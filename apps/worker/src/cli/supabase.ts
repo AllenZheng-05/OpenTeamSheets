@@ -1,0 +1,52 @@
+import path from "node:path";
+import { createInterface } from "node:readline/promises";
+import { createClient, type SupabaseClient } from "@supabase/supabase-js";
+import type { Database } from "@ots/core/db";
+
+export type Db = SupabaseClient<Database>;
+
+/**
+ * A Supabase client with the secret key, for maintainer CLIs. Uses
+ * apps/worker/.env (the local database) by default; `--prod` uses
+ * .env.production after asking for confirmation.
+ */
+export async function connect(args: string[]): Promise<Db> {
+  const production = args.includes("--prod");
+  const envFile = production ? ".env.production" : ".env";
+  try {
+    process.loadEnvFile(path.join(import.meta.dirname, "../..", envFile));
+  } catch {
+    throw new Error(`Missing apps/worker/${envFile}; see .env.example`);
+  }
+
+  const url = process.env.SUPABASE_URL;
+  const secretKey = process.env.SUPABASE_SECRET_KEY;
+  if (!url || !secretKey) {
+    throw new Error(`Set SUPABASE_URL and SUPABASE_SECRET_KEY in ${envFile}`);
+  }
+
+  if (production) {
+    const prompt = createInterface({
+      input: process.stdin,
+      output: process.stdout,
+    });
+    const answer = await prompt.question(
+      `This writes to production (${url}). Type "production" to continue: `,
+    );
+    prompt.close();
+    if (answer.trim() !== "production") throw new Error("Cancelled");
+  }
+
+  return createClient<Database>(url, secretKey, {
+    auth: { persistSession: false },
+  });
+}
+
+/** Throws on a Supabase error, so a failed write stops the CLI. */
+export function check<T extends { error: { message: string } | null }>(
+  result: T,
+  action: string,
+): T {
+  if (result.error) throw new Error(`${action}: ${result.error.message}`);
+  return result;
+}

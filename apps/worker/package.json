@@ -8,11 +8,13 @@
     "build": "tsup",
     "start": "node dist/index.js",
     "typecheck": "tsc --noEmit",
-    "test": "vitest run"
+    "test": "vitest run",
+    "data:sync": "tsx src/cli/data-sync.ts"
   },
   "dependencies": {
     "@hono/node-server": "^1",
     "@ots/core": "workspace:*",
+    "@supabase/supabase-js": "^2.117.2",
     "hono": "^4"
   },
   "devDependencies": {

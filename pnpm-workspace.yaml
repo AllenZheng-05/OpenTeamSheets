@@ -1,6 +1,7 @@
 packages:
   - apps/*
   - packages/*
+  - tools
 
 # Packages allowed to run install scripts. The Supabase CLI downloads its binary on install.
 onlyBuiltDependencies:

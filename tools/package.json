@@ -1,20 +1,17 @@
 {
-  "name": "@ots/core",
+  "name": "@ots/tools",
   "version": "0.1.0",
   "private": true,
   "type": "module",
-  "sideEffects": false,
-  "exports": {
-    ".": "./src/index.ts",
-    "./game-data": "./src/game-data/index.ts",
-    "./db": "./src/db/types.ts"
-  },
   "scripts": {
+    "data:pull": "tsx src/data-pull.ts",
     "typecheck": "tsc --noEmit",
     "test": "vitest run"
   },
   "devDependencies": {
+    "@ots/core": "workspace:*",
     "@types/node": "^22",
+    "tsx": "^4",
     "typescript": "^5",
     "vitest": "^3"
   }

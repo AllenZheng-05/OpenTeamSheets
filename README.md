@@ -37,10 +37,12 @@ git clone https://github.com/AllenZheng-05/OpenTeamSheets.git
 cd OpenTeamSheets
 pnpm install
 pnpm db:start   # local Supabase; prints the URL and keys
+# copy .env.example to apps/web/.env.local and apps/worker/.env, filled in from `pnpm supabase status`
+pnpm data:sync  # loads the game data into the local database
 pnpm dev        # http://localhost:3000
 ```
 
-Then copy `.env.example` to `apps/web/.env.local` and fill it in from `pnpm supabase status`. Contributors never need production keys: the local database is seeded with sample data.
+Contributors never need production keys: everything runs against the local database.
 
 The repo is a pnpm workspace:
 
@@ -49,6 +51,7 @@ The repo is a pnpm workspace:
 | `apps/web`      | The Next.js site                                            |
 | `apps/worker`   | Background jobs such as tournament imports (`pnpm dev:all`) |
 | `packages/core` | Shared types, parsing and Champions data                    |
+| `tools`         | Maintainer scripts such as `pnpm data:pull`                 |
 | `supabase`      | Database config, migrations and seed data                   |
 
 Before opening a pull request, run `pnpm lint`, `pnpm typecheck`, `pnpm test` and `pnpm build`. CI runs the same checks, plus `pnpm format:check`.
