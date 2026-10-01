@@ -8,10 +8,10 @@ A free hub for finding, building and sharing Pokémon Champions VGC teams.
 
 ## Core Features
 
-- **Search teams** from official tournaments and the community
+- **Search teams** from official tournaments top cut teams and community published teams
 - **Match your box.** Filter teams to only include Pokémon you own
 - **Team Builder** with a built-in damage calculator
-- **Community shared** teams with structured write-ups (what it does, how to play it, key calcs, matchups), or add community notes to tournament teams
+- **Community shared** teams with structured write-ups (what it does, how to play it, key calcs, matchups) and community notes to tournament teams
 
 ## Tech stack
 
@@ -26,29 +26,32 @@ A free hub for finding, building and sharing Pokémon Champions VGC teams.
 
 ## Running locally
 
-**IN PROGRESS**
+Prerequisites:
 
-The planned setup:
-
-Prerequisites: Node.js 22, pnpm (via `corepack enable`) and Docker Desktop (for the local Supabase database).
+- Node.js 22
+- pnpm 10: `corepack enable`, or `npm install -g pnpm@10` if corepack needs admin rights
+- Docker Desktop, for the local Supabase database
 
 ```sh
 git clone https://github.com/AllenZheng-05/OpenTeamSheets.git
 cd OpenTeamSheets
 pnpm install
-pnpm db:start   # local Supabase with migrations and sample teams
-pnpm dev
+pnpm db:start   # local Supabase; prints the URL and keys
+pnpm dev        # http://localhost:3000
 ```
 
-Contributors never need production keys: the local database comes with a seed script that loads sample teams.
+Then copy `.env.example` to `apps/web/.env.local` and fill it in from `pnpm supabase status`. Contributors never need production keys: the local database is seeded with sample data.
 
-## Roadmap
+The repo is a pnpm workspace:
 
-1. Admin import tool, database schema and team pages, filled with top cut teams from official tournaments
-2. Team search
-3. Team builder with Showdown-style keyboard navigation
-4. Damage calculator in-line integration into team builder
-5. Accounts, My teams, publishing with write-ups, and community notes
+| Folder          | What it is                                                  |
+| --------------- | ----------------------------------------------------------- |
+| `apps/web`      | The Next.js site                                            |
+| `apps/worker`   | Background jobs such as tournament imports (`pnpm dev:all`) |
+| `packages/core` | Shared types, parsing and Champions data                    |
+| `supabase`      | Database config, migrations and seed data                   |
+
+Before opening a pull request, run `pnpm lint`, `pnpm typecheck`, `pnpm test` and `pnpm build`. CI runs the same checks, plus `pnpm format:check`.
 
 ## Contributing
 

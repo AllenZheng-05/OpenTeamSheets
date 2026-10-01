@@ -1,0 +1,2 @@
+-- Sample data loaded by `pnpm db:reset`. Runs after migrations.
+-- Schema and one official event's top cut will go here
