@@ -1,0 +1,7 @@
+# Use LF line endings everywhere, so Windows checkouts match CI and Prettier.
+* text=auto eol=lf
+
+*.ico binary
+*.png binary
+*.jpg binary
+*.webp binary
