@@ -4,3 +4,4 @@ dist
 coverage
 supabase/.temp
 supabase/.branches
+packages/core/data/generated

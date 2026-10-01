@@ -22,17 +22,20 @@ git clone https://github.com/<your-username>/OpenTeamSheets.git
 cd OpenTeamSheets
 pnpm install
 pnpm db:start   # local Supabase; prints the URL and keys
+# copy .env.example to apps/web/.env.local and apps/worker/.env, filled in from `pnpm supabase status`
+pnpm data:sync  # loads the game data into the local database
 pnpm dev        # http://localhost:3000
 ```
 
-Copy `.env.example` to `apps/web/.env.local` and fill it in from `pnpm supabase status`. You never need production keys: the local database is seeded with sample data, and `pnpm db:reset` rebuilds it from scratch.
+You never need production keys: everything runs against the local database. `pnpm db:reset` rebuilds it from scratch; run `pnpm data:sync` again afterwards.
 
-| Folder          | What it is                                 |
-| --------------- | ------------------------------------------ |
-| `apps/web`      | The Next.js site                           |
-| `apps/worker`   | Background jobs such as tournament imports |
-| `packages/core` | Shared types, parsing and Champions data   |
-| `supabase`      | Database config, migrations and seed data  |
+| Folder          | What it is                                  |
+| --------------- | ------------------------------------------- |
+| `apps/web`      | The Next.js site                            |
+| `apps/worker`   | Background jobs such as tournament imports  |
+| `packages/core` | Shared types, parsing and Champions data    |
+| `tools`         | Maintainer scripts such as `pnpm data:pull` |
+| `supabase`      | Database config, migrations and seed data   |
 
 ## Making a change
 
@@ -66,9 +69,21 @@ of your changes if it is not obvious.
 - Add a new file in `supabase/migrations` (`pnpm supabase migration new <name>`); never edit one that has already merged. Every table needs row-level security policies.
 - **No secrets in code.** Keys belong in `.env.local`, which git ignores. Never prefix a secret with `NEXT_PUBLIC_`, since those values ship to the browser.
 
-## Regulation data
+## Game data
 
-A new regulation's rules usually only become known once it goes live, so its data is filled in by the community. When adding or correcting regulation data, link a source (an in-game screenshot or an official announcement) in the pull request.
+Champions game data (species, moves, abilities, items, type chart, and each regulation's legal Pokémon, items and learnsets) lives in `packages/core/data`. It comes from [Pokémon Showdown](https://github.com/smogon/pokemon-showdown), whose own data and team validator resolve it.
+
+| File                     | Edited by                                           |
+| ------------------------ | --------------------------------------------------- |
+| `generated/`             | `pnpm data:pull` only. Never edit it by hand.       |
+| `showdown-sources.json`  | Hand: the Showdown commit and format per regulation |
+| `overrides.json`         | Hand: corrections where Showdown is wrong           |
+| `regulation-status.json` | Hand: `pending`, `partial` or `complete`            |
+
+- **Something wrong in the data?** Add a correction to `overrides.json`, run `pnpm data:pull`, and link a source (an in-game screenshot or an official announcement) in the pull request. Consider reporting it to Showdown too.
+- **Updating from Showdown:** bump the commit in `showdown-sources.json` and run `pnpm data:pull`. The first run builds Showdown (a few minutes; it's cached in `~/.cache/openteamsheets`). Review the diff in `generated/` like any other change.
+- **A new regulation:** a regulation's rules usually only become known once it goes live. Add it to `showdown-sources.json` once Showdown supports it, and keep it `partial` in `regulation-status.json` until the data has been checked.
+- **Loading it locally:** `pnpm data:sync` copies the data into your local database. It needs `apps/worker/.env`; see `.env.example`.
 
 ## License
 

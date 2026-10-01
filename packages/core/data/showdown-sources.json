@@ -1,0 +1,18 @@
+{
+  "repository": "https://github.com/smogon/pokemon-showdown.git",
+  "current": "M-C",
+  "regulations": {
+    "M-A": {
+      "commit": "81c39fb3facd0c82bc6753295b2b079190fa3e6f",
+      "format": "gen9championsvgc2026regma"
+    },
+    "M-B": {
+      "commit": "1ce9b34f971867b1c63689b167641d9ec552a985",
+      "format": "gen9championsvgc2026regmb"
+    },
+    "M-C": {
+      "commit": "1ce9b34f971867b1c63689b167641d9ec552a985",
+      "format": "gen9championsvgc2026regmc"
+    }
+  }
+}
