@@ -1,0 +1,794 @@
+# The top cut of the 2027 Baltimore Pokémon VGC Regional Championships,
+# from RK9 (roster: standings and teamlists). Each paste is the English
+# team list copied from the player's RK9 teamlist page.
+event:
+  name: 2027 Baltimore Pokémon VGC Regional Championships
+  source: rk9
+  sourceId: BA002-JL3KVbvivVKNAc
+  regulation: M-C
+  official: true
+  startsOn: 2026-09-18
+  endsOn: 2026-09-20
+  playerCount: 1079
+  standingsUrl: https://rk9.gg/roster/BA002-JL3KVbvivVKNAc
+
+teams:
+  - player: Joseph Ugarte
+    placement: 1
+    teamlistUrl: https://rk9.gg/teamlist/public/BA002-JL3KVbvivVKNAc/DqQtlduXE6DDLOKZXBHD
+    paste: |
+      Excadrill
+      EN
+      Ability: Sand Rush
+      Held Item: Focus Sash
+      Stat Alignment: Jolly
+      Iron Head
+      High Horsepower
+      Rock Slide
+      Protect
+      Salamence
+      EN
+      Ability: Intimidate
+      Held Item: Salamencite
+      Stat Alignment: Timid
+      Hyper Voice
+      Draco Meteor
+      Flamethrower
+      Protect
+      Tyranitar
+      EN
+      Ability: Sand Stream
+      Held Item: Tyranitarite
+      Stat Alignment: Jolly
+      Rock Slide
+      Knock Off
+      Low Kick
+      Protect
+      Indeedee [Male]
+      EN
+      Ability: Psychic Surge
+      Held Item: Choice Scarf
+      Stat Alignment: Modest
+      Expanding Force
+      Mystical Fire
+      Trick
+      Protect
+      Corviknight
+      EN
+      Ability: Mirror Armor
+      Held Item: Psychic Seed
+      Stat Alignment: Careful
+      Brave Bird
+      Power Trip
+      Bulk Up
+      Roost
+      Sneasler
+      EN
+      Ability: Unburden
+      Held Item: White Herb
+      Stat Alignment: Adamant
+      Dire Claw
+      Close Combat
+      Coaching
+      Protect
+      -->
+
+  - player: Aditya Subramanian
+    placement: 2
+    teamlistUrl: https://rk9.gg/teamlist/public/BA002-JL3KVbvivVKNAc/i4SPzSax7gWzIckK52KU
+    paste: |
+      Golisopod
+      EN
+      Ability: Emergency Exit
+      Held Item: Golisopite
+      Stat Alignment: Adamant
+      Leech Life
+      Drill Run
+      Iron Head
+      Protect
+      Charizard
+      EN
+      Ability: Blaze
+      Held Item: Charizardite Y
+      Stat Alignment: Timid
+      Heat Wave
+      Hurricane
+      Weather Ball
+      Protect
+      Politoed
+      EN
+      Ability: Drizzle
+      Held Item: Mystic Water
+      Stat Alignment: Modest
+      Muddy Water
+      Ice Beam
+      Weather Ball
+      Protect
+      Archaludon
+      EN
+      Ability: Stamina
+      Held Item: Leftovers
+      Stat Alignment: Bold
+      Dragon Pulse
+      Snarl
+      Electro Shot
+      Protect
+      Grimmsnarl
+      EN
+      Ability: Prankster
+      Held Item: Light Clay
+      Stat Alignment: Sassy
+      Light Screen
+      Reflect
+      Parting Shot
+      Spirit Break
+      Farigiraf
+      EN
+      Ability: Armor Tail
+      Held Item: Sitrus Berry
+      Stat Alignment: Bold
+      Psychic
+      Trick Room
+      Protect
+      Grass Knot
+      -->
+
+  - player: Brady Smith
+    placement: 3
+    teamlistUrl: https://rk9.gg/teamlist/public/BA002-JL3KVbvivVKNAc/27LoUGHWZssTh74nA0Oc
+    paste: |
+      Archaludon
+      EN
+      Ability: Stamina
+      Held Item: Leftovers
+      Stat Alignment: Bold
+      Dragon Pulse
+      Flash Cannon
+      Electro Shot
+      Protect
+      Incineroar
+      EN
+      Ability: Intimidate
+      Held Item: Passho Berry
+      Stat Alignment: Sassy
+      Fake Out
+      Parting Shot
+      Darkest Lariat
+      Protect
+      Politoed
+      EN
+      Ability: Drizzle
+      Held Item: Sitrus Berry
+      Stat Alignment: Calm
+      Perish Song
+      Weather Ball
+      Encore
+      Protect
+      Vivillon
+      EN
+      Ability: Compound Eyes
+      Held Item: Focus Sash
+      Stat Alignment: Timid
+      Sleep Powder
+      Rage Powder
+      Hurricane
+      Protect
+      Rillaboom
+      EN
+      Ability: Grassy Surge
+      Held Item: Eject Button
+      Stat Alignment: Careful
+      Fake Out
+      Grassy Glide
+      U-turn
+      Protect
+      Gengar
+      EN
+      Ability: Cursed Body
+      Held Item: Gengarite
+      Stat Alignment: Modest
+      Shadow Ball
+      Sludge Bomb
+      Perish Song
+      Protect
+      -->
+
+  - player: Blaik Thompson
+    placement: 4
+    teamlistUrl: https://rk9.gg/teamlist/public/BA002-JL3KVbvivVKNAc/041J16pnhkWU3DFoHdLN
+    paste: |
+      Salamence
+      EN
+      Ability: Intimidate
+      Held Item: Salamencite
+      Stat Alignment: Timid
+      Heat Wave
+      Draco Meteor
+      Hyper Voice
+      Protect
+      Arcanine [Hisuian Form]
+      EN
+      Ability: Rock Head
+      Held Item: Focus Sash
+      Stat Alignment: Jolly
+      Flare Blitz
+      Head Smash
+      Extreme Speed
+      Protect
+      Indeedee [Male]
+      EN
+      Ability: Psychic Surge
+      Held Item: Choice Scarf
+      Stat Alignment: Modest
+      Expanding Force
+      Trick
+      Trick Room
+      Imprison
+      Milotic
+      EN
+      Ability: Competitive
+      Held Item: Leftovers
+      Stat Alignment: Calm
+      Scald
+      Ice Beam
+      Icy Wind
+      Protect
+      Metagross
+      EN
+      Ability: Clear Body
+      Held Item: Metagrossite
+      Stat Alignment: Adamant
+      Steel Roller
+      Psychic Fangs
+      Body Press
+      Protect
+      Sneasler
+      EN
+      Ability: Unburden
+      Held Item: Psychic Seed
+      Stat Alignment: Adamant
+      Throat Chop
+      Close Combat
+      Rock Slide
+      Protect
+      -->
+
+  - player: Lorenzo Arce
+    placement: 5
+    teamlistUrl: https://rk9.gg/teamlist/public/BA002-JL3KVbvivVKNAc/LYtRe2wIpubHSuZG9OfO
+    paste: |
+      Milotic
+      EN
+      Ability: Competitive
+      Held Item: Sitrus Berry
+      Stat Alignment: Calm
+      Coil
+      Hypnosis
+      Ice Beam
+      Muddy Water
+      Raichu
+      EN
+      Ability: Lightning Rod
+      Held Item: Raichunite Y
+      Stat Alignment: Timid
+      Zap Cannon
+      Protect
+      Fake Out
+      Focus Blast
+      Ceruledge
+      EN
+      Ability: Flash Fire
+      Held Item: Grassy Seed
+      Stat Alignment: Adamant
+      Protect
+      Bitter Blade
+      Swords Dance
+      Shadow Sneak
+      Staraptor
+      EN
+      Ability: Intimidate
+      Held Item: Staraptite
+      Stat Alignment: Jolly
+      Brave Bird
+      Tailwind
+      Protect
+      Close Combat
+      Gholdengo
+      EN
+      Ability: Good as Gold
+      Held Item: Life Orb
+      Stat Alignment: Modest
+      Shadow Ball
+      Nasty Plot
+      Make It Rain
+      Protect
+      Rillaboom
+      EN
+      Ability: Grassy Surge
+      Held Item: Miracle Seed
+      Stat Alignment: Adamant
+      Wood Hammer
+      Fake Out
+      High Horsepower
+      Grassy Glide
+      -->
+
+  - player: Esa Ishaque
+    placement: 6
+    teamlistUrl: https://rk9.gg/teamlist/public/BA002-JL3KVbvivVKNAc/xwGrkGvg8PXbgIxsRNlv
+    paste: |
+      Froslass
+      EN
+      Ability: Cursed Body
+      Held Item: Froslassite
+      Stat Alignment: Timid
+      Blizzard
+      Shadow Ball
+      Aurora Veil
+      Protect
+      Raichu
+      EN
+      Ability: Lightning Rod
+      Held Item: Raichunite Y
+      Stat Alignment: Timid
+      Zap Cannon
+      Focus Blast
+      Encore
+      Protect
+      Rillaboom
+      EN
+      Ability: Grassy Surge
+      Held Item: Sitrus Berry
+      Stat Alignment: Adamant
+      Fake Out
+      Grassy Glide
+      Wood Hammer
+      High Horsepower
+      Kingambit
+      EN
+      Ability: Defiant
+      Held Item: Life Orb
+      Stat Alignment: Adamant
+      Kowtow Cleave
+      Sucker Punch
+      Swords Dance
+      Protect
+      Sneasler
+      EN
+      Ability: Unburden
+      Held Item: White Herb
+      Stat Alignment: Adamant
+      Close Combat
+      Dire Claw
+      Fake Out
+      Protect
+      Arcanine [Hisuian Form]
+      EN
+      Ability: Rock Head
+      Held Item: Focus Sash
+      Stat Alignment: Jolly
+      Flare Blitz
+      Head Smash
+      Extreme Speed
+      Protect
+      -->
+
+  - player: Conner Pietrusinski
+    placement: 7
+    teamlistUrl: https://rk9.gg/teamlist/public/BA002-JL3KVbvivVKNAc/VW1m8TfHx0RIVs4aGHGl
+    paste: |
+      Arcanine [Hisuian Form]
+      EN
+      Ability: Rock Head
+      Held Item: Focus Sash
+      Stat Alignment: Jolly
+      Flare Blitz
+      Head Smash
+      Extreme Speed
+      Protect
+      Rillaboom
+      EN
+      Ability: Grassy Surge
+      Held Item: Miracle Seed
+      Stat Alignment: Adamant
+      Wood Hammer
+      Grassy Glide
+      High Horsepower
+      Fake Out
+      Gholdengo
+      EN
+      Ability: Good as Gold
+      Held Item: Life Orb
+      Stat Alignment: Timid
+      Make It Rain
+      Shadow Ball
+      Nasty Plot
+      Protect
+      Staraptor
+      EN
+      Ability: Intimidate
+      Held Item: Staraptite
+      Stat Alignment: Jolly
+      Close Combat
+      Protect
+      Brave Bird
+      Tailwind
+      Raichu
+      EN
+      Ability: Lightning Rod
+      Held Item: Raichunite Y
+      Stat Alignment: Timid
+      Zap Cannon
+      Focus Blast
+      Fake Out
+      Protect
+      Sylveon
+      EN
+      Ability: Pixilate
+      Held Item: Fairy Feather
+      Stat Alignment: Modest
+      Hyper Beam
+      Hyper Voice
+      Quick Attack
+      Protect
+      -->
+
+  - player: Cole Basham
+    placement: 8
+    teamlistUrl: https://rk9.gg/teamlist/public/BA002-JL3KVbvivVKNAc/rD6PrJBrCfzicynLnRAI
+    paste: |
+      Floette [Eternal Flower]
+      EN
+      Ability: Flower Veil
+      Held Item: Floettite
+      Stat Alignment: Modest
+      Dazzling Gleam
+      Draining Kiss
+      Calm Mind
+      Protect
+      Kingambit
+      EN
+      Ability: Defiant
+      Held Item: Life Orb
+      Stat Alignment: Adamant
+      Kowtow Cleave
+      Sucker Punch
+      Swords Dance
+      Protect
+      Rillaboom
+      EN
+      Ability: Grassy Surge
+      Held Item: Miracle Seed
+      Stat Alignment: Adamant
+      Wood Hammer
+      Grassy Glide
+      Fake Out
+      High Horsepower
+      Sneasler
+      EN
+      Ability: Poison Touch
+      Held Item: Focus Sash
+      Stat Alignment: Jolly
+      Poison Jab
+      Close Combat
+      Fake Out
+      Quick Guard
+      Incineroar
+      EN
+      Ability: Intimidate
+      Held Item: Passho Berry
+      Stat Alignment: Careful
+      Flare Blitz
+      Throat Chop
+      Fake Out
+      Parting Shot
+      Delphox
+      EN
+      Ability: Blaze
+      Held Item: Delphoxite
+      Stat Alignment: Timid
+      Heat Wave
+      Psychic
+      Nasty Plot
+      Protect
+      -->
+
+  - player: Dorian Kang
+    placement: 9
+    teamlistUrl: https://rk9.gg/teamlist/public/BA002-JL3KVbvivVKNAc/10gY7gYrOnPAGK7Nudmq
+    paste: |
+      Armarouge
+      EN
+      Ability: Flash Fire
+      Held Item: Focus Sash
+      Stat Alignment: Modest
+      Armor Cannon
+      Expanding Force
+      Wide Guard
+      Protect
+      Dragapult
+      EN
+      Ability: Infiltrator
+      Held Item: Life Orb
+      Stat Alignment: Timid
+      Draco Meteor
+      Shadow Ball
+      Will-O-Wisp
+      Protect
+      Gengar
+      EN
+      Ability: Cursed Body
+      Held Item: Gengarite
+      Stat Alignment: Modest
+      Shadow Ball
+      Focus Blast
+      Protect
+      Sludge Bomb
+      Milotic
+      EN
+      Ability: Competitive
+      Held Item: Psychic Seed
+      Stat Alignment: Calm
+      Muddy Water
+      Coil
+      Hypnosis
+      Recover
+      Indeedee [Female]
+      EN
+      Ability: Psychic Surge
+      Held Item: Rocky Helmet
+      Stat Alignment: Relaxed
+      Psychic
+      Follow Me
+      Helping Hand
+      Trick Room
+      Staraptor
+      EN
+      Ability: Intimidate
+      Held Item: Staraptite
+      Stat Alignment: Adamant
+      Protect
+      Close Combat
+      Brave Bird
+      Roost
+      -->
+
+  - player: Billy Helm
+    placement: 10
+    teamlistUrl: https://rk9.gg/teamlist/public/BA002-JL3KVbvivVKNAc/dB80NsfxqmJBVxknlXR3
+    paste: |
+      Rillaboom
+      EN
+      Ability: Grassy Surge
+      Held Item: Miracle Seed
+      Stat Alignment: Adamant
+      Protect
+      Fake Out
+      Grassy Glide
+      U-turn
+      Politoed
+      EN
+      Ability: Drizzle
+      Held Item: Sitrus Berry
+      Stat Alignment: Calm
+      Protect
+      Weather Ball
+      Perish Song
+      Encore
+      Archaludon
+      EN
+      Ability: Stamina
+      Held Item: Leftovers
+      Stat Alignment: Modest
+      Protect
+      Electro Shot
+      Dragon Pulse
+      Aura Sphere
+      Gengar
+      EN
+      Ability: Cursed Body
+      Held Item: Gengarite
+      Stat Alignment: Modest
+      Protect
+      Perish Song
+      Sludge Bomb
+      Shadow Ball
+      Incineroar
+      EN
+      Ability: Intimidate
+      Held Item: Passho Berry
+      Stat Alignment: Careful
+      Protect
+      Fake Out
+      Throat Chop
+      Parting Shot
+      Golisopod
+      EN
+      Ability: Emergency Exit
+      Held Item: Golisopite
+      Stat Alignment: Adamant
+      Protect
+      Leech Life
+      Sucker Punch
+      Swords Dance
+      -->
+
+  - player: Michael Spinetta-McCarthy
+    placement: 11
+    teamlistUrl: https://rk9.gg/teamlist/public/BA002-JL3KVbvivVKNAc/0lbS1fGaeHdeq74HLZWq
+    paste: |
+      Garchomp
+      EN
+      Ability: Rough Skin
+      Held Item: Choice Scarf
+      Stat Alignment: Adamant
+      Dragon Claw
+      Earthquake
+      Stomping Tantrum
+      Rock Tomb
+      Farigiraf
+      EN
+      Ability: Armor Tail
+      Held Item: Sitrus Berry
+      Stat Alignment: Bold
+      Psychic
+      Thunderbolt
+      Trick Room
+      Protect
+      Aerodactyl
+      EN
+      Ability: Unnerve
+      Held Item: Aerodactylite
+      Stat Alignment: Jolly
+      Rock Slide
+      Dual Wingbeat
+      Tailwind
+      Wide Guard
+      Sylveon
+      EN
+      Ability: Pixilate
+      Held Item: Fairy Feather
+      Stat Alignment: Modest
+      Hyper Voice
+      Hyper Beam
+      Quick Attack
+      Detect
+      Charizard
+      EN
+      Ability: Blaze
+      Held Item: Charizardite Y
+      Stat Alignment: Timid
+      Heat Wave
+      Weather Ball
+      Solar Beam
+      Protect
+      Kingambit
+      EN
+      Ability: Defiant
+      Held Item: Focus Sash
+      Stat Alignment: Adamant
+      Kowtow Cleave
+      Sucker Punch
+      Iron Head
+      Low Kick
+      -->
+
+  - player: Justin Tang
+    placement: 12
+    teamlistUrl: https://rk9.gg/teamlist/public/BA002-JL3KVbvivVKNAc/urXCEsyr6l208Bg4tX4o
+    paste: |
+      Sneasler
+      EN
+      Ability: Poison Touch
+      Held Item: Focus Sash
+      Stat Alignment: Jolly
+      Fake Out
+      Close Combat
+      Poison Jab
+      Quick Guard
+      Sinistcha [Masterpiece Form]
+      EN
+      Ability: Hospitality
+      Held Item: Colbur Berry
+      Stat Alignment: Bold
+      Matcha Gotcha
+      Rage Powder
+      Trick Room
+      Protect
+      Kingambit
+      EN
+      Ability: Defiant
+      Held Item: Life Orb
+      Stat Alignment: Adamant
+      Kowtow Cleave
+      Sucker Punch
+      Swords Dance
+      Protect
+      Floette [Eternal Flower]
+      EN
+      Ability: Flower Veil
+      Held Item: Floettite
+      Stat Alignment: Modest
+      Moonblast
+      Dazzling Gleam
+      Calm Mind
+      Protect
+      Delphox
+      EN
+      Ability: Blaze
+      Held Item: Delphoxite
+      Stat Alignment: Timid
+      Heat Wave
+      Psychic
+      Nasty Plot
+      Protect
+      Incineroar
+      EN
+      Ability: Intimidate
+      Held Item: Sitrus Berry
+      Stat Alignment: Impish
+      Parting Shot
+      Flare Blitz
+      Throat Chop
+      Fake Out
+      -->
+
+  - player: Andres Wilkerson
+    placement: 13
+    teamlistUrl: https://rk9.gg/teamlist/public/BA002-JL3KVbvivVKNAc/bASM2pmAEMjJYJ4ja7yI
+    paste: |
+      Ceruledge
+      EN
+      Ability: Flash Fire
+      Held Item: Focus Sash
+      Stat Alignment: Jolly
+      Poltergeist
+      Bitter Blade
+      Close Combat
+      Swords Dance
+      Indeedee [Female]
+      EN
+      Ability: Psychic Surge
+      Held Item: Colbur Berry
+      Stat Alignment: Relaxed
+      Mystical Fire
+      Follow Me
+      Helping Hand
+      Trick Room
+      Dragonite
+      EN
+      Ability: Inner Focus
+      Held Item: Life Orb
+      Stat Alignment: Adamant
+      Scale Shot
+      Stomping Tantrum
+      Rock Slide
+      Dragon Dance
+      Lopunny
+      EN
+      Ability: Limber
+      Held Item: Lopunnite
+      Stat Alignment: Jolly
+      Close Combat
+      Triple Axel
+      Thunder Punch
+      Fake Out
+      Gardevoir
+      EN
+      Ability: Trace
+      Held Item: Gardevoirite
+      Stat Alignment: Modest
+      Expanding Force
+      Hyper Voice
+      Calm Mind
+      Protect
+      Sneasler
+      EN
+      Ability: Unburden
+      Held Item: Psychic Seed
+      Stat Alignment: Adamant
+      Close Combat
+      Dire Claw
+      Throat Chop
+      Fake Out
+      -->

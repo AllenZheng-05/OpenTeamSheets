@@ -10,3 +10,4 @@ export {
   type ValidationResult,
 } from "./validate";
 export { teamFingerprint } from "./fingerprint";
+export { deriveArchetypes } from "./archetypes";
