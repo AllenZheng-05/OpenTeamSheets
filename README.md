@@ -54,7 +54,7 @@ The repo is a pnpm workspace:
 | `tools`         | Maintainer scripts such as `pnpm data:pull`                 |
 | `supabase`      | Database config, migrations and seed data                   |
 
-Before opening a pull request, run `pnpm lint`, `pnpm typecheck`, `pnpm test` and `pnpm build`. CI runs the same checks, plus `pnpm format:check`.
+Before opening a pull request, run `pnpm lint`, `pnpm typecheck`, `pnpm test` and `pnpm build`, plus `pnpm db:test` if you changed the database. CI runs the same checks, plus `pnpm format:check`.
 
 ## Contributing
 
