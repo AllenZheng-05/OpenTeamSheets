@@ -20,7 +20,9 @@
     "db:test": "supabase test db",
     "db:types": "supabase gen types typescript --local > packages/core/src/db/types.ts && prettier --write packages/core/src/db/types.ts",
     "data:pull": "pnpm --filter @ots/tools data:pull",
-    "data:sync": "pnpm --filter @ots/worker data:sync"
+    "data:sync": "pnpm --filter @ots/worker data:sync",
+    "import:event": "pnpm --filter @ots/worker import:event",
+    "db:seed": "pnpm data:sync && pnpm import:event data/events"
   },
   "devDependencies": {
     "prettier": "^3",

@@ -38,7 +38,7 @@ cd OpenTeamSheets
 pnpm install
 pnpm db:start   # local Supabase; prints the URL and keys
 # copy .env.example to apps/web/.env.local and apps/worker/.env, filled in from `pnpm supabase status`
-pnpm data:sync  # loads the game data into the local database
+pnpm db:seed    # loads the game data into the local database
 pnpm dev        # http://localhost:3000
 ```
 

@@ -23,11 +23,11 @@ cd OpenTeamSheets
 pnpm install
 pnpm db:start   # local Supabase; prints the URL and keys
 # copy .env.example to apps/web/.env.local and apps/worker/.env, filled in from `pnpm supabase status`
-pnpm data:sync  # loads the game data into the local database
+pnpm db:seed    # loads the game data into the local database
 pnpm dev        # http://localhost:3000
 ```
 
-You never need production keys: everything runs against the local database. `pnpm db:reset` rebuilds it from scratch; run `pnpm data:sync` again afterwards.
+You never need production keys: everything runs against the local database. `pnpm db:reset` rebuilds it from scratch; run `pnpm db:seed` again afterwards.
 
 | Folder          | What it is                                  |
 | --------------- | ------------------------------------------- |
