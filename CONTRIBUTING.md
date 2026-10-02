@@ -49,6 +49,7 @@ You never need production keys: everything runs against the local database. `pnp
    pnpm typecheck
    pnpm test
    pnpm build
+   pnpm db:test      # database tests; needs pnpm db:start
    ```
 
 4. **Open a pull request** against `main` and fill in the template. Link the issue it closes (`Closes #12`).
@@ -66,7 +67,7 @@ of your changes if it is not obvious.
 - New logic in `packages/core` needs Vitest tests. Tests must pass dates in explicitly, don't use the real clock
 - Follow the naming, structure and comment style of nearby files. Prettier and ESLint are used for formatting.
 - Interactive UI must work with the keyboard and a screen reader, with visible focus outlines.
-- Add a new file in `supabase/migrations` (`pnpm supabase migration new <name>`); never edit one that has already merged. Every table needs row-level security policies.
+- Always add new files in `supabase/migrations` (`pnpm supabase migration new <name>`). Do not edit one that has already merged. Every table needs row-level security policies, and new tables, policies and functions need tests in `supabase/tests` (pgTAP).
 - **No secrets in code.** Keys belong in `.env.local`, which git ignores. Never prefix a secret with `NEXT_PUBLIC_`, since those values ship to the browser.
 
 ## Game data

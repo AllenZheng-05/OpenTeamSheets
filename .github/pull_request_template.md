@@ -16,6 +16,6 @@ Closes #
 
 - [ ] `pnpm lint`, `pnpm typecheck`, `pnpm test` and `pnpm build` pass locally
 - [ ] New or changed logic has tests
-- [ ] Database changes are a new migration, with row-level security policies
+- [ ] Database changes are a new migration, with row-level security policies and tests (`pnpm db:test` passes)
 - [ ] No secrets, keys or `.env` files are committed
 - [ ] UI changes work with the keyboard and at phone width

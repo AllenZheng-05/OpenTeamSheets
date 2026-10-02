@@ -17,6 +17,7 @@
     "db:start": "supabase start",
     "db:stop": "supabase stop",
     "db:reset": "supabase db reset",
+    "db:test": "supabase test db",
     "db:types": "supabase gen types typescript --local > packages/core/src/db/types.ts && prettier --write packages/core/src/db/types.ts",
     "data:pull": "pnpm --filter @ots/tools data:pull",
     "data:sync": "pnpm --filter @ots/worker data:sync"

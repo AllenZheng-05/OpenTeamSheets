@@ -22,9 +22,11 @@ export interface Species {
   /** The base form this is a form of (Charizard for Mega Charizard Y). */
   baseSpeciesId: string | null;
   /**
-   * For forms that only exist mid-battle (Megas, Mimikyu-Busted), the form
-   * it changes from. These can't be put on a team, so they're never on a
-   * regulation's legal list. Null for forms that can be on a team.
+   * For forms that only exist mid-battle (Megas, Mimikyu-Busted),
+   * battleOnlyFromId is the form it changes from. Like in Showdown,
+   * a team slot may have a battle-only form (Mega Charizard Y in team builder)
+   * but it's validated as this form, and only this form is on a regulation's
+   * legal list. Null for other forms.
    */
   battleOnlyFromId: string | null;
   type1: string;

@@ -55,6 +55,71 @@ export type Database = {
         };
         Relationships: [];
       };
+      archetypes: {
+        Row: {
+          id: string;
+          name: string;
+        };
+        Insert: {
+          id: string;
+          name: string;
+        };
+        Update: {
+          id?: string;
+          name?: string;
+        };
+        Relationships: [];
+      };
+      events: {
+        Row: {
+          created_at: string;
+          ends_on: string;
+          id: string;
+          name: string;
+          official: boolean;
+          player_count: number | null;
+          regulation_id: string;
+          source: string;
+          source_id: string;
+          standings_url: string | null;
+          starts_on: string;
+        };
+        Insert: {
+          created_at?: string;
+          ends_on: string;
+          id?: string;
+          name: string;
+          official?: boolean;
+          player_count?: number | null;
+          regulation_id: string;
+          source: string;
+          source_id: string;
+          standings_url?: string | null;
+          starts_on: string;
+        };
+        Update: {
+          created_at?: string;
+          ends_on?: string;
+          id?: string;
+          name?: string;
+          official?: boolean;
+          player_count?: number | null;
+          regulation_id?: string;
+          source?: string;
+          source_id?: string;
+          standings_url?: string | null;
+          starts_on?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "events_regulation_id_fkey";
+            columns: ["regulation_id"];
+            isOneToOne: false;
+            referencedRelation: "regulations";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
       items: {
         Row: {
           description: string;
@@ -75,6 +140,41 @@ export type Database = {
           num?: number;
         };
         Relationships: [];
+      };
+      media_links: {
+        Row: {
+          id: string;
+          kind: string;
+          start_seconds: number | null;
+          team_id: string;
+          title: string | null;
+          url: string;
+        };
+        Insert: {
+          id?: string;
+          kind: string;
+          start_seconds?: number | null;
+          team_id: string;
+          title?: string | null;
+          url: string;
+        };
+        Update: {
+          id?: string;
+          kind?: string;
+          start_seconds?: number | null;
+          team_id?: string;
+          title?: string | null;
+          url?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "media_links_team_id_fkey";
+            columns: ["team_id"];
+            isOneToOne: false;
+            referencedRelation: "teams";
+            referencedColumns: ["id"];
+          },
+        ];
       };
       moves: {
         Row: {
@@ -144,6 +244,30 @@ export type Database = {
           minus_stat?: string | null;
           name?: string;
           plus_stat?: string | null;
+        };
+        Relationships: [];
+      };
+      profiles: {
+        Row: {
+          avatar_url: string | null;
+          created_at: string;
+          display_name: string | null;
+          id: string;
+          username: string;
+        };
+        Insert: {
+          avatar_url?: string | null;
+          created_at?: string;
+          display_name?: string | null;
+          id: string;
+          username: string;
+        };
+        Update: {
+          avatar_url?: string | null;
+          created_at?: string;
+          display_name?: string | null;
+          id?: string;
+          username?: string;
         };
         Relationships: [];
       };
@@ -378,6 +502,422 @@ export type Database = {
           },
         ];
       };
+      team_archetypes: {
+        Row: {
+          archetype_id: string;
+          team_id: string;
+        };
+        Insert: {
+          archetype_id: string;
+          team_id: string;
+        };
+        Update: {
+          archetype_id?: string;
+          team_id?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "team_archetypes_archetype_id_fkey";
+            columns: ["archetype_id"];
+            isOneToOne: false;
+            referencedRelation: "archetypes";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "team_archetypes_team_id_fkey";
+            columns: ["team_id"];
+            isOneToOne: false;
+            referencedRelation: "teams";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      team_comments: {
+        Row: {
+          author_id: string;
+          body: string;
+          created_at: string;
+          id: string;
+          team_id: string;
+          updated_at: string;
+        };
+        Insert: {
+          author_id: string;
+          body: string;
+          created_at?: string;
+          id?: string;
+          team_id: string;
+          updated_at?: string;
+        };
+        Update: {
+          author_id?: string;
+          body?: string;
+          created_at?: string;
+          id?: string;
+          team_id?: string;
+          updated_at?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "team_comments_author_id_fkey";
+            columns: ["author_id"];
+            isOneToOne: false;
+            referencedRelation: "profiles";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "team_comments_team_id_fkey";
+            columns: ["team_id"];
+            isOneToOne: false;
+            referencedRelation: "teams";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      team_matchups: {
+        Row: {
+          archetype_id: string | null;
+          id: string;
+          lead_slots: number[];
+          notes: string;
+          outlook: string;
+          species_id: string | null;
+          team_id: string;
+        };
+        Insert: {
+          archetype_id?: string | null;
+          id?: string;
+          lead_slots?: number[];
+          notes?: string;
+          outlook: string;
+          species_id?: string | null;
+          team_id: string;
+        };
+        Update: {
+          archetype_id?: string | null;
+          id?: string;
+          lead_slots?: number[];
+          notes?: string;
+          outlook?: string;
+          species_id?: string | null;
+          team_id?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "team_matchups_archetype_id_fkey";
+            columns: ["archetype_id"];
+            isOneToOne: false;
+            referencedRelation: "archetypes";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "team_matchups_species_id_fkey";
+            columns: ["species_id"];
+            isOneToOne: false;
+            referencedRelation: "species";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "team_matchups_team_id_fkey";
+            columns: ["team_id"];
+            isOneToOne: false;
+            referencedRelation: "teams";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      team_sets: {
+        Row: {
+          ability_id: string | null;
+          item_id: string | null;
+          move_1_id: string | null;
+          move_2_id: string | null;
+          move_3_id: string | null;
+          move_4_id: string | null;
+          nature_id: string | null;
+          note: string | null;
+          slot: number;
+          sp_atk: number | null;
+          sp_def: number | null;
+          sp_hp: number | null;
+          sp_spa: number | null;
+          sp_spd: number | null;
+          sp_spe: number | null;
+          species_id: string | null;
+          team_id: string;
+        };
+        Insert: {
+          ability_id?: string | null;
+          item_id?: string | null;
+          move_1_id?: string | null;
+          move_2_id?: string | null;
+          move_3_id?: string | null;
+          move_4_id?: string | null;
+          nature_id?: string | null;
+          note?: string | null;
+          slot: number;
+          sp_atk?: number | null;
+          sp_def?: number | null;
+          sp_hp?: number | null;
+          sp_spa?: number | null;
+          sp_spd?: number | null;
+          sp_spe?: number | null;
+          species_id?: string | null;
+          team_id: string;
+        };
+        Update: {
+          ability_id?: string | null;
+          item_id?: string | null;
+          move_1_id?: string | null;
+          move_2_id?: string | null;
+          move_3_id?: string | null;
+          move_4_id?: string | null;
+          nature_id?: string | null;
+          note?: string | null;
+          slot?: number;
+          sp_atk?: number | null;
+          sp_def?: number | null;
+          sp_hp?: number | null;
+          sp_spa?: number | null;
+          sp_spd?: number | null;
+          sp_spe?: number | null;
+          species_id?: string | null;
+          team_id?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "team_sets_ability_id_fkey";
+            columns: ["ability_id"];
+            isOneToOne: false;
+            referencedRelation: "abilities";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "team_sets_item_id_fkey";
+            columns: ["item_id"];
+            isOneToOne: false;
+            referencedRelation: "items";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "team_sets_move_1_id_fkey";
+            columns: ["move_1_id"];
+            isOneToOne: false;
+            referencedRelation: "moves";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "team_sets_move_2_id_fkey";
+            columns: ["move_2_id"];
+            isOneToOne: false;
+            referencedRelation: "moves";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "team_sets_move_3_id_fkey";
+            columns: ["move_3_id"];
+            isOneToOne: false;
+            referencedRelation: "moves";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "team_sets_move_4_id_fkey";
+            columns: ["move_4_id"];
+            isOneToOne: false;
+            referencedRelation: "moves";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "team_sets_nature_id_fkey";
+            columns: ["nature_id"];
+            isOneToOne: false;
+            referencedRelation: "natures";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "team_sets_species_id_fkey";
+            columns: ["species_id"];
+            isOneToOne: false;
+            referencedRelation: "species";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "team_sets_team_id_fkey";
+            columns: ["team_id"];
+            isOneToOne: false;
+            referencedRelation: "teams";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      team_sources: {
+        Row: {
+          event_id: string;
+          id: string;
+          placement: number | null;
+          player_name: string;
+          record: string | null;
+          team_id: string;
+          teamlist_url: string | null;
+        };
+        Insert: {
+          event_id: string;
+          id?: string;
+          placement?: number | null;
+          player_name: string;
+          record?: string | null;
+          team_id: string;
+          teamlist_url?: string | null;
+        };
+        Update: {
+          event_id?: string;
+          id?: string;
+          placement?: number | null;
+          player_name?: string;
+          record?: string | null;
+          team_id?: string;
+          teamlist_url?: string | null;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "team_sources_event_id_fkey";
+            columns: ["event_id"];
+            isOneToOne: false;
+            referencedRelation: "events";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "team_sources_team_id_fkey";
+            columns: ["team_id"];
+            isOneToOne: false;
+            referencedRelation: "teams";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      team_votes: {
+        Row: {
+          created_at: string;
+          team_id: string;
+          user_id: string;
+        };
+        Insert: {
+          created_at?: string;
+          team_id: string;
+          user_id: string;
+        };
+        Update: {
+          created_at?: string;
+          team_id?: string;
+          user_id?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "team_votes_team_id_fkey";
+            columns: ["team_id"];
+            isOneToOne: false;
+            referencedRelation: "teams";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "team_votes_user_id_fkey";
+            columns: ["user_id"];
+            isOneToOne: false;
+            referencedRelation: "profiles";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      team_writeups: {
+        Row: {
+          overview: string;
+          team_id: string;
+          updated_at: string;
+        };
+        Insert: {
+          overview?: string;
+          team_id: string;
+          updated_at?: string;
+        };
+        Update: {
+          overview?: string;
+          team_id?: string;
+          updated_at?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "team_writeups_team_id_fkey";
+            columns: ["team_id"];
+            isOneToOne: true;
+            referencedRelation: "teams";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      teams: {
+        Row: {
+          author_id: string | null;
+          created_at: string;
+          fingerprint: string | null;
+          forked_from_id: string | null;
+          id: string;
+          origin: string;
+          published_at: string | null;
+          regulation_id: string;
+          title: string | null;
+          updated_at: string;
+          visibility: string;
+        };
+        Insert: {
+          author_id?: string | null;
+          created_at?: string;
+          fingerprint?: string | null;
+          forked_from_id?: string | null;
+          id?: string;
+          origin: string;
+          published_at?: string | null;
+          regulation_id: string;
+          title?: string | null;
+          updated_at?: string;
+          visibility?: string;
+        };
+        Update: {
+          author_id?: string | null;
+          created_at?: string;
+          fingerprint?: string | null;
+          forked_from_id?: string | null;
+          id?: string;
+          origin?: string;
+          published_at?: string | null;
+          regulation_id?: string;
+          title?: string | null;
+          updated_at?: string;
+          visibility?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "teams_author_id_fkey";
+            columns: ["author_id"];
+            isOneToOne: false;
+            referencedRelation: "profiles";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "teams_forked_from_id_fkey";
+            columns: ["forked_from_id"];
+            isOneToOne: false;
+            referencedRelation: "teams";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "teams_regulation_id_fkey";
+            columns: ["regulation_id"];
+            isOneToOne: false;
+            referencedRelation: "regulations";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
       type_effectiveness: {
         Row: {
           attacking_type_id: string;
@@ -431,7 +971,15 @@ export type Database = {
       [_ in never]: never;
     };
     Functions: {
-      [_ in never]: never;
+      fork_team: { Args: { p_team_id: string }; Returns: string };
+      import_event: { Args: { payload: Json }; Returns: Json };
+      is_team_editable: { Args: { p_team_id: string }; Returns: boolean };
+      is_team_public: {
+        Args: { p_origin: string; p_team_id: string };
+        Returns: boolean;
+      };
+      is_team_visible: { Args: { p_team_id: string }; Returns: boolean };
+      publish_team: { Args: { p_team_id: string }; Returns: undefined };
     };
     Enums: {
       [_ in never]: never;

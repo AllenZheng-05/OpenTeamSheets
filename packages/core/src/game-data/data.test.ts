@@ -75,7 +75,7 @@ describe("game data", () => {
     ).toEqual([]);
   });
 
-  it("battle-only forms change from a form that can be on a team", () => {
+  it("battle-only forms change from a form that can be legal", () => {
     const battleOnly = new Set(
       species.filter((s) => s.battleOnlyFromId !== null).map((s) => s.id),
     );
