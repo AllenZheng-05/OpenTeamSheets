@@ -5,3 +5,4 @@ coverage
 supabase/.temp
 supabase/.branches
 packages/core/data/generated
+packages/core/src/teams/__fixtures__/validator/showdown-verdicts.json

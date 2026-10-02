@@ -1,0 +1,494 @@
+Armarouge
+EN
+Ability: Flash Fire
+Held Item: Focus Sash
+Stat Alignment: Modest
+Armor Cannon
+Expanding Force
+Wide Guard
+Protect
+Dragapult
+EN
+Ability: Infiltrator
+Held Item: Life Orb
+Stat Alignment: Timid
+Draco Meteor
+Shadow Ball
+Will-O-Wisp
+Protect
+Gengar
+EN
+Ability: Cursed Body
+Held Item: Gengarite
+Stat Alignment: Modest
+Shadow Ball
+Focus Blast
+Protect
+Sludge Bomb
+Milotic
+EN
+Ability: Competitive
+Held Item: Psychic Seed
+Stat Alignment: Calm
+Muddy Water
+Coil
+Hypnosis
+Recover
+Indeedee [Female]
+EN
+Ability: Psychic Surge
+Held Item: Rocky Helmet
+Stat Alignment: Relaxed
+Psychic
+Follow Me
+Helping Hand
+Trick Room
+Staraptor
+EN
+Ability: Intimidate
+Held Item: Staraptite
+Stat Alignment: Adamant
+Protect
+Close Combat
+Brave Bird
+Roost
+-->
+Carmadura
+FR
+Ability: Torche
+Held Item: Ceinture Force
+Stat Alignment: Modeste
+Canon Blindé
+Vaste Pouvoir
+Garde Large
+Abri
+Lanssorien
+FR
+Ability: Infiltration
+Held Item: Orbe Vie
+Stat Alignment: Timide
+Draco-Météore
+Ball&#39;Ombre
+Feu Follet
+Abri
+Ectoplasma
+FR
+Ability: Corps Maudit
+Held Item: Ectoplasmite
+Stat Alignment: Modeste
+Ball&#39;Ombre
+Exploforce
+Abri
+Bombe Beurk
+Milobellus
+FR
+Ability: Battant
+Held Item: Graine Psychique
+Stat Alignment: Calme
+Ocroupi
+Enroulement
+Hypnose
+Soin
+Wimessir [Femelle]
+FR
+Ability: Créa-Psy
+Held Item: Casque Brut
+Stat Alignment: Relax
+Psyko
+Par Ici
+Coup d&#39;Main
+Distorsion
+Étouraptor
+FR
+Ability: Intimidation
+Held Item: Étouraptorite
+Stat Alignment: Rigide
+Abri
+Close Combat
+Rapace
+Atterrissage
+-->
+Armarouge
+IT
+Ability: Fuocardore
+Held Item: Focalnastro
+Stat Alignment: Modesta
+Corazza Cannone
+Vastenergia
+Bodyguard
+Protezione
+Dragapult
+IT
+Ability: Intrapasso
+Held Item: Assorbisfera
+Stat Alignment: Timida
+Dragobolide
+Palla Ombra
+Fuocofatuo
+Protezione
+Gengar
+IT
+Ability: Corpofunesto
+Held Item: Gengarite
+Stat Alignment: Modesta
+Palla Ombra
+Focalcolpo
+Protezione
+Fangobomba
+Milotic
+IT
+Ability: Tenacia
+Held Item: Psicoseme
+Stat Alignment: Calma
+Fanghiglia
+Arrotola
+Ipnosi
+Ripresa
+Indeedee [Femmina]
+IT
+Ability: Psicogenesi
+Held Item: Bitorzolelmo
+Stat Alignment: Placida
+Psichico
+Sonoqui
+Altruismo
+Distortozona
+Staraptor
+IT
+Ability: Prepotenza
+Held Item: Staraptorite
+Stat Alignment: Decisa
+Protezione
+Zuffa
+Baldeali
+Trespolo
+-->
+Crimanzo
+DE
+Ability: Feuerfänger
+Held Item: Fokusgurt
+Stat Alignment: Mäßig
+Rüstungskanone
+Flächenmacht
+Rundumschutz
+Schutzschild
+Katapuldra
+DE
+Ability: Schwebedurch
+Held Item: Leben-Orb
+Stat Alignment: Scheu
+Draco Meteor
+Spukball
+Irrlicht
+Schutzschild
+Gengar
+DE
+Ability: Tastfluch
+Held Item: Gengarnit
+Stat Alignment: Mäßig
+Spukball
+Fokusstoß
+Schutzschild
+Matschbombe
+Milotic
+DE
+Ability: Unbeugsamkeit
+Held Item: Psycho-Samen
+Stat Alignment: Still
+Lehmbrühe
+Einrollen
+Hypnose
+Genesung
+Servol [Weiblich]
+DE
+Ability: Psycho-Erzeuger
+Held Item: Beulenhelm
+Stat Alignment: Locker
+Psychokinese
+Spotlight
+Rechte Hand
+Bizarroraum
+Staraptor
+DE
+Ability: Bedroher
+Held Item: Staraptornit
+Stat Alignment: Hart
+Schutzschild
+Nahkampf
+Sturzflug
+Ruheort
+-->
+Armarouge
+ES
+Ability: Absorbe Fuego
+Held Item: Banda Aguante
+Stat Alignment: Modesta
+Cañón Armadura
+Vasta Fuerza
+Vasta Guardia
+Protección
+Dragapult
+ES
+Ability: Allanamiento
+Held Item: Vidasfera
+Stat Alignment: Miedosa
+Cometa Draco
+Bola Sombra
+Fuego Fatuo
+Protección
+Gengar
+ES
+Ability: Cuerpo Maldito
+Held Item: Gengarita
+Stat Alignment: Modesta
+Bola Sombra
+Onda Certera
+Protección
+Bomba Lodo
+Milotic
+ES
+Ability: Tenacidad
+Held Item: Semilla Psique
+Stat Alignment: Serena
+Agua Lodosa
+Enrosque
+Hipnosis
+Recuperación
+Indeedee [Hembra]
+ES
+Ability: Psicogénesis
+Held Item: Casco Dentado
+Stat Alignment: Plácida
+Psíquico
+Señuelo
+Refuerzo
+Espacio Raro
+Staraptor
+ES
+Ability: Intimidación
+Held Item: Staraptorita
+Stat Alignment: Firme
+Protección
+A Bocajarro
+Pájaro Osado
+Respiro
+-->
+グレンアルマ
+JP
+Ability: もらいび
+Held Item: きあいのタスキ
+Stat Alignment: ひかえめ
+アーマーキャノン
+ワイドフォース
+ワイドガード
+まもる
+ドラパルト
+JP
+Ability: すりぬけ
+Held Item: いのちのたま
+Stat Alignment: おくびょう
+りゅうせいぐん
+シャドーボール
+おにび
+まもる
+ゲンガー
+JP
+Ability: のろわれボディ
+Held Item: ゲンガナイト
+Stat Alignment: ひかえめ
+シャドーボール
+きあいだま
+まもる
+ヘドロばくだん
+ミロカロス
+JP
+Ability: かちき
+Held Item: サイコシード
+Stat Alignment: おだやか
+だくりゅう
+とぐろをまく
+さいみんじゅつ
+じこさいせい
+イエッサン [メスのすがた]
+JP
+Ability: サイコメイカー
+Held Item: ゴツゴツメット
+Stat Alignment: のんき
+サイコキネシス
+このゆびとまれ
+てだすけ
+トリックルーム
+ムクホーク
+JP
+Ability: いかく
+Held Item: ムクホークナイト
+Stat Alignment: いじっぱり
+まもる
+インファイト
+ブレイブバード
+はねやすめ
+-->
+카디나르마
+KO
+Ability: 타오르는 불꽃
+Held Item: 기합의띠
+Stat Alignment: 조심
+아머캐논
+와이드포스
+와이드가드
+방어
+드래펄트
+KO
+Ability: 틈새포착
+Held Item: 생명의구슬
+Stat Alignment: 겁쟁이
+용성군
+섀도볼
+도깨비불
+방어
+팬텀
+KO
+Ability: 저주받은바디
+Held Item: 팬텀나이트
+Stat Alignment: 조심
+섀도볼
+기합구슬
+방어
+오물폭탄
+밀로틱
+KO
+Ability: 승기
+Held Item: 사이코시드
+Stat Alignment: 차분
+탁류
+똬리틀기
+최면술
+HP회복
+에써르 [암컷의 모습]
+KO
+Ability: 사이코메이커
+Held Item: 울퉁불퉁멧
+Stat Alignment: 무사태평
+사이코키네시스
+날따름
+도우미
+트릭룸
+찌르호크
+KO
+Ability: 위협
+Held Item: 찌르호크나이트
+Stat Alignment: 고집
+방어
+인파이트
+브레이브버드
+날개쉬기
+-->
+红莲铠骑
+SC
+Ability: 引火
+Held Item: 气势披带
+Stat Alignment: 内敛
+铠农炮
+广域战力
+广域防守
+守住
+多龙巴鲁托
+SC
+Ability: 穿透
+Held Item: 生命宝珠
+Stat Alignment: 胆小
+流星群
+暗影球
+磷火
+守住
+耿鬼
+SC
+Ability: 咒术之躯
+Held Item: 耿鬼进化石
+Stat Alignment: 内敛
+暗影球
+真气弹
+守住
+污泥炸弹
+美纳斯
+SC
+Ability: 好胜
+Held Item: 精神种子
+Stat Alignment: 温和
+浊流
+盘蜷
+催眠术
+自我再生
+爱管侍 [雌性的样子]
+SC
+Ability: 精神制造者
+Held Item: 凸凸头盔
+Stat Alignment: 悠闲
+精神强念
+看我嘛
+帮助
+戏法空间
+姆克鹰
+SC
+Ability: 威吓
+Held Item: 姆克鹰进化石
+Stat Alignment: 固执
+守住
+近身战
+勇鸟猛攻
+羽栖
+-->
+紅蓮鎧騎
+TC
+Ability: 引火
+Held Item: 氣勢披帶
+Stat Alignment: 內斂
+鎧農炮
+廣域戰力
+廣域防守
+守住
+多龍巴魯托
+TC
+Ability: 穿透
+Held Item: 生命寶珠
+Stat Alignment: 膽小
+流星群
+暗影球
+鬼火
+守住
+耿鬼
+TC
+Ability: 詛咒之軀
+Held Item: 耿鬼進化石
+Stat Alignment: 內斂
+暗影球
+真氣彈
+守住
+污泥炸彈
+美納斯
+TC
+Ability: 好勝
+Held Item: 精神種子
+Stat Alignment: 溫和
+濁流
+盤蜷
+催眠術
+自我再生
+愛管侍 [雌性的樣子]
+TC
+Ability: 精神製造者
+Held Item: 凸凸頭盔
+Stat Alignment: 悠閒
+精神強念
+看我嘛
+幫助
+戲法空間
+姆克鷹
+TC
+Ability: 威嚇
+Held Item: 姆克鷹進化石
+Stat Alignment: 固執
+守住
+近身戰
+勇鳥猛攻
+羽棲

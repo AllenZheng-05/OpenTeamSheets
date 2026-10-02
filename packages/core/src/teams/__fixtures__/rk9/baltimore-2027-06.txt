@@ -1,0 +1,494 @@
+Froslass
+EN
+Ability: Cursed Body
+Held Item: Froslassite
+Stat Alignment: Timid
+Blizzard
+Shadow Ball
+Aurora Veil
+Protect
+Raichu
+EN
+Ability: Lightning Rod
+Held Item: Raichunite Y
+Stat Alignment: Timid
+Zap Cannon
+Focus Blast
+Encore
+Protect
+Rillaboom
+EN
+Ability: Grassy Surge
+Held Item: Sitrus Berry
+Stat Alignment: Adamant
+Fake Out
+Grassy Glide
+Wood Hammer
+High Horsepower
+Kingambit
+EN
+Ability: Defiant
+Held Item: Life Orb
+Stat Alignment: Adamant
+Kowtow Cleave
+Sucker Punch
+Swords Dance
+Protect
+Sneasler
+EN
+Ability: Unburden
+Held Item: White Herb
+Stat Alignment: Adamant
+Close Combat
+Dire Claw
+Fake Out
+Protect
+Arcanine [Hisuian Form]
+EN
+Ability: Rock Head
+Held Item: Focus Sash
+Stat Alignment: Jolly
+Flare Blitz
+Head Smash
+Extreme Speed
+Protect
+-->
+Momartik
+FR
+Ability: Corps Maudit
+Held Item: Momartikite
+Stat Alignment: Timide
+Blizzard
+Ball&#39;Ombre
+Voile Aurore
+Abri
+Raichu
+FR
+Ability: Paratonnerre
+Held Item: Raichuïte Y
+Stat Alignment: Timide
+Élecanon
+Exploforce
+Encore
+Abri
+Gorythmic
+FR
+Ability: Créa-Herbe
+Held Item: Baie Sitrus
+Stat Alignment: Rigide
+Bluff
+Gliss&#39;Herbe
+Martobois
+Cavalerie Lourde
+Scalpereur
+FR
+Ability: Acharné
+Held Item: Orbe Vie
+Stat Alignment: Rigide
+Génusection
+Coup Bas
+Danse Lames
+Abri
+Farfurex
+FR
+Ability: Délestage
+Held Item: Herbe Blanche
+Stat Alignment: Rigide
+Close Combat
+Griffes Funestes
+Bluff
+Abri
+Arcanin [Forme de Hisui]
+FR
+Ability: Tête de Roc
+Held Item: Ceinture Force
+Stat Alignment: Jovial
+Boutefeu
+Fracass&#39;Tête
+Vitesse Extrême
+Abri
+-->
+Froslass
+IT
+Ability: Corpofunesto
+Held Item: Froslassite
+Stat Alignment: Timida
+Bora
+Palla Ombra
+Velaurora
+Protezione
+Raichu
+IT
+Ability: Parafulmine
+Held Item: Raichuite Y
+Stat Alignment: Timida
+Elettrocannone
+Focalcolpo
+Ripeti
+Protezione
+Rillaboom
+IT
+Ability: Erbogenesi
+Held Item: Baccacedro
+Stat Alignment: Decisa
+Bruciapelo
+Erboscivolata
+Mazzuolegno
+Forza Equina
+Kingambit
+IT
+Ability: Agonismo
+Held Item: Assorbisfera
+Stat Alignment: Decisa
+Genufendente
+Sbigoattacco
+Danzaspada
+Protezione
+Sneasler
+IT
+Ability: Agiltecnica
+Held Item: Erbachiara
+Stat Alignment: Decisa
+Zuffa
+Artigli Fatali
+Bruciapelo
+Protezione
+Arcanine [Forme de Hisui]
+IT
+Ability: Testadura
+Held Item: Focalnastro
+Stat Alignment: Allegra
+Fuococarica
+Zuccata
+Extrarapido
+Protezione
+-->
+Frosdedje
+DE
+Ability: Tastfluch
+Held Item: Frosdedjenit
+Stat Alignment: Scheu
+Blizzard
+Spukball
+Auroraschleier
+Schutzschild
+Raichu
+DE
+Ability: Blitzfänger
+Held Item: Raichunit Y
+Stat Alignment: Scheu
+Blitzkanone
+Fokusstoß
+Zugabe
+Schutzschild
+Gortrom
+DE
+Ability: Gras-Erzeuger
+Held Item: Tsitrubeere
+Stat Alignment: Hart
+Mogelhieb
+Grasrutsche
+Holzhammer
+Pferdestärke
+Gladimperio
+DE
+Ability: Siegeswille
+Held Item: Leben-Orb
+Stat Alignment: Hart
+Kniefallspalter
+Tiefschlag
+Schwerttanz
+Schutzschild
+Snieboss
+DE
+Ability: Entlastung
+Held Item: Schlohkraut
+Stat Alignment: Hart
+Nahkampf
+Unheilsklauen
+Mogelhieb
+Schutzschild
+Arkani [Hisui-Form]
+DE
+Ability: Steinhaupt
+Held Item: Fokusgurt
+Stat Alignment: Froh
+Flammenblitz
+Kopfstoß
+Turbotempo
+Schutzschild
+-->
+Froslass
+ES
+Ability: Cuerpo Maldito
+Held Item: Froslassita
+Stat Alignment: Miedosa
+Ventisca
+Bola Sombra
+Velo Aurora
+Protección
+Raichu
+ES
+Ability: Pararrayos
+Held Item: Raichunita Y
+Stat Alignment: Miedosa
+Electrocañón
+Onda Certera
+Otra Vez
+Protección
+Rillaboom
+ES
+Ability: Herbogénesis
+Held Item: Baya Zidra
+Stat Alignment: Firme
+Sorpresa
+Fitoimpulso
+Mazazo
+Fuerza Equina
+Kingambit
+ES
+Ability: Competitivo
+Held Item: Vidasfera
+Stat Alignment: Firme
+Genufendiente
+Golpe Bajo
+Danza Espada
+Protección
+Sneasler
+ES
+Ability: Liviano
+Held Item: Hierba Blanca
+Stat Alignment: Firme
+A Bocajarro
+Garra Nociva
+Sorpresa
+Protección
+Arcanine [Forma de Hisui]
+ES
+Ability: Cabeza Roca
+Held Item: Banda Aguante
+Stat Alignment: Alegre
+Envite Ígneo
+Testarazo
+Velocidad Extrema
+Protección
+-->
+ユキメノコ
+JP
+Ability: のろわれボディ
+Held Item: ユキメノコナイト
+Stat Alignment: おくびょう
+ふぶき
+シャドーボール
+オーロラベール
+まもる
+ライチュウ
+JP
+Ability: ひらいしん
+Held Item: ライチュウナイトＹ
+Stat Alignment: おくびょう
+でんじほう
+きあいだま
+アンコール
+まもる
+ゴリランダー
+JP
+Ability: グラスメイカー
+Held Item: オボンのみ
+Stat Alignment: いじっぱり
+ねこだまし
+グラススライダー
+ウッドハンマー
+１０まんばりき
+ドドゲザン
+JP
+Ability: まけんき
+Held Item: いのちのたま
+Stat Alignment: いじっぱり
+ドゲザン
+ふいうち
+つるぎのまい
+まもる
+オオニューラ
+JP
+Ability: かるわざ
+Held Item: しろいハーブ
+Stat Alignment: いじっぱり
+インファイト
+フェイタルクロー
+ねこだまし
+まもる
+ウインディ [ヒスイのすがた]
+JP
+Ability: いしあたま
+Held Item: きあいのタスキ
+Stat Alignment: ようき
+フレアドライブ
+もろはのずつき
+しんそく
+まもる
+-->
+눈여아
+KO
+Ability: 저주받은바디
+Held Item: 눈여아나이트
+Stat Alignment: 겁쟁이
+눈보라
+섀도볼
+오로라베일
+방어
+라이츄
+KO
+Ability: 피뢰침
+Held Item: 라이츄나이트Y
+Stat Alignment: 겁쟁이
+전자포
+기합구슬
+앵콜
+방어
+고릴타
+KO
+Ability: 그래스메이커
+Held Item: 자뭉열매
+Stat Alignment: 고집
+속이다
+그래스슬라이더
+우드해머
+10만마력
+대도각참
+KO
+Ability: 오기
+Held Item: 생명의구슬
+Stat Alignment: 고집
+도각참
+기습
+칼춤
+방어
+포푸니크
+KO
+Ability: 곡예
+Held Item: 하양허브
+Stat Alignment: 고집
+인파이트
+페이탈클로
+속이다
+방어
+윈디 [히스이의 모습]
+KO
+Ability: 돌머리
+Held Item: 기합의띠
+Stat Alignment: 명랑
+플레어드라이브
+양날박치기
+신속
+방어
+-->
+雪妖女
+SC
+Ability: 咒术之躯
+Held Item: 雪妖女进化石
+Stat Alignment: 胆小
+暴风雪
+暗影球
+极光幕
+守住
+雷丘
+SC
+Ability: 避雷针
+Held Item: 雷丘进化石Y
+Stat Alignment: 胆小
+电磁炮
+真气弹
+再来一次
+守住
+轰擂金刚猩
+SC
+Ability: 青草制造者
+Held Item: 文柚果
+Stat Alignment: 固执
+击掌奇袭
+青草滑梯
+木槌
+十万马力
+仆刀将军
+SC
+Ability: 不服输
+Held Item: 生命宝珠
+Stat Alignment: 固执
+仆刀
+突袭
+剑舞
+守住
+大狃拉
+SC
+Ability: 轻装
+Held Item: 白色香草
+Stat Alignment: 固执
+近身战
+克命爪
+击掌奇袭
+守住
+风速狗 [洗翠的样子]
+SC
+Ability: 坚硬脑袋
+Held Item: 气势披带
+Stat Alignment: 爽朗
+闪焰冲锋
+双刃头锤
+神速
+守住
+-->
+雪妖女
+TC
+Ability: 詛咒之軀
+Held Item: 雪妖女進化石
+Stat Alignment: 膽小
+暴風雪
+暗影球
+極光幕
+守住
+雷丘
+TC
+Ability: 避雷針
+Held Item: 雷丘進化石Y
+Stat Alignment: 膽小
+電磁炮
+真氣彈
+再來一次
+守住
+轟擂金剛猩
+TC
+Ability: 青草製造者
+Held Item: 文柚果
+Stat Alignment: 固執
+擊掌奇襲
+青草滑梯
+木槌
+十萬馬力
+仆斬將軍
+TC
+Ability: 不服輸
+Held Item: 生命寶珠
+Stat Alignment: 固執
+仆斬
+突襲
+劍舞
+守住
+大狃拉
+TC
+Ability: 輕裝
+Held Item: 白色香草
+Stat Alignment: 固執
+近身戰
+剋命爪
+擊掌奇襲
+守住
+風速狗 [洗翠的樣子]
+TC
+Ability: 堅硬腦袋
+Held Item: 氣勢披帶
+Stat Alignment: 爽朗
+閃焰衝鋒
+雙刃頭錘
+神速
+守住

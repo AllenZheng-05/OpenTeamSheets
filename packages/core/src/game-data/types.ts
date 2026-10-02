@@ -42,6 +42,10 @@ export interface Species {
   spe: number;
   /** The item needed to be in this form, such as a mega stone. */
   requiredItemId: string | null;
+  /** The ability needed to be in this form (Stance Change for Aegislash-Blade). */
+  requiredAbilityId: string | null;
+  /** The move needed to be in this form (Relic Song for Meloetta-Pirouette). */
+  requiredMoveId: string | null;
 }
 
 export type MoveCategory = "physical" | "special" | "status";

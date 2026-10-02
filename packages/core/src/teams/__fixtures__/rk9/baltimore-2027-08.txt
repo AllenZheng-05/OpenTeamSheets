@@ -1,0 +1,494 @@
+Floette [Eternal Flower]
+EN
+Ability: Flower Veil
+Held Item: Floettite
+Stat Alignment: Modest
+Dazzling Gleam
+Draining Kiss
+Calm Mind
+Protect
+Kingambit
+EN
+Ability: Defiant
+Held Item: Life Orb
+Stat Alignment: Adamant
+Kowtow Cleave
+Sucker Punch
+Swords Dance
+Protect
+Rillaboom
+EN
+Ability: Grassy Surge
+Held Item: Miracle Seed
+Stat Alignment: Adamant
+Wood Hammer
+Grassy Glide
+Fake Out
+High Horsepower
+Sneasler
+EN
+Ability: Poison Touch
+Held Item: Focus Sash
+Stat Alignment: Jolly
+Poison Jab
+Close Combat
+Fake Out
+Quick Guard
+Incineroar
+EN
+Ability: Intimidate
+Held Item: Passho Berry
+Stat Alignment: Careful
+Flare Blitz
+Throat Chop
+Fake Out
+Parting Shot
+Delphox
+EN
+Ability: Blaze
+Held Item: Delphoxite
+Stat Alignment: Timid
+Heat Wave
+Psychic
+Nasty Plot
+Protect
+-->
+Floette [Eternal Flower*]
+FR
+Ability: Flora-Voile
+Held Item: Floettite
+Stat Alignment: Modeste
+Éclat Magique
+Vampibaiser
+Plénitude
+Abri
+Scalpereur
+FR
+Ability: Acharné
+Held Item: Orbe Vie
+Stat Alignment: Rigide
+Génusection
+Coup Bas
+Danse Lames
+Abri
+Gorythmic
+FR
+Ability: Créa-Herbe
+Held Item: Graine Miracle
+Stat Alignment: Rigide
+Martobois
+Gliss&#39;Herbe
+Bluff
+Cavalerie Lourde
+Farfurex
+FR
+Ability: Toxitouche
+Held Item: Ceinture Force
+Stat Alignment: Jovial
+Direct Toxik
+Close Combat
+Bluff
+Prévention
+Félinferno
+FR
+Ability: Intimidation
+Held Item: Baie Pocpoc
+Stat Alignment: Prudent
+Boutefeu
+Exécu-Son
+Bluff
+Dernier Mot
+Goupelin
+FR
+Ability: Brasier
+Held Item: Goupelinite
+Stat Alignment: Timide
+Canicule
+Psyko
+Machination
+Abri
+-->
+Floette [Eternal Flower*]
+IT
+Ability: Fiorvelo
+Held Item: Floettite
+Stat Alignment: Modesta
+Magibrillio
+Assorbibacio
+Calmamente
+Protezione
+Kingambit
+IT
+Ability: Agonismo
+Held Item: Assorbisfera
+Stat Alignment: Decisa
+Genufendente
+Sbigoattacco
+Danzaspada
+Protezione
+Rillaboom
+IT
+Ability: Erbogenesi
+Held Item: Miracolseme
+Stat Alignment: Decisa
+Mazzuolegno
+Erboscivolata
+Bruciapelo
+Forza Equina
+Sneasler
+IT
+Ability: Velentocco
+Held Item: Focalnastro
+Stat Alignment: Allegra
+Velenpuntura
+Zuffa
+Bruciapelo
+Anticipo
+Incineroar
+IT
+Ability: Prepotenza
+Held Item: Baccapasflo
+Stat Alignment: Cauta
+Fuococarica
+Colpo Infernale
+Bruciapelo
+Monito
+Delphox
+IT
+Ability: Aiutofuoco
+Held Item: Delphoxite
+Stat Alignment: Timida
+Ondacalda
+Psichico
+Congiura
+Protezione
+-->
+Floette [Eternal Flower*]
+DE
+Ability: Blütenhülle
+Held Item: Floetteonit
+Stat Alignment: Mäßig
+Zauberschein
+Diebeskuss
+Gedankengut
+Schutzschild
+Gladimperio
+DE
+Ability: Siegeswille
+Held Item: Leben-Orb
+Stat Alignment: Hart
+Kniefallspalter
+Tiefschlag
+Schwerttanz
+Schutzschild
+Gortrom
+DE
+Ability: Gras-Erzeuger
+Held Item: Wundersaat
+Stat Alignment: Hart
+Holzhammer
+Grasrutsche
+Mogelhieb
+Pferdestärke
+Snieboss
+DE
+Ability: Giftgriff
+Held Item: Fokusgurt
+Stat Alignment: Froh
+Gifthieb
+Nahkampf
+Mogelhieb
+Rapidschutz
+Fuegro
+DE
+Ability: Bedroher
+Held Item: Foepasbeere
+Stat Alignment: Sacht
+Flammenblitz
+Neck Strike
+Mogelhieb
+Abgangstirade
+Fennexis
+DE
+Ability: Großbrand
+Held Item: Fennexisnit
+Stat Alignment: Scheu
+Hitzewelle
+Psychokinese
+Ränkeschmied
+Schutzschild
+-->
+Floette [Eternal Flower*]
+ES
+Ability: Velo Flor
+Held Item: Floettita
+Stat Alignment: Modesta
+Brillo Mágico
+Beso Drenaje
+Paz Mental
+Protección
+Kingambit
+ES
+Ability: Competitivo
+Held Item: Vidasfera
+Stat Alignment: Firme
+Genufendiente
+Golpe Bajo
+Danza Espada
+Protección
+Rillaboom
+ES
+Ability: Herbogénesis
+Held Item: Semilla Milagro
+Stat Alignment: Firme
+Mazazo
+Fitoimpulso
+Sorpresa
+Fuerza Equina
+Sneasler
+ES
+Ability: Toque Tóxico
+Held Item: Banda Aguante
+Stat Alignment: Alegre
+Puya Nociva
+A Bocajarro
+Sorpresa
+Anticipo
+Incineroar
+ES
+Ability: Intimidación
+Held Item: Baya Pasio
+Stat Alignment: Cauta
+Envite Ígneo
+Golpe Mordaza
+Sorpresa
+Última Palabra
+Delphox
+ES
+Ability: Mar Llamas
+Held Item: Delphoxita
+Stat Alignment: Miedosa
+Onda Ígnea
+Psíquico
+Maquinación
+Protección
+-->
+フラエッテ [Eternal Flower*]
+JP
+Ability: フラワーベール
+Held Item: フラエッテナイト
+Stat Alignment: ひかえめ
+マジカルシャイン
+ドレインキッス
+めいそう
+まもる
+ドドゲザン
+JP
+Ability: まけんき
+Held Item: いのちのたま
+Stat Alignment: いじっぱり
+ドゲザン
+ふいうち
+つるぎのまい
+まもる
+ゴリランダー
+JP
+Ability: グラスメイカー
+Held Item: きせきのタネ
+Stat Alignment: いじっぱり
+ウッドハンマー
+グラススライダー
+ねこだまし
+１０まんばりき
+オオニューラ
+JP
+Ability: どくしゅ
+Held Item: きあいのタスキ
+Stat Alignment: ようき
+どくづき
+インファイト
+ねこだまし
+ファストガード
+ガオガエン
+JP
+Ability: いかく
+Held Item: イトケのみ
+Stat Alignment: しんちょう
+フレアドライブ
+じごくづき
+ねこだまし
+すてゼリフ
+マフォクシー
+JP
+Ability: もうか
+Held Item: マフォクシナイト
+Stat Alignment: おくびょう
+ねっぷう
+サイコキネシス
+わるだくみ
+まもる
+-->
+플라엣테 [Eternal Flower*]
+KO
+Ability: 플라워베일
+Held Item: 플라엣테나이트
+Stat Alignment: 조심
+매지컬샤인
+드게인키스
+명상
+방어
+대도각참
+KO
+Ability: 오기
+Held Item: 생명의구슬
+Stat Alignment: 고집
+도각참
+기습
+칼춤
+방어
+고릴타
+KO
+Ability: 그래스메이커
+Held Item: 기적의씨
+Stat Alignment: 고집
+우드해머
+그래스슬라이더
+속이다
+10만마력
+포푸니크
+KO
+Ability: 독수
+Held Item: 기합의띠
+Stat Alignment: 명랑
+독찌르기
+인파이트
+속이다
+퍼스트가드
+어흥염
+KO
+Ability: 위협
+Held Item: 꼬시개열매
+Stat Alignment: 신중
+플레어드라이브
+지옥찌르기
+속이다
+막말내뱉기
+마폭시
+KO
+Ability: 맹화
+Held Item: 마폭시나이트
+Stat Alignment: 겁쟁이
+열풍
+사이코키네시스
+나쁜음모
+방어
+-->
+花叶蒂 [Eternal Flower*]
+SC
+Ability: 花幕
+Held Item: 花叶蒂进化石
+Stat Alignment: 内敛
+魔法闪耀
+吸取之吻
+冥想
+守住
+仆刀将军
+SC
+Ability: 不服输
+Held Item: 生命宝珠
+Stat Alignment: 固执
+仆刀
+突袭
+剑舞
+守住
+轰擂金刚猩
+SC
+Ability: 青草制造者
+Held Item: 奇迹种子
+Stat Alignment: 固执
+木槌
+青草滑梯
+击掌奇袭
+十万马力
+大狃拉
+SC
+Ability: 毒手
+Held Item: 气势披带
+Stat Alignment: 爽朗
+毒击
+近身战
+击掌奇袭
+快速防守
+炽焰咆哮虎
+SC
+Ability: 威吓
+Held Item: 千香果
+Stat Alignment: 慎重
+闪焰冲锋
+深渊突刺
+击掌奇袭
+抛下狠话
+妖火红狐
+SC
+Ability: 猛火
+Held Item: 妖火红狐进化石
+Stat Alignment: 胆小
+热风
+精神强念
+诡计
+守住
+-->
+花葉蒂 [Eternal Flower*]
+TC
+Ability: 花幕
+Held Item: 花葉蒂進化石
+Stat Alignment: 內斂
+魔法閃耀
+吸取之吻
+冥想
+守住
+仆斬將軍
+TC
+Ability: 不服輸
+Held Item: 生命寶珠
+Stat Alignment: 固執
+仆斬
+突襲
+劍舞
+守住
+轟擂金剛猩
+TC
+Ability: 青草製造者
+Held Item: 奇跡種子
+Stat Alignment: 固執
+木槌
+青草滑梯
+擊掌奇襲
+十萬馬力
+大狃拉
+TC
+Ability: 毒手
+Held Item: 氣勢披帶
+Stat Alignment: 爽朗
+毒擊
+近身戰
+擊掌奇襲
+快速防守
+熾焰咆哮虎
+TC
+Ability: 威嚇
+Held Item: 千香果
+Stat Alignment: 慎重
+閃焰衝鋒
+地獄突刺
+擊掌奇襲
+拋下狠話
+妖火紅狐
+TC
+Ability: 猛火
+Held Item: 妖火紅狐進化石
+Stat Alignment: 膽小
+熱風
+精神強念
+詭計
+守住

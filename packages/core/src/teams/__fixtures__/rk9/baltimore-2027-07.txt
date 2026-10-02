@@ -1,0 +1,494 @@
+Arcanine [Hisuian Form]
+EN
+Ability: Rock Head
+Held Item: Focus Sash
+Stat Alignment: Jolly
+Flare Blitz
+Head Smash
+Extreme Speed
+Protect
+Rillaboom
+EN
+Ability: Grassy Surge
+Held Item: Miracle Seed
+Stat Alignment: Adamant
+Wood Hammer
+Grassy Glide
+High Horsepower
+Fake Out
+Gholdengo
+EN
+Ability: Good as Gold
+Held Item: Life Orb
+Stat Alignment: Timid
+Make It Rain
+Shadow Ball
+Nasty Plot
+Protect
+Staraptor
+EN
+Ability: Intimidate
+Held Item: Staraptite
+Stat Alignment: Jolly
+Close Combat
+Protect
+Brave Bird
+Tailwind
+Raichu
+EN
+Ability: Lightning Rod
+Held Item: Raichunite Y
+Stat Alignment: Timid
+Zap Cannon
+Focus Blast
+Fake Out
+Protect
+Sylveon
+EN
+Ability: Pixilate
+Held Item: Fairy Feather
+Stat Alignment: Modest
+Hyper Beam
+Hyper Voice
+Quick Attack
+Protect
+-->
+Arcanin [Forme de Hisui]
+FR
+Ability: Tête de Roc
+Held Item: Ceinture Force
+Stat Alignment: Jovial
+Boutefeu
+Fracass&#39;Tête
+Vitesse Extrême
+Abri
+Gorythmic
+FR
+Ability: Créa-Herbe
+Held Item: Graine Miracle
+Stat Alignment: Rigide
+Martobois
+Gliss&#39;Herbe
+Cavalerie Lourde
+Bluff
+Gromago
+FR
+Ability: Corps en Or
+Held Item: Orbe Vie
+Stat Alignment: Timide
+Ruée d&#39;Or
+Ball&#39;Ombre
+Machination
+Abri
+Étouraptor
+FR
+Ability: Intimidation
+Held Item: Étouraptorite
+Stat Alignment: Jovial
+Close Combat
+Abri
+Rapace
+Vent Arrière
+Raichu
+FR
+Ability: Paratonnerre
+Held Item: Raichuïte Y
+Stat Alignment: Timide
+Élecanon
+Exploforce
+Bluff
+Abri
+Nymphali
+FR
+Ability: Peau Féérique
+Held Item: Plume Enchantée
+Stat Alignment: Modeste
+Ultralaser
+Mégaphone
+Vive-Attaque
+Abri
+-->
+Arcanine [Forme de Hisui]
+IT
+Ability: Testadura
+Held Item: Focalnastro
+Stat Alignment: Allegra
+Fuococarica
+Zuccata
+Extrarapido
+Protezione
+Rillaboom
+IT
+Ability: Erbogenesi
+Held Item: Miracolseme
+Stat Alignment: Decisa
+Mazzuolegno
+Erboscivolata
+Forza Equina
+Bruciapelo
+Gholdengo
+IT
+Ability: Corpo Aureo
+Held Item: Assorbisfera
+Stat Alignment: Timida
+Corsa all&#39;Oro
+Palla Ombra
+Congiura
+Protezione
+Staraptor
+IT
+Ability: Prepotenza
+Held Item: Staraptorite
+Stat Alignment: Allegra
+Zuffa
+Protezione
+Baldeali
+Ventoincoda
+Raichu
+IT
+Ability: Parafulmine
+Held Item: Raichuite Y
+Stat Alignment: Timida
+Elettrocannone
+Focalcolpo
+Bruciapelo
+Protezione
+Sylveon
+IT
+Ability: Pellefolletto
+Held Item: Piuma fatata
+Stat Alignment: Modesta
+Iper Raggio
+Granvoce
+Attacco Rapido
+Protezione
+-->
+Arkani [Hisui-Form]
+DE
+Ability: Steinhaupt
+Held Item: Fokusgurt
+Stat Alignment: Froh
+Flammenblitz
+Kopfstoß
+Turbotempo
+Schutzschild
+Gortrom
+DE
+Ability: Gras-Erzeuger
+Held Item: Wundersaat
+Stat Alignment: Hart
+Holzhammer
+Grasrutsche
+Pferdestärke
+Mogelhieb
+Monetigo
+DE
+Ability: Goldkörper
+Held Item: Leben-Orb
+Stat Alignment: Scheu
+Goldrausch
+Spukball
+Ränkeschmied
+Schutzschild
+Staraptor
+DE
+Ability: Bedroher
+Held Item: Staraptornit
+Stat Alignment: Froh
+Nahkampf
+Schutzschild
+Sturzflug
+Rückenwind
+Raichu
+DE
+Ability: Blitzfänger
+Held Item: Raichunit Y
+Stat Alignment: Scheu
+Blitzkanone
+Fokusstoß
+Mogelhieb
+Schutzschild
+Feelinara
+DE
+Ability: Feenschicht
+Held Item: Feendaune
+Stat Alignment: Mäßig
+Hyperstrahl
+Schallwelle
+Ruckzuckhieb
+Schutzschild
+-->
+Arcanine [Forma de Hisui]
+ES
+Ability: Cabeza Roca
+Held Item: Banda Aguante
+Stat Alignment: Alegre
+Envite Ígneo
+Testarazo
+Velocidad Extrema
+Protección
+Rillaboom
+ES
+Ability: Herbogénesis
+Held Item: Semilla Milagro
+Stat Alignment: Firme
+Mazazo
+Fitoimpulso
+Fuerza Equina
+Sorpresa
+Gholdengo
+ES
+Ability: Cuerpo Áureo
+Held Item: Vidasfera
+Stat Alignment: Miedosa
+Fiebre Dorada
+Bola Sombra
+Maquinación
+Protección
+Staraptor
+ES
+Ability: Intimidación
+Held Item: Staraptorita
+Stat Alignment: Alegre
+A Bocajarro
+Protección
+Pájaro Osado
+Viento Afín
+Raichu
+ES
+Ability: Pararrayos
+Held Item: Raichunita Y
+Stat Alignment: Miedosa
+Electrocañón
+Onda Certera
+Sorpresa
+Protección
+Sylveon
+ES
+Ability: Piel Feérica
+Held Item: Pluma Feérica
+Stat Alignment: Modesta
+Hiperrayo
+Vozarrón
+Ataque Rápido
+Protección
+-->
+ウインディ [ヒスイのすがた]
+JP
+Ability: いしあたま
+Held Item: きあいのタスキ
+Stat Alignment: ようき
+フレアドライブ
+もろはのずつき
+しんそく
+まもる
+ゴリランダー
+JP
+Ability: グラスメイカー
+Held Item: きせきのタネ
+Stat Alignment: いじっぱり
+ウッドハンマー
+グラススライダー
+１０まんばりき
+ねこだまし
+サーフゴー
+JP
+Ability: おうごんのからだ
+Held Item: いのちのたま
+Stat Alignment: おくびょう
+ゴールドラッシュ
+シャドーボール
+わるだくみ
+まもる
+ムクホーク
+JP
+Ability: いかく
+Held Item: ムクホークナイト
+Stat Alignment: ようき
+インファイト
+まもる
+ブレイブバード
+おいかぜ
+ライチュウ
+JP
+Ability: ひらいしん
+Held Item: ライチュウナイトＹ
+Stat Alignment: おくびょう
+でんじほう
+きあいだま
+ねこだまし
+まもる
+ニンフィア
+JP
+Ability: フェアリースキン
+Held Item: ようせいのハネ
+Stat Alignment: ひかえめ
+はかいこうせん
+ハイパーボイス
+でんこうせっか
+まもる
+-->
+윈디 [히스이의 모습]
+KO
+Ability: 돌머리
+Held Item: 기합의띠
+Stat Alignment: 명랑
+플레어드라이브
+양날박치기
+신속
+방어
+고릴타
+KO
+Ability: 그래스메이커
+Held Item: 기적의씨
+Stat Alignment: 고집
+우드해머
+그래스슬라이더
+10만마력
+속이다
+타부자고
+KO
+Ability: 황금몸
+Held Item: 생명의구슬
+Stat Alignment: 겁쟁이
+골드러시
+섀도볼
+나쁜음모
+방어
+찌르호크
+KO
+Ability: 위협
+Held Item: 찌르호크나이트
+Stat Alignment: 명랑
+인파이트
+방어
+브레이브버드
+순풍
+라이츄
+KO
+Ability: 피뢰침
+Held Item: 라이츄나이트Y
+Stat Alignment: 겁쟁이
+전자포
+기합구슬
+속이다
+방어
+님피아
+KO
+Ability: 페어리스킨
+Held Item: 요정의깃털
+Stat Alignment: 조심
+파괴광선
+하이퍼보이스
+전광석화
+방어
+-->
+风速狗 [洗翠的样子]
+SC
+Ability: 坚硬脑袋
+Held Item: 气势披带
+Stat Alignment: 爽朗
+闪焰冲锋
+双刃头锤
+神速
+守住
+轰擂金刚猩
+SC
+Ability: 青草制造者
+Held Item: 奇迹种子
+Stat Alignment: 固执
+木槌
+青草滑梯
+十万马力
+击掌奇袭
+赛富豪
+SC
+Ability: 黄金之躯
+Held Item: 生命宝珠
+Stat Alignment: 胆小
+淘金潮
+暗影球
+诡计
+守住
+姆克鹰
+SC
+Ability: 威吓
+Held Item: 姆克鹰进化石
+Stat Alignment: 爽朗
+近身战
+守住
+勇鸟猛攻
+顺风
+雷丘
+SC
+Ability: 避雷针
+Held Item: 雷丘进化石Y
+Stat Alignment: 胆小
+电磁炮
+真气弹
+击掌奇袭
+守住
+仙子伊布
+SC
+Ability: 妖精皮肤
+Held Item: 妖精之羽
+Stat Alignment: 内敛
+破坏光线
+巨声
+电光一闪
+守住
+-->
+風速狗 [洗翠的樣子]
+TC
+Ability: 堅硬腦袋
+Held Item: 氣勢披帶
+Stat Alignment: 爽朗
+閃焰衝鋒
+雙刃頭錘
+神速
+守住
+轟擂金剛猩
+TC
+Ability: 青草製造者
+Held Item: 奇跡種子
+Stat Alignment: 固執
+木槌
+青草滑梯
+十萬馬力
+擊掌奇襲
+賽富豪
+TC
+Ability: 黃金之軀
+Held Item: 生命寶珠
+Stat Alignment: 膽小
+淘金潮
+暗影球
+詭計
+守住
+姆克鷹
+TC
+Ability: 威嚇
+Held Item: 姆克鷹進化石
+Stat Alignment: 爽朗
+近身戰
+守住
+勇鳥猛攻
+順風
+雷丘
+TC
+Ability: 避雷針
+Held Item: 雷丘進化石Y
+Stat Alignment: 膽小
+電磁炮
+真氣彈
+擊掌奇襲
+守住
+仙子伊布
+TC
+Ability: 妖精皮膚
+Held Item: 妖精之羽
+Stat Alignment: 內斂
+破壞光線
+巨聲
+電光一閃
+守住

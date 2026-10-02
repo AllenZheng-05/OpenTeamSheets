@@ -1,0 +1,494 @@
+Milotic
+EN
+Ability: Competitive
+Held Item: Sitrus Berry
+Stat Alignment: Calm
+Coil
+Hypnosis
+Ice Beam
+Muddy Water
+Raichu
+EN
+Ability: Lightning Rod
+Held Item: Raichunite Y
+Stat Alignment: Timid
+Zap Cannon
+Protect
+Fake Out
+Focus Blast
+Ceruledge
+EN
+Ability: Flash Fire
+Held Item: Grassy Seed
+Stat Alignment: Adamant
+Protect
+Bitter Blade
+Swords Dance
+Shadow Sneak
+Staraptor
+EN
+Ability: Intimidate
+Held Item: Staraptite
+Stat Alignment: Jolly
+Brave Bird
+Tailwind
+Protect
+Close Combat
+Gholdengo
+EN
+Ability: Good as Gold
+Held Item: Life Orb
+Stat Alignment: Modest
+Shadow Ball
+Nasty Plot
+Make It Rain
+Protect
+Rillaboom
+EN
+Ability: Grassy Surge
+Held Item: Miracle Seed
+Stat Alignment: Adamant
+Wood Hammer
+Fake Out
+High Horsepower
+Grassy Glide
+-->
+Milobellus
+FR
+Ability: Battant
+Held Item: Baie Sitrus
+Stat Alignment: Calme
+Enroulement
+Hypnose
+Laser Glace
+Ocroupi
+Raichu
+FR
+Ability: Paratonnerre
+Held Item: Raichuïte Y
+Stat Alignment: Timide
+Élecanon
+Abri
+Bluff
+Exploforce
+Malvalame
+FR
+Ability: Torche
+Held Item: Graine Herbe
+Stat Alignment: Rigide
+Abri
+Lame en Peine
+Danse Lames
+Ombre Portée
+Étouraptor
+FR
+Ability: Intimidation
+Held Item: Étouraptorite
+Stat Alignment: Jovial
+Rapace
+Vent Arrière
+Abri
+Close Combat
+Gromago
+FR
+Ability: Corps en Or
+Held Item: Orbe Vie
+Stat Alignment: Modeste
+Ball&#39;Ombre
+Machination
+Ruée d&#39;Or
+Abri
+Gorythmic
+FR
+Ability: Créa-Herbe
+Held Item: Graine Miracle
+Stat Alignment: Rigide
+Martobois
+Bluff
+Cavalerie Lourde
+Gliss&#39;Herbe
+-->
+Milotic
+IT
+Ability: Tenacia
+Held Item: Baccacedro
+Stat Alignment: Calma
+Arrotola
+Ipnosi
+Geloraggio
+Fanghiglia
+Raichu
+IT
+Ability: Parafulmine
+Held Item: Raichuite Y
+Stat Alignment: Timida
+Elettrocannone
+Protezione
+Bruciapelo
+Focalcolpo
+Ceruledge
+IT
+Ability: Fuocardore
+Held Item: Erbaseme
+Stat Alignment: Decisa
+Protezione
+Lama del Rimorso
+Danzaspada
+Furtivombra
+Staraptor
+IT
+Ability: Prepotenza
+Held Item: Staraptorite
+Stat Alignment: Allegra
+Baldeali
+Ventoincoda
+Protezione
+Zuffa
+Gholdengo
+IT
+Ability: Corpo Aureo
+Held Item: Assorbisfera
+Stat Alignment: Modesta
+Palla Ombra
+Congiura
+Corsa all&#39;Oro
+Protezione
+Rillaboom
+IT
+Ability: Erbogenesi
+Held Item: Miracolseme
+Stat Alignment: Decisa
+Mazzuolegno
+Bruciapelo
+Forza Equina
+Erboscivolata
+-->
+Milotic
+DE
+Ability: Unbeugsamkeit
+Held Item: Tsitrubeere
+Stat Alignment: Still
+Einrollen
+Hypnose
+Eisstrahl
+Lehmbrühe
+Raichu
+DE
+Ability: Blitzfänger
+Held Item: Raichunit Y
+Stat Alignment: Scheu
+Blitzkanone
+Schutzschild
+Mogelhieb
+Fokusstoß
+Azugladis
+DE
+Ability: Feuerfänger
+Held Item: Gras-Samen
+Stat Alignment: Hart
+Schutzschild
+Reueschwert
+Schwerttanz
+Schattenstoß
+Staraptor
+DE
+Ability: Bedroher
+Held Item: Staraptornit
+Stat Alignment: Froh
+Sturzflug
+Rückenwind
+Schutzschild
+Nahkampf
+Monetigo
+DE
+Ability: Goldkörper
+Held Item: Leben-Orb
+Stat Alignment: Mäßig
+Spukball
+Ränkeschmied
+Goldrausch
+Schutzschild
+Gortrom
+DE
+Ability: Gras-Erzeuger
+Held Item: Wundersaat
+Stat Alignment: Hart
+Holzhammer
+Mogelhieb
+Pferdestärke
+Grasrutsche
+-->
+Milotic
+ES
+Ability: Tenacidad
+Held Item: Baya Zidra
+Stat Alignment: Serena
+Enrosque
+Hipnosis
+Rayo Hielo
+Agua Lodosa
+Raichu
+ES
+Ability: Pararrayos
+Held Item: Raichunita Y
+Stat Alignment: Miedosa
+Electrocañón
+Protección
+Sorpresa
+Onda Certera
+Ceruledge
+ES
+Ability: Absorbe Fuego
+Held Item: Semilla Hierba
+Stat Alignment: Firme
+Protección
+Espada Lamento
+Danza Espada
+Sombra Vil
+Staraptor
+ES
+Ability: Intimidación
+Held Item: Staraptorita
+Stat Alignment: Alegre
+Pájaro Osado
+Viento Afín
+Protección
+A Bocajarro
+Gholdengo
+ES
+Ability: Cuerpo Áureo
+Held Item: Vidasfera
+Stat Alignment: Modesta
+Bola Sombra
+Maquinación
+Fiebre Dorada
+Protección
+Rillaboom
+ES
+Ability: Herbogénesis
+Held Item: Semilla Milagro
+Stat Alignment: Firme
+Mazazo
+Sorpresa
+Fuerza Equina
+Fitoimpulso
+-->
+ミロカロス
+JP
+Ability: かちき
+Held Item: オボンのみ
+Stat Alignment: おだやか
+とぐろをまく
+さいみんじゅつ
+れいとうビーム
+だくりゅう
+ライチュウ
+JP
+Ability: ひらいしん
+Held Item: ライチュウナイトＹ
+Stat Alignment: おくびょう
+でんじほう
+まもる
+ねこだまし
+きあいだま
+ソウブレイズ
+JP
+Ability: もらいび
+Held Item: グラスシード
+Stat Alignment: いじっぱり
+まもる
+むねんのつるぎ
+つるぎのまい
+かげうち
+ムクホーク
+JP
+Ability: いかく
+Held Item: ムクホークナイト
+Stat Alignment: ようき
+ブレイブバード
+おいかぜ
+まもる
+インファイト
+サーフゴー
+JP
+Ability: おうごんのからだ
+Held Item: いのちのたま
+Stat Alignment: ひかえめ
+シャドーボール
+わるだくみ
+ゴールドラッシュ
+まもる
+ゴリランダー
+JP
+Ability: グラスメイカー
+Held Item: きせきのタネ
+Stat Alignment: いじっぱり
+ウッドハンマー
+ねこだまし
+１０まんばりき
+グラススライダー
+-->
+밀로틱
+KO
+Ability: 승기
+Held Item: 자뭉열매
+Stat Alignment: 차분
+똬리틀기
+최면술
+냉동빔
+탁류
+라이츄
+KO
+Ability: 피뢰침
+Held Item: 라이츄나이트Y
+Stat Alignment: 겁쟁이
+전자포
+방어
+속이다
+기합구슬
+파라블레이즈
+KO
+Ability: 타오르는 불꽃
+Held Item: 그래스시드
+Stat Alignment: 고집
+방어
+원념의칼
+칼춤
+야습
+찌르호크
+KO
+Ability: 위협
+Held Item: 찌르호크나이트
+Stat Alignment: 명랑
+브레이브버드
+순풍
+방어
+인파이트
+타부자고
+KO
+Ability: 황금몸
+Held Item: 생명의구슬
+Stat Alignment: 조심
+섀도볼
+나쁜음모
+골드러시
+방어
+고릴타
+KO
+Ability: 그래스메이커
+Held Item: 기적의씨
+Stat Alignment: 고집
+우드해머
+속이다
+10만마력
+그래스슬라이더
+-->
+美纳斯
+SC
+Ability: 好胜
+Held Item: 文柚果
+Stat Alignment: 温和
+盘蜷
+催眠术
+冰冻光束
+浊流
+雷丘
+SC
+Ability: 避雷针
+Held Item: 雷丘进化石Y
+Stat Alignment: 胆小
+电磁炮
+守住
+击掌奇袭
+真气弹
+苍炎刃鬼
+SC
+Ability: 引火
+Held Item: 青草种子
+Stat Alignment: 固执
+守住
+悔念剑
+剑舞
+影子偷袭
+姆克鹰
+SC
+Ability: 威吓
+Held Item: 姆克鹰进化石
+Stat Alignment: 爽朗
+勇鸟猛攻
+顺风
+守住
+近身战
+赛富豪
+SC
+Ability: 黄金之躯
+Held Item: 生命宝珠
+Stat Alignment: 内敛
+暗影球
+诡计
+淘金潮
+守住
+轰擂金刚猩
+SC
+Ability: 青草制造者
+Held Item: 奇迹种子
+Stat Alignment: 固执
+木槌
+击掌奇袭
+十万马力
+青草滑梯
+-->
+美納斯
+TC
+Ability: 好勝
+Held Item: 文柚果
+Stat Alignment: 溫和
+盤蜷
+催眠術
+冰凍光束
+濁流
+雷丘
+TC
+Ability: 避雷針
+Held Item: 雷丘進化石Y
+Stat Alignment: 膽小
+電磁炮
+守住
+擊掌奇襲
+真氣彈
+蒼炎刃鬼
+TC
+Ability: 引火
+Held Item: 青草種子
+Stat Alignment: 固執
+守住
+悔念劍
+劍舞
+影子偷襲
+姆克鷹
+TC
+Ability: 威嚇
+Held Item: 姆克鷹進化石
+Stat Alignment: 爽朗
+勇鳥猛攻
+順風
+守住
+近身戰
+賽富豪
+TC
+Ability: 黃金之軀
+Held Item: 生命寶珠
+Stat Alignment: 內斂
+暗影球
+詭計
+淘金潮
+守住
+轟擂金剛猩
+TC
+Ability: 青草製造者
+Held Item: 奇跡種子
+Stat Alignment: 固執
+木槌
+擊掌奇襲
+十萬馬力
+青草滑梯

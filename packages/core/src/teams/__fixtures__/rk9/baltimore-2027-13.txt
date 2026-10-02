@@ -1,0 +1,494 @@
+Ceruledge
+EN
+Ability: Flash Fire
+Held Item: Focus Sash
+Stat Alignment: Jolly
+Poltergeist
+Bitter Blade
+Close Combat
+Swords Dance
+Indeedee [Female]
+EN
+Ability: Psychic Surge
+Held Item: Colbur Berry
+Stat Alignment: Relaxed
+Mystical Fire
+Follow Me
+Helping Hand
+Trick Room
+Dragonite
+EN
+Ability: Inner Focus
+Held Item: Life Orb
+Stat Alignment: Adamant
+Scale Shot
+Stomping Tantrum
+Rock Slide
+Dragon Dance
+Lopunny
+EN
+Ability: Limber
+Held Item: Lopunnite
+Stat Alignment: Jolly
+Close Combat
+Triple Axel
+Thunder Punch
+Fake Out
+Gardevoir
+EN
+Ability: Trace
+Held Item: Gardevoirite
+Stat Alignment: Modest
+Expanding Force
+Hyper Voice
+Calm Mind
+Protect
+Sneasler
+EN
+Ability: Unburden
+Held Item: Psychic Seed
+Stat Alignment: Adamant
+Close Combat
+Dire Claw
+Throat Chop
+Fake Out
+-->
+Malvalame
+FR
+Ability: Torche
+Held Item: Ceinture Force
+Stat Alignment: Jovial
+Esprit Frappeur
+Lame en Peine
+Close Combat
+Danse Lames
+Wimessir [Femelle]
+FR
+Ability: Créa-Psy
+Held Item: Baie Lampou
+Stat Alignment: Relax
+Feu Ensorcelé
+Par Ici
+Coup d&#39;Main
+Distorsion
+Dracolosse
+FR
+Ability: Attention
+Held Item: Orbe Vie
+Stat Alignment: Rigide
+Rafale Écailles
+Trépignement
+Éboulement
+Danse Draco
+Lockpin
+FR
+Ability: Échauffement
+Held Item: Lockpinite
+Stat Alignment: Jovial
+Close Combat
+Triple Axel
+Poing Éclair
+Bluff
+Gardevoir
+FR
+Ability: Calque
+Held Item: Gardevoirite
+Stat Alignment: Modeste
+Vaste Pouvoir
+Mégaphone
+Plénitude
+Abri
+Farfurex
+FR
+Ability: Délestage
+Held Item: Graine Psychique
+Stat Alignment: Rigide
+Close Combat
+Griffes Funestes
+Exécu-Son
+Bluff
+-->
+Ceruledge
+IT
+Ability: Fuocardore
+Held Item: Focalnastro
+Stat Alignment: Allegra
+Poltergeist
+Lama del Rimorso
+Zuffa
+Danzaspada
+Indeedee [Femmina]
+IT
+Ability: Psicogenesi
+Held Item: Baccaxan
+Stat Alignment: Placida
+Magifiamma
+Sonoqui
+Altruismo
+Distortozona
+Dragonite
+IT
+Ability: Forza Interiore
+Held Item: Assorbisfera
+Stat Alignment: Decisa
+Squamacolpo
+Battipiedi
+Frana
+Dragodanza
+Lopunny
+IT
+Ability: Scioltezza
+Held Item: Lopunnite
+Stat Alignment: Allegra
+Zuffa
+Triplo Axel
+Tuonopugno
+Bruciapelo
+Gardevoir
+IT
+Ability: Traccia
+Held Item: Gardevoirite
+Stat Alignment: Modesta
+Vastenergia
+Granvoce
+Calmamente
+Protezione
+Sneasler
+IT
+Ability: Agiltecnica
+Held Item: Psicoseme
+Stat Alignment: Decisa
+Zuffa
+Artigli Fatali
+Colpo Infernale
+Bruciapelo
+-->
+Azugladis
+DE
+Ability: Feuerfänger
+Held Item: Fokusgurt
+Stat Alignment: Froh
+Poltergeist
+Reueschwert
+Nahkampf
+Schwerttanz
+Servol [Weiblich]
+DE
+Ability: Psycho-Erzeuger
+Held Item: Burleobeere
+Stat Alignment: Locker
+Magieflamme
+Spotlight
+Rechte Hand
+Bizarroraum
+Dragoran
+DE
+Ability: Konzentrator
+Held Item: Leben-Orb
+Stat Alignment: Hart
+Schuppenschuss
+Fruststampfer
+Steinhagel
+Drachentanz
+Schlapor
+DE
+Ability: Flexibilität
+Held Item: Schlapornit
+Stat Alignment: Froh
+Nahkampf
+Dreifach-Axel
+Donnerschlag
+Mogelhieb
+Guardevoir
+DE
+Ability: Erfassen
+Held Item: Guardevoirnit
+Stat Alignment: Mäßig
+Flächenmacht
+Schallwelle
+Gedankengut
+Schutzschild
+Snieboss
+DE
+Ability: Entlastung
+Held Item: Psycho-Samen
+Stat Alignment: Hart
+Nahkampf
+Unheilsklauen
+Neck Strike
+Mogelhieb
+-->
+Ceruledge
+ES
+Ability: Absorbe Fuego
+Held Item: Banda Aguante
+Stat Alignment: Alegre
+Poltergeist
+Espada Lamento
+A Bocajarro
+Danza Espada
+Indeedee [Hembra]
+ES
+Ability: Psicogénesis
+Held Item: Baya Dillo
+Stat Alignment: Plácida
+Llama Embrujada
+Señuelo
+Refuerzo
+Espacio Raro
+Dragonite
+ES
+Ability: Fuerza Mental
+Held Item: Vidasfera
+Stat Alignment: Firme
+Ráfaga Escamas
+Pataleta
+Avalancha
+Danza Dragón
+Lopunny
+ES
+Ability: Flexibilidad
+Held Item: Lopunnita
+Stat Alignment: Alegre
+A Bocajarro
+Triple Axel
+Puño Trueno
+Sorpresa
+Gardevoir
+ES
+Ability: Calco
+Held Item: Gardevoirita
+Stat Alignment: Modesta
+Vasta Fuerza
+Vozarrón
+Paz Mental
+Protección
+Sneasler
+ES
+Ability: Liviano
+Held Item: Semilla Psique
+Stat Alignment: Firme
+A Bocajarro
+Garra Nociva
+Golpe Mordaza
+Sorpresa
+-->
+ソウブレイズ
+JP
+Ability: もらいび
+Held Item: きあいのタスキ
+Stat Alignment: ようき
+ポルターガイスト
+むねんのつるぎ
+インファイト
+つるぎのまい
+イエッサン [メスのすがた]
+JP
+Ability: サイコメイカー
+Held Item: ナモのみ
+Stat Alignment: のんき
+マジカルフレイム
+このゆびとまれ
+てだすけ
+トリックルーム
+カイリュー
+JP
+Ability: せいしんりょく
+Held Item: いのちのたま
+Stat Alignment: いじっぱり
+スケイルショット
+じだんだ
+いわなだれ
+りゅうのまい
+ミミロップ
+JP
+Ability: じゅうなん
+Held Item: ミミロップナイト
+Stat Alignment: ようき
+インファイト
+トリプルアクセル
+かみなりパンチ
+ねこだまし
+サーナイト
+JP
+Ability: トレース
+Held Item: サーナイトナイト
+Stat Alignment: ひかえめ
+ワイドフォース
+ハイパーボイス
+めいそう
+まもる
+オオニューラ
+JP
+Ability: かるわざ
+Held Item: サイコシード
+Stat Alignment: いじっぱり
+インファイト
+フェイタルクロー
+じごくづき
+ねこだまし
+-->
+파라블레이즈
+KO
+Ability: 타오르는 불꽃
+Held Item: 기합의띠
+Stat Alignment: 명랑
+폴터가이스트
+원념의칼
+인파이트
+칼춤
+에써르 [암컷의 모습]
+KO
+Ability: 사이코메이커
+Held Item: 마코열매
+Stat Alignment: 무사태평
+매지컬플레임
+날따름
+도우미
+트릭룸
+망나뇽
+KO
+Ability: 정신력
+Held Item: 생명의구슬
+Stat Alignment: 고집
+스케일샷
+분함의발구르기
+스톤샤워
+용의춤
+이어롭
+KO
+Ability: 유연
+Held Item: 이어롭나이트
+Stat Alignment: 명랑
+인파이트
+트리플악셀
+번개펀치
+속이다
+가디안
+KO
+Ability: 트레이스
+Held Item: 가디안나이트
+Stat Alignment: 조심
+와이드포스
+하이퍼보이스
+명상
+방어
+포푸니크
+KO
+Ability: 곡예
+Held Item: 사이코시드
+Stat Alignment: 고집
+인파이트
+페이탈클로
+지옥찌르기
+속이다
+-->
+苍炎刃鬼
+SC
+Ability: 引火
+Held Item: 气势披带
+Stat Alignment: 爽朗
+灵骚
+悔念剑
+近身战
+剑舞
+爱管侍 [雌性的样子]
+SC
+Ability: 精神制造者
+Held Item: 刺耳果
+Stat Alignment: 悠闲
+魔法火焰
+看我嘛
+帮助
+戏法空间
+快龙
+SC
+Ability: 精神力
+Held Item: 生命宝珠
+Stat Alignment: 固执
+鳞射
+跺脚
+岩崩
+龙之舞
+长耳兔
+SC
+Ability: 柔软
+Held Item: 长耳兔进化石
+Stat Alignment: 爽朗
+近身战
+三旋击
+雷电拳
+击掌奇袭
+沙奈朵
+SC
+Ability: 复制
+Held Item: 沙奈朵进化石
+Stat Alignment: 内敛
+广域战力
+巨声
+冥想
+守住
+大狃拉
+SC
+Ability: 轻装
+Held Item: 精神种子
+Stat Alignment: 固执
+近身战
+克命爪
+深渊突刺
+击掌奇袭
+-->
+蒼炎刃鬼
+TC
+Ability: 引火
+Held Item: 氣勢披帶
+Stat Alignment: 爽朗
+靈騷
+悔念劍
+近身戰
+劍舞
+愛管侍 [雌性的樣子]
+TC
+Ability: 精神製造者
+Held Item: 刺耳果
+Stat Alignment: 悠閒
+魔法火焰
+看我嘛
+幫助
+戲法空間
+快龍
+TC
+Ability: 精神力
+Held Item: 生命寶珠
+Stat Alignment: 固執
+鱗射
+跺腳
+岩崩
+龍之舞
+長耳兔
+TC
+Ability: 柔軟
+Held Item: 長耳兔進化石
+Stat Alignment: 爽朗
+近身戰
+三旋擊
+雷電拳
+擊掌奇襲
+沙奈朵
+TC
+Ability: 複製
+Held Item: 沙奈朵進化石
+Stat Alignment: 內斂
+廣域戰力
+巨聲
+冥想
+守住
+大狃拉
+TC
+Ability: 輕裝
+Held Item: 精神種子
+Stat Alignment: 固執
+近身戰
+剋命爪
+地獄突刺
+擊掌奇襲

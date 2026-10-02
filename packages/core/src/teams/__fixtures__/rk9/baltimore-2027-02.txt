@@ -1,0 +1,494 @@
+Golisopod
+EN
+Ability: Emergency Exit
+Held Item: Golisopite
+Stat Alignment: Adamant
+Leech Life
+Drill Run
+Iron Head
+Protect
+Charizard
+EN
+Ability: Blaze
+Held Item: Charizardite Y
+Stat Alignment: Timid
+Heat Wave
+Hurricane
+Weather Ball
+Protect
+Politoed
+EN
+Ability: Drizzle
+Held Item: Mystic Water
+Stat Alignment: Modest
+Muddy Water
+Ice Beam
+Weather Ball
+Protect
+Archaludon
+EN
+Ability: Stamina
+Held Item: Leftovers
+Stat Alignment: Bold
+Dragon Pulse
+Snarl
+Electro Shot
+Protect
+Grimmsnarl
+EN
+Ability: Prankster
+Held Item: Light Clay
+Stat Alignment: Sassy
+Light Screen
+Reflect
+Parting Shot
+Spirit Break
+Farigiraf
+EN
+Ability: Armor Tail
+Held Item: Sitrus Berry
+Stat Alignment: Bold
+Psychic
+Trick Room
+Protect
+Grass Knot
+-->
+Sarmuraï
+FR
+Ability: Repli Tactique
+Held Item: Sarmuraïte
+Stat Alignment: Rigide
+Vampirisme
+Tunnelier
+Tête de Fer
+Abri
+Dracaufeu
+FR
+Ability: Brasier
+Held Item: Dracaufite Y
+Stat Alignment: Timide
+Canicule
+Vent Violent
+Ball&#39;Météo
+Abri
+Tarpaud
+FR
+Ability: Crachin
+Held Item: Eau Mystique
+Stat Alignment: Modeste
+Ocroupi
+Laser Glace
+Ball&#39;Météo
+Abri
+Pondralugon
+FR
+Ability: Endurance
+Held Item: Restes
+Stat Alignment: Assuré
+Draco-Choc
+Aboiement
+Fulgurayon
+Abri
+Angoliath
+FR
+Ability: Farceur
+Held Item: Lumargile
+Stat Alignment: Malpoli
+Mur Lumière
+Protection
+Dernier Mot
+Choc Émotionnel
+Farigiraf
+FR
+Ability: Armure Caudale
+Held Item: Baie Sitrus
+Stat Alignment: Assuré
+Psyko
+Distorsion
+Abri
+Nœud Herbe
+-->
+Golisopod
+IT
+Ability: Passoindietro
+Held Item: Golisopodite
+Stat Alignment: Decisa
+Sanguisuga
+Giravvita
+Metaltestata
+Protezione
+Charizard
+IT
+Ability: Aiutofuoco
+Held Item: Charizardite Y
+Stat Alignment: Timida
+Ondacalda
+Tifone
+Palla Clima
+Protezione
+Politoed
+IT
+Ability: Piovischio
+Held Item: Acqua magica
+Stat Alignment: Modesta
+Fanghiglia
+Geloraggio
+Palla Clima
+Protezione
+Archaludon
+IT
+Ability: Sopportazione
+Held Item: Avanzi
+Stat Alignment: Sicura
+Dragopulsar
+Urlorabbia
+Elettroraggio
+Protezione
+Grimmsnarl
+IT
+Ability: Burla
+Held Item: Creta luce
+Stat Alignment: Vivace
+Schermoluce
+Riflesso
+Monito
+Frantumanima
+Farigiraf
+IT
+Ability: Codarmatura
+Held Item: Baccacedro
+Stat Alignment: Sicura
+Psichico
+Distortozona
+Protezione
+Laccioerboso
+-->
+Tectass
+DE
+Ability: Rückzug
+Held Item: Tectassnit
+Stat Alignment: Hart
+Blutsauger
+Schlagbohrer
+Eisenschädel
+Schutzschild
+Glurak
+DE
+Ability: Großbrand
+Held Item: Gluraknit Y
+Stat Alignment: Scheu
+Hitzewelle
+Orkan
+Meteorologe
+Schutzschild
+Quaxo
+DE
+Ability: Niesel
+Held Item: Zauberwasser
+Stat Alignment: Mäßig
+Lehmbrühe
+Eisstrahl
+Meteorologe
+Schutzschild
+Briduradon
+DE
+Ability: Zähigkeit
+Held Item: Überreste
+Stat Alignment: Kühn
+Drachenpuls
+Standpauke
+Stromstrahl
+Schutzschild
+Olangaar
+DE
+Ability: Strolch
+Held Item: Lichtlehm
+Stat Alignment: Forsch
+Lichtschild
+Reflektor
+Abgangstirade
+Seelenbruch
+Farigiraf
+DE
+Ability: Schweifrüstung
+Held Item: Tsitrubeere
+Stat Alignment: Kühn
+Psychokinese
+Bizarroraum
+Schutzschild
+Strauchler
+-->
+Golisopod
+ES
+Ability: Retirada
+Held Item: Golisopodita
+Stat Alignment: Firme
+Chupavidas
+Taladradora
+Cabeza de Hierro
+Protección
+Charizard
+ES
+Ability: Mar Llamas
+Held Item: Charizardita Y
+Stat Alignment: Miedosa
+Onda Ígnea
+Vendaval
+Meteorobola
+Protección
+Politoed
+ES
+Ability: Llovizna
+Held Item: Agua Mística
+Stat Alignment: Modesta
+Agua Lodosa
+Rayo Hielo
+Meteorobola
+Protección
+Archaludon
+ES
+Ability: Firmeza
+Held Item: Restos
+Stat Alignment: Osada
+Pulso Dragón
+Alarido
+Electrorrayo
+Protección
+Grimmsnarl
+ES
+Ability: Bromista
+Held Item: Refleluz
+Stat Alignment: Grosera
+Pantalla de Luz
+Reflejo
+Última Palabra
+Choque Anímico
+Farigiraf
+ES
+Ability: Cola Armadura
+Held Item: Baya Zidra
+Stat Alignment: Osada
+Psíquico
+Espacio Raro
+Protección
+Hierba Lazo
+-->
+グソクムシャ
+JP
+Ability: ききかいひ
+Held Item: グソクムシャナイト
+Stat Alignment: いじっぱり
+きゅうけつ
+ドリルライナー
+アイアンヘッド
+まもる
+リザードン
+JP
+Ability: もうか
+Held Item: リザードナイトＹ
+Stat Alignment: おくびょう
+ねっぷう
+ぼうふう
+ウェザーボール
+まもる
+ニョロトノ
+JP
+Ability: あめふらし
+Held Item: しんぴのしずく
+Stat Alignment: ひかえめ
+だくりゅう
+れいとうビーム
+ウェザーボール
+まもる
+ブリジュラス
+JP
+Ability: じきゅうりょく
+Held Item: たべのこし
+Stat Alignment: ずぶとい
+りゅうのはどう
+バークアウト
+エレクトロビーム
+まもる
+オーロンゲ
+JP
+Ability: いたずらごころ
+Held Item: ひかりのねんど
+Stat Alignment: なまいき
+ひかりのかべ
+リフレクター
+すてゼリフ
+ソウルクラッシュ
+リキキリン
+JP
+Ability: テイルアーマー
+Held Item: オボンのみ
+Stat Alignment: ずぶとい
+サイコキネシス
+トリックルーム
+まもる
+くさむすび
+-->
+갑주무사
+KO
+Ability: 위기회피
+Held Item: 갑주무사나이트
+Stat Alignment: 고집
+흡혈
+드릴라이너
+아이언헤드
+방어
+리자몽
+KO
+Ability: 맹화
+Held Item: 리자몽나이트Y
+Stat Alignment: 겁쟁이
+열풍
+폭풍
+웨더볼
+방어
+왕구리
+KO
+Ability: 잔비
+Held Item: 신비의물방울
+Stat Alignment: 조심
+탁류
+냉동빔
+웨더볼
+방어
+브리두라스
+KO
+Ability: 지구력
+Held Item: 먹다남은음식
+Stat Alignment: 대담
+용의파동
+바크아웃
+일렉트로빔
+방어
+오롱털
+KO
+Ability: 짓궂은마음
+Held Item: 빛의점토
+Stat Alignment: 건방
+빛의장막
+리플렉터
+막말내뱉기
+소울크래시
+키키링
+KO
+Ability: 테일아머
+Held Item: 자뭉열매
+Stat Alignment: 대담
+사이코키네시스
+트릭룸
+방어
+풀묶기
+-->
+具甲武者
+SC
+Ability: 危险回避
+Held Item: 具甲武者进化石
+Stat Alignment: 固执
+汲取
+直冲钻
+铁头
+守住
+喷火龙
+SC
+Ability: 猛火
+Held Item: 喷火龙进化石Y
+Stat Alignment: 胆小
+热风
+暴风
+气象球
+守住
+蚊香蛙皇
+SC
+Ability: 降雨
+Held Item: 神秘水滴
+Stat Alignment: 内敛
+浊流
+冰冻光束
+气象球
+守住
+铝钢桥龙
+SC
+Ability: 持久力
+Held Item: 吃剩的东西
+Stat Alignment: 大胆
+龙之波动
+大声咆哮
+电光束
+守住
+长毛巨魔
+SC
+Ability: 恶作剧之心
+Held Item: 光之黏土
+Stat Alignment: 自大
+光墙
+反射壁
+抛下狠话
+灵魂冲击
+奇麒麟
+SC
+Ability: 尾甲
+Held Item: 文柚果
+Stat Alignment: 大胆
+精神强念
+戏法空间
+守住
+打草结
+-->
+具甲武者
+TC
+Ability: 危險迴避
+Held Item: 具甲武者進化石
+Stat Alignment: 固執
+吸血
+直衝鑽
+鐵頭
+守住
+噴火龍
+TC
+Ability: 猛火
+Held Item: 噴火龍進化石Y
+Stat Alignment: 膽小
+熱風
+暴風
+氣象球
+守住
+蚊香蛙皇
+TC
+Ability: 降雨
+Held Item: 神秘水滴
+Stat Alignment: 內斂
+濁流
+冰凍光束
+氣象球
+守住
+鋁鋼橋龍
+TC
+Ability: 持久力
+Held Item: 吃剩的東西
+Stat Alignment: 大膽
+龍之波動
+大聲咆哮
+電光束
+守住
+長毛巨魔
+TC
+Ability: 惡作劇之心
+Held Item: 光之黏土
+Stat Alignment: 自大
+光牆
+反射壁
+拋下狠話
+靈魂衝擊
+奇麒麟
+TC
+Ability: 尾甲
+Held Item: 文柚果
+Stat Alignment: 大膽
+精神強念
+戲法空間
+守住
+打草結

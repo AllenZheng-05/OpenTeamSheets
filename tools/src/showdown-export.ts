@@ -33,6 +33,8 @@ interface ShowdownSpecies extends ShowdownEffect {
   abilities: Record<string, string | undefined>;
   baseStats: Record<StatId, number>;
   requiredItem?: string;
+  requiredAbility?: string;
+  requiredMove?: string;
   battleOnly?: string | string[];
 }
 interface ShowdownMove extends ShowdownEffect {
@@ -194,11 +196,18 @@ function exportFormat(showdownDir: string, formatId: string): ShowdownExport {
     if (species.requiredItem) {
       itemIds.add(dex.items.get(species.requiredItem).id);
     }
-    for (const ability of Object.values(species.abilities)) {
+    for (const ability of [
+      ...Object.values(species.abilities),
+      species.requiredAbility,
+    ]) {
       if (ability) abilityIds.add(dex.abilities.get(ability).id);
     }
   }
   const moveIds = new Set(Object.values(learnsets).flat());
+  for (const species of speciesById.values()) {
+    if (species.requiredMove)
+      moveIds.add(dex.moves.get(species.requiredMove).id);
+  }
 
   const abilityId = (name: string | undefined) =>
     name ? dex.abilities.get(name).id : null;
@@ -248,6 +257,10 @@ function exportFormat(showdownDir: string, formatId: string): ShowdownExport {
       ...species.baseStats,
       requiredItemId: species.requiredItem
         ? dex.items.get(species.requiredItem).id
+        : null,
+      requiredAbilityId: abilityId(species.requiredAbility),
+      requiredMoveId: species.requiredMove
+        ? dex.moves.get(species.requiredMove).id
         : null,
     })),
     moves: [...moveIds].sort().map((id) => {
