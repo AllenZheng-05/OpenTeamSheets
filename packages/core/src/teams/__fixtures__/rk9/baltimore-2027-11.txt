@@ -1,0 +1,494 @@
+Garchomp
+EN
+Ability: Rough Skin
+Held Item: Choice Scarf
+Stat Alignment: Adamant
+Dragon Claw
+Earthquake
+Stomping Tantrum
+Rock Tomb
+Farigiraf
+EN
+Ability: Armor Tail
+Held Item: Sitrus Berry
+Stat Alignment: Bold
+Psychic
+Thunderbolt
+Trick Room
+Protect
+Aerodactyl
+EN
+Ability: Unnerve
+Held Item: Aerodactylite
+Stat Alignment: Jolly
+Rock Slide
+Dual Wingbeat
+Tailwind
+Wide Guard
+Sylveon
+EN
+Ability: Pixilate
+Held Item: Fairy Feather
+Stat Alignment: Modest
+Hyper Voice
+Hyper Beam
+Quick Attack
+Detect
+Charizard
+EN
+Ability: Blaze
+Held Item: Charizardite Y
+Stat Alignment: Timid
+Heat Wave
+Weather Ball
+Solar Beam
+Protect
+Kingambit
+EN
+Ability: Defiant
+Held Item: Focus Sash
+Stat Alignment: Adamant
+Kowtow Cleave
+Sucker Punch
+Iron Head
+Low Kick
+-->
+Carchacrok
+FR
+Ability: Peau Dure
+Held Item: Mouchoir Choix
+Stat Alignment: Rigide
+Draco-Griffe
+Séisme
+Trépignement
+Tomberoche
+Farigiraf
+FR
+Ability: Armure Caudale
+Held Item: Baie Sitrus
+Stat Alignment: Assuré
+Psyko
+Tonnerre
+Distorsion
+Abri
+Ptéra
+FR
+Ability: Tension
+Held Item: Ptéraïte
+Stat Alignment: Jovial
+Éboulement
+Double Volée
+Vent Arrière
+Garde Large
+Nymphali
+FR
+Ability: Peau Féérique
+Held Item: Plume Enchantée
+Stat Alignment: Modeste
+Mégaphone
+Ultralaser
+Vive-Attaque
+Détection
+Dracaufeu
+FR
+Ability: Brasier
+Held Item: Dracaufite Y
+Stat Alignment: Timide
+Canicule
+Ball&#39;Météo
+Lance-Soleil
+Abri
+Scalpereur
+FR
+Ability: Acharné
+Held Item: Ceinture Force
+Stat Alignment: Rigide
+Génusection
+Coup Bas
+Tête de Fer
+Balayage
+-->
+Garchomp
+IT
+Ability: Cartavetro
+Held Item: Stolascelta
+Stat Alignment: Decisa
+Dragartigli
+Terremoto
+Battipiedi
+Rocciotomba
+Farigiraf
+IT
+Ability: Codarmatura
+Held Item: Baccacedro
+Stat Alignment: Sicura
+Psichico
+Fulmine
+Distortozona
+Protezione
+Aerodactyl
+IT
+Ability: Agitazione
+Held Item: Aerodactylite
+Stat Alignment: Allegra
+Frana
+Doppia Ala
+Ventoincoda
+Bodyguard
+Sylveon
+IT
+Ability: Pellefolletto
+Held Item: Piuma fatata
+Stat Alignment: Modesta
+Granvoce
+Iper Raggio
+Attacco Rapido
+Individua
+Charizard
+IT
+Ability: Aiutofuoco
+Held Item: Charizardite Y
+Stat Alignment: Timida
+Ondacalda
+Palla Clima
+Solarraggio
+Protezione
+Kingambit
+IT
+Ability: Agonismo
+Held Item: Focalnastro
+Stat Alignment: Decisa
+Genufendente
+Sbigoattacco
+Metaltestata
+Colpo Basso
+-->
+Knakrack
+DE
+Ability: Rauhaut
+Held Item: Wahlschal
+Stat Alignment: Hart
+Drachenklaue
+Erdbeben
+Fruststampfer
+Felsgrab
+Farigiraf
+DE
+Ability: Schweifrüstung
+Held Item: Tsitrubeere
+Stat Alignment: Kühn
+Psychokinese
+Donnerblitz
+Bizarroraum
+Schutzschild
+Aerodactyl
+DE
+Ability: Anspannung
+Held Item: Aerodactylonit
+Stat Alignment: Froh
+Steinhagel
+Doppelflügel
+Rückenwind
+Rundumschutz
+Feelinara
+DE
+Ability: Feenschicht
+Held Item: Feendaune
+Stat Alignment: Mäßig
+Schallwelle
+Hyperstrahl
+Ruckzuckhieb
+Scanner
+Glurak
+DE
+Ability: Großbrand
+Held Item: Gluraknit Y
+Stat Alignment: Scheu
+Hitzewelle
+Meteorologe
+Solarstrahl
+Schutzschild
+Gladimperio
+DE
+Ability: Siegeswille
+Held Item: Fokusgurt
+Stat Alignment: Hart
+Kniefallspalter
+Tiefschlag
+Eisenschädel
+Fußkick
+-->
+Garchomp
+ES
+Ability: Piel Tosca
+Held Item: Pañuelo Elección
+Stat Alignment: Firme
+Garra Dragón
+Terremoto
+Pataleta
+Tumba Rocas
+Farigiraf
+ES
+Ability: Cola Armadura
+Held Item: Baya Zidra
+Stat Alignment: Osada
+Psíquico
+Rayo
+Espacio Raro
+Protección
+Aerodactyl
+ES
+Ability: Nerviosismo
+Held Item: Aerodactylita
+Stat Alignment: Alegre
+Avalancha
+Ala Bis
+Viento Afín
+Vasta Guardia
+Sylveon
+ES
+Ability: Piel Feérica
+Held Item: Pluma Feérica
+Stat Alignment: Modesta
+Vozarrón
+Hiperrayo
+Ataque Rápido
+Detección
+Charizard
+ES
+Ability: Mar Llamas
+Held Item: Charizardita Y
+Stat Alignment: Miedosa
+Onda Ígnea
+Meteorobola
+Rayo Solar
+Protección
+Kingambit
+ES
+Ability: Competitivo
+Held Item: Banda Aguante
+Stat Alignment: Firme
+Genufendiente
+Golpe Bajo
+Cabeza de Hierro
+Patada Baja
+-->
+ガブリアス
+JP
+Ability: さめはだ
+Held Item: こだわりスカーフ
+Stat Alignment: いじっぱり
+ドラゴンクロー
+じしん
+じだんだ
+がんせきふうじ
+リキキリン
+JP
+Ability: テイルアーマー
+Held Item: オボンのみ
+Stat Alignment: ずぶとい
+サイコキネシス
+１０まんボルト
+トリックルーム
+まもる
+プテラ
+JP
+Ability: きんちょうかん
+Held Item: プテラナイト
+Stat Alignment: ようき
+いわなだれ
+ダブルウイング
+おいかぜ
+ワイドガード
+ニンフィア
+JP
+Ability: フェアリースキン
+Held Item: ようせいのハネ
+Stat Alignment: ひかえめ
+ハイパーボイス
+はかいこうせん
+でんこうせっか
+みきり
+リザードン
+JP
+Ability: もうか
+Held Item: リザードナイトＹ
+Stat Alignment: おくびょう
+ねっぷう
+ウェザーボール
+ソーラービーム
+まもる
+ドドゲザン
+JP
+Ability: まけんき
+Held Item: きあいのタスキ
+Stat Alignment: いじっぱり
+ドゲザン
+ふいうち
+アイアンヘッド
+けたぐり
+-->
+한카리아스
+KO
+Ability: 까칠한 피부
+Held Item: 구애스카프
+Stat Alignment: 고집
+드래곤크루
+지진
+분함의발구르기
+암석봉인
+키키링
+KO
+Ability: 테일아머
+Held Item: 자뭉열매
+Stat Alignment: 대담
+사이코키네시스
+１０만볼트
+트릭룸
+방어
+프테라
+KO
+Ability: 긴장감
+Held Item: 프테라나이트
+Stat Alignment: 명랑
+스톤샤워
+더블윙
+순풍
+와이드가드
+님피아
+KO
+Ability: 페어리스킨
+Held Item: 요정의깃털
+Stat Alignment: 조심
+하이퍼보이스
+파괴광선
+전광석화
+선찰
+리자몽
+KO
+Ability: 맹화
+Held Item: 리자몽나이트Y
+Stat Alignment: 겁쟁이
+열풍
+웨더볼
+솔라빔
+방어
+대도각참
+KO
+Ability: 오기
+Held Item: 기합의띠
+Stat Alignment: 고집
+도각참
+기습
+아이언헤드
+안다리걸기
+-->
+烈咬陆鲨
+SC
+Ability: 粗糙皮肤
+Held Item: 讲究围巾
+Stat Alignment: 固执
+龙爪
+地震
+跺脚
+岩石封锁
+奇麒麟
+SC
+Ability: 尾甲
+Held Item: 文柚果
+Stat Alignment: 大胆
+精神强念
+十万伏特
+戏法空间
+守住
+化石翼龙
+SC
+Ability: 紧张感
+Held Item: 化石翼龙进化石
+Stat Alignment: 爽朗
+岩崩
+双翼
+顺风
+广域防守
+仙子伊布
+SC
+Ability: 妖精皮肤
+Held Item: 妖精之羽
+Stat Alignment: 内敛
+巨声
+破坏光线
+电光一闪
+看穿
+喷火龙
+SC
+Ability: 猛火
+Held Item: 喷火龙进化石Y
+Stat Alignment: 胆小
+热风
+气象球
+日光束
+守住
+仆刀将军
+SC
+Ability: 不服输
+Held Item: 气势披带
+Stat Alignment: 固执
+仆刀
+突袭
+铁头
+踢倒
+-->
+烈咬陸鯊
+TC
+Ability: 粗糙皮膚
+Held Item: 講究圍巾
+Stat Alignment: 固執
+龍爪
+地震
+跺腳
+岩石封鎖
+奇麒麟
+TC
+Ability: 尾甲
+Held Item: 文柚果
+Stat Alignment: 大膽
+精神強念
+十萬伏特
+戲法空間
+守住
+化石翼龍
+TC
+Ability: 緊張感
+Held Item: 化石翼龍進化石
+Stat Alignment: 爽朗
+岩崩
+雙翼
+順風
+廣域防守
+仙子伊布
+TC
+Ability: 妖精皮膚
+Held Item: 妖精之羽
+Stat Alignment: 內斂
+巨聲
+破壞光線
+電光一閃
+看穿
+噴火龍
+TC
+Ability: 猛火
+Held Item: 噴火龍進化石Y
+Stat Alignment: 膽小
+熱風
+氣象球
+日光束
+守住
+仆斬將軍
+TC
+Ability: 不服輸
+Held Item: 氣勢披帶
+Stat Alignment: 固執
+仆斬
+突襲
+鐵頭
+踢倒

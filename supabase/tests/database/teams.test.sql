@@ -3,7 +3,7 @@
 -- in a transaction that is rolled back, so the database is left unchanged.
 begin;
 create extension if not exists pgtap with schema extensions;
-select plan(42);
+select plan(46);
 
 -- The game data these tests need. It may already be there from
 -- `pnpm data:sync`, so existing rows are left alone.
@@ -45,7 +45,8 @@ returns jsonb language sql as $$
       'sets', jsonb_build_array(jsonb_build_object(
         'slot', 1, 'speciesId', 'charizard', 'itemId', 'charizarditey',
         'abilityId', 'blaze', 'natureId', 'modest',
-        'moves', jsonb_build_array(move, 'protect'), 'statPoints', null
+        'moves', jsonb_build_array(move, 'protect'), 'statPoints', null,
+        'shiny', true, 'ivs', jsonb_build_object('atk', 0)
       )),
       'media', jsonb_build_array(jsonb_build_object(
         'kind', 'stream_vod', 'url', 'https://example.com/vod', 'startSeconds', 3721
@@ -120,6 +121,30 @@ select throws_ok(
   '23514',
   null,
   'more than 32 stat points in one stat is rejected'
+);
+
+-- Level, IVs and shiny
+
+select is(
+  (select level || '/' || iv_hp || '/' || iv_atk || '/' || shiny from public.team_sets
+    join public.teams on teams.id = team_sets.team_id
+    where teams.fingerprint = 'test-fingerprint' and slot = 1),
+  '50/31/0/true',
+  'imports store shiny and IVs, with level 50 and IV 31 where the payload has none'
+);
+select is(
+  (select level || '/' || iv_spe || '/' || shiny from public.team_sets
+    join public.teams on teams.id = team_sets.team_id
+    where teams.fingerprint = 'test-fingerprint' and slot = 2),
+  '50/31/false',
+  'a set added without them gets level 50, IVs of 31 and not shiny'
+);
+select throws_ok(
+  $$ insert into public.team_sets (team_id, slot, level, iv_atk)
+     select id, 3, 101, 32 from public.teams where fingerprint = 'test-fingerprint' $$,
+  '23514',
+  null,
+  'a level over 100 or an IV over 31 is rejected'
 );
 
 -- Anonymous visitors
@@ -302,6 +327,14 @@ select is(
     where teams.forked_from_id = (select id from public.teams where fingerprint = 'test-fingerprint')),
   1,
   'a fork copies the archetypes'
+);
+select is(
+  (select team_sets.shiny::text || '/' || team_sets.iv_atk from public.team_sets
+    join public.teams on teams.id = team_sets.team_id
+    where teams.forked_from_id = (select id from public.teams where fingerprint = 'test-fingerprint')
+      and team_sets.slot = 1),
+  'true/0',
+  'a fork copies shiny and IVs'
 );
 select is(
   (select visibility || '/' || origin from public.teams

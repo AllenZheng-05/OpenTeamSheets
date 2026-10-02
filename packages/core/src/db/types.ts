@@ -398,7 +398,9 @@ export type Database = {
           id: string;
           name: string;
           num: number;
+          required_ability_id: string | null;
           required_item_id: string | null;
+          required_move_id: string | null;
           spa: number;
           spd: number;
           spe: number;
@@ -417,7 +419,9 @@ export type Database = {
           id: string;
           name: string;
           num: number;
+          required_ability_id?: string | null;
           required_item_id?: string | null;
+          required_move_id?: string | null;
           spa: number;
           spd: number;
           spe: number;
@@ -436,7 +440,9 @@ export type Database = {
           id?: string;
           name?: string;
           num?: number;
+          required_ability_id?: string | null;
           required_item_id?: string | null;
+          required_move_id?: string | null;
           spa?: number;
           spd?: number;
           spe?: number;
@@ -480,10 +486,24 @@ export type Database = {
             referencedColumns: ["id"];
           },
           {
+            foreignKeyName: "species_required_ability_id_fkey";
+            columns: ["required_ability_id"];
+            isOneToOne: false;
+            referencedRelation: "abilities";
+            referencedColumns: ["id"];
+          },
+          {
             foreignKeyName: "species_required_item_id_fkey";
             columns: ["required_item_id"];
             isOneToOne: false;
             referencedRelation: "items";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "species_required_move_id_fkey";
+            columns: ["required_move_id"];
+            isOneToOne: false;
+            referencedRelation: "moves";
             referencedColumns: ["id"];
           },
           {
@@ -630,12 +650,20 @@ export type Database = {
         Row: {
           ability_id: string | null;
           item_id: string | null;
+          iv_atk: number;
+          iv_def: number;
+          iv_hp: number;
+          iv_spa: number;
+          iv_spd: number;
+          iv_spe: number;
+          level: number;
           move_1_id: string | null;
           move_2_id: string | null;
           move_3_id: string | null;
           move_4_id: string | null;
           nature_id: string | null;
           note: string | null;
+          shiny: boolean;
           slot: number;
           sp_atk: number | null;
           sp_def: number | null;
@@ -649,12 +677,20 @@ export type Database = {
         Insert: {
           ability_id?: string | null;
           item_id?: string | null;
+          iv_atk?: number;
+          iv_def?: number;
+          iv_hp?: number;
+          iv_spa?: number;
+          iv_spd?: number;
+          iv_spe?: number;
+          level?: number;
           move_1_id?: string | null;
           move_2_id?: string | null;
           move_3_id?: string | null;
           move_4_id?: string | null;
           nature_id?: string | null;
           note?: string | null;
+          shiny?: boolean;
           slot: number;
           sp_atk?: number | null;
           sp_def?: number | null;
@@ -668,12 +704,20 @@ export type Database = {
         Update: {
           ability_id?: string | null;
           item_id?: string | null;
+          iv_atk?: number;
+          iv_def?: number;
+          iv_hp?: number;
+          iv_spa?: number;
+          iv_spd?: number;
+          iv_spe?: number;
+          level?: number;
           move_1_id?: string | null;
           move_2_id?: string | null;
           move_3_id?: string | null;
           move_4_id?: string | null;
           nature_id?: string | null;
           note?: string | null;
+          shiny?: boolean;
           slot?: number;
           sp_atk?: number | null;
           sp_def?: number | null;

@@ -39,6 +39,12 @@ const dataDir = path.join(rootDir, "packages/core/data");
 const outDir = path.join(dataDir, "generated");
 // Outside the repo on purpose: inside it, Node's module lookup from the
 // Showdown checkout would find this repo's packages instead of Showdown's.
+// Teams our validator is tested on, with Showdown's verdicts saved beside them.
+const verdictsDir = path.join(
+  rootDir,
+  "packages/core/src/teams/__fixtures__/validator",
+);
+
 const cacheDir =
   process.env.OTS_SHOWDOWN_CACHE ??
   path.join(os.homedir(), ".cache", "openteamsheets", "showdown");
@@ -173,3 +179,23 @@ for (const [id, regulation] of Object.entries(data.regulations)) {
   );
 }
 console.log(`Wrote ${path.relative(rootDir, outDir)}`);
+
+// Showdown's verdicts on the validator fixtures, for the current regulation.
+const currentSource = sources.regulations[sources.current]!;
+const verdicts = execFileSync(
+  process.execPath,
+  [
+    "--import",
+    "tsx",
+    "src/showdown-verdicts.ts",
+    buildShowdown(sources.repository, currentSource.commit),
+    currentSource.format,
+    verdictsDir,
+  ],
+  { cwd: toolsDir, encoding: "utf8" },
+);
+writeFileSync(
+  path.join(verdictsDir, "showdown-verdicts.json"),
+  stringifyByLine(JSON.parse(verdicts) as object),
+);
+console.log(`Wrote Showdown's validator verdicts for ${sources.current}`);

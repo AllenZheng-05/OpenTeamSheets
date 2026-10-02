@@ -1,0 +1,11 @@
+{
+  "illegal-move.txt": {"valid":false,"problems":["Excadrill can't learn Moonblast."]},
+  "illegal-species.txt": {"valid":false,"problems":["Cramorant does not exist in Gen 9.","Cramorant can't have Mirror Armor.","Cramorant can't learn Power Trip."]},
+  "item-clause.txt": {"valid":false,"problems":["You are limited to 1 of each item by Item Clause.","(You have more than 1 Focus Sash)"]},
+  "mega-without-stone.txt": {"valid":false,"problems":["Salamence-Mega transforms in-battle with Salamencite, please fix its item."]},
+  "species-clause.txt": {"valid":false,"problems":["You are limited to one of each Pokémon by Species Clause.","(You have more than one Excadrill)"]},
+  "stat-over-32.txt": {"valid":false,"problems":["Tyranitar has more than 32 Stat Points in HP."]},
+  "too-many-stat-points.txt": {"valid":false,"problems":["Excadrill has 96 total Stat Points, which is more than this format's limit of 66."]},
+  "valid.txt": {"valid":true,"problems":[]},
+  "wrong-ability.txt": {"valid":false,"problems":["Excadrill can't have Intimidate."]}
+}

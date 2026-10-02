@@ -106,6 +106,8 @@ await upsert(
       spd: s.spd,
       spe: s.spe,
       required_item_id: s.requiredItemId,
+      required_ability_id: s.requiredAbilityId,
+      required_move_id: s.requiredMoveId,
     })),
 );
 

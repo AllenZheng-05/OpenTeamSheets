@@ -73,6 +73,18 @@ describe("game data", () => {
         speciesIds,
       ),
     ).toEqual([]);
+    expect(
+      missing(
+        species.map((s) => s.requiredAbilityId),
+        abilityIds,
+      ),
+    ).toEqual([]);
+    expect(
+      missing(
+        species.map((s) => s.requiredMoveId),
+        moveIds,
+      ),
+    ).toEqual([]);
   });
 
   it("battle-only forms change from a form that can be legal", () => {

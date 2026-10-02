@@ -1,0 +1,494 @@
+Rillaboom
+EN
+Ability: Grassy Surge
+Held Item: Miracle Seed
+Stat Alignment: Adamant
+Protect
+Fake Out
+Grassy Glide
+U-turn
+Politoed
+EN
+Ability: Drizzle
+Held Item: Sitrus Berry
+Stat Alignment: Calm
+Protect
+Weather Ball
+Perish Song
+Encore
+Archaludon
+EN
+Ability: Stamina
+Held Item: Leftovers
+Stat Alignment: Modest
+Protect
+Electro Shot
+Dragon Pulse
+Aura Sphere
+Gengar
+EN
+Ability: Cursed Body
+Held Item: Gengarite
+Stat Alignment: Modest
+Protect
+Perish Song
+Sludge Bomb
+Shadow Ball
+Incineroar
+EN
+Ability: Intimidate
+Held Item: Passho Berry
+Stat Alignment: Careful
+Protect
+Fake Out
+Throat Chop
+Parting Shot
+Golisopod
+EN
+Ability: Emergency Exit
+Held Item: Golisopite
+Stat Alignment: Adamant
+Protect
+Leech Life
+Sucker Punch
+Swords Dance
+-->
+Gorythmic
+FR
+Ability: Créa-Herbe
+Held Item: Graine Miracle
+Stat Alignment: Rigide
+Abri
+Bluff
+Gliss&#39;Herbe
+Demi-Tour
+Tarpaud
+FR
+Ability: Crachin
+Held Item: Baie Sitrus
+Stat Alignment: Calme
+Abri
+Ball&#39;Météo
+Requiem
+Encore
+Pondralugon
+FR
+Ability: Endurance
+Held Item: Restes
+Stat Alignment: Modeste
+Abri
+Fulgurayon
+Draco-Choc
+Aurasphère
+Ectoplasma
+FR
+Ability: Corps Maudit
+Held Item: Ectoplasmite
+Stat Alignment: Modeste
+Abri
+Requiem
+Bombe Beurk
+Ball&#39;Ombre
+Félinferno
+FR
+Ability: Intimidation
+Held Item: Baie Pocpoc
+Stat Alignment: Prudent
+Abri
+Bluff
+Exécu-Son
+Dernier Mot
+Sarmuraï
+FR
+Ability: Repli Tactique
+Held Item: Sarmuraïte
+Stat Alignment: Rigide
+Abri
+Vampirisme
+Coup Bas
+Danse Lames
+-->
+Rillaboom
+IT
+Ability: Erbogenesi
+Held Item: Miracolseme
+Stat Alignment: Decisa
+Protezione
+Bruciapelo
+Erboscivolata
+Retromarcia
+Politoed
+IT
+Ability: Piovischio
+Held Item: Baccacedro
+Stat Alignment: Calma
+Protezione
+Palla Clima
+Ultimocanto
+Ripeti
+Archaludon
+IT
+Ability: Sopportazione
+Held Item: Avanzi
+Stat Alignment: Modesta
+Protezione
+Elettroraggio
+Dragopulsar
+Sferapulsar
+Gengar
+IT
+Ability: Corpofunesto
+Held Item: Gengarite
+Stat Alignment: Modesta
+Protezione
+Ultimocanto
+Fangobomba
+Palla Ombra
+Incineroar
+IT
+Ability: Prepotenza
+Held Item: Baccapasflo
+Stat Alignment: Cauta
+Protezione
+Bruciapelo
+Colpo Infernale
+Monito
+Golisopod
+IT
+Ability: Passoindietro
+Held Item: Golisopodite
+Stat Alignment: Decisa
+Protezione
+Sanguisuga
+Sbigoattacco
+Danzaspada
+-->
+Gortrom
+DE
+Ability: Gras-Erzeuger
+Held Item: Wundersaat
+Stat Alignment: Hart
+Schutzschild
+Mogelhieb
+Grasrutsche
+Kehrtwende
+Quaxo
+DE
+Ability: Niesel
+Held Item: Tsitrubeere
+Stat Alignment: Still
+Schutzschild
+Meteorologe
+Abgesang
+Zugabe
+Briduradon
+DE
+Ability: Zähigkeit
+Held Item: Überreste
+Stat Alignment: Mäßig
+Schutzschild
+Stromstrahl
+Drachenpuls
+Aurasphäre
+Gengar
+DE
+Ability: Tastfluch
+Held Item: Gengarnit
+Stat Alignment: Mäßig
+Schutzschild
+Abgesang
+Matschbombe
+Spukball
+Fuegro
+DE
+Ability: Bedroher
+Held Item: Foepasbeere
+Stat Alignment: Sacht
+Schutzschild
+Mogelhieb
+Neck Strike
+Abgangstirade
+Tectass
+DE
+Ability: Rückzug
+Held Item: Tectassnit
+Stat Alignment: Hart
+Schutzschild
+Blutsauger
+Tiefschlag
+Schwerttanz
+-->
+Rillaboom
+ES
+Ability: Herbogénesis
+Held Item: Semilla Milagro
+Stat Alignment: Firme
+Protección
+Sorpresa
+Fitoimpulso
+Ida y Vuelta
+Politoed
+ES
+Ability: Llovizna
+Held Item: Baya Zidra
+Stat Alignment: Serena
+Protección
+Meteorobola
+Canto Mortal
+Otra Vez
+Archaludon
+ES
+Ability: Firmeza
+Held Item: Restos
+Stat Alignment: Modesta
+Protección
+Electrorrayo
+Pulso Dragón
+Esfera Aural
+Gengar
+ES
+Ability: Cuerpo Maldito
+Held Item: Gengarita
+Stat Alignment: Modesta
+Protección
+Canto Mortal
+Bomba Lodo
+Bola Sombra
+Incineroar
+ES
+Ability: Intimidación
+Held Item: Baya Pasio
+Stat Alignment: Cauta
+Protección
+Sorpresa
+Golpe Mordaza
+Última Palabra
+Golisopod
+ES
+Ability: Retirada
+Held Item: Golisopodita
+Stat Alignment: Firme
+Protección
+Chupavidas
+Golpe Bajo
+Danza Espada
+-->
+ゴリランダー
+JP
+Ability: グラスメイカー
+Held Item: きせきのタネ
+Stat Alignment: いじっぱり
+まもる
+ねこだまし
+グラススライダー
+とんぼがえり
+ニョロトノ
+JP
+Ability: あめふらし
+Held Item: オボンのみ
+Stat Alignment: おだやか
+まもる
+ウェザーボール
+ほろびのうた
+アンコール
+ブリジュラス
+JP
+Ability: じきゅうりょく
+Held Item: たべのこし
+Stat Alignment: ひかえめ
+まもる
+エレクトロビーム
+りゅうのはどう
+はどうだん
+ゲンガー
+JP
+Ability: のろわれボディ
+Held Item: ゲンガナイト
+Stat Alignment: ひかえめ
+まもる
+ほろびのうた
+ヘドロばくだん
+シャドーボール
+ガオガエン
+JP
+Ability: いかく
+Held Item: イトケのみ
+Stat Alignment: しんちょう
+まもる
+ねこだまし
+じごくづき
+すてゼリフ
+グソクムシャ
+JP
+Ability: ききかいひ
+Held Item: グソクムシャナイト
+Stat Alignment: いじっぱり
+まもる
+きゅうけつ
+ふいうち
+つるぎのまい
+-->
+고릴타
+KO
+Ability: 그래스메이커
+Held Item: 기적의씨
+Stat Alignment: 고집
+방어
+속이다
+그래스슬라이더
+유턴
+왕구리
+KO
+Ability: 잔비
+Held Item: 자뭉열매
+Stat Alignment: 차분
+방어
+웨더볼
+멸망의노래
+앵콜
+브리두라스
+KO
+Ability: 지구력
+Held Item: 먹다남은음식
+Stat Alignment: 조심
+방어
+일렉트로빔
+용의파동
+파동탄
+팬텀
+KO
+Ability: 저주받은바디
+Held Item: 팬텀나이트
+Stat Alignment: 조심
+방어
+멸망의노래
+오물폭탄
+섀도볼
+어흥염
+KO
+Ability: 위협
+Held Item: 꼬시개열매
+Stat Alignment: 신중
+방어
+속이다
+지옥찌르기
+막말내뱉기
+갑주무사
+KO
+Ability: 위기회피
+Held Item: 갑주무사나이트
+Stat Alignment: 고집
+방어
+흡혈
+기습
+칼춤
+-->
+轰擂金刚猩
+SC
+Ability: 青草制造者
+Held Item: 奇迹种子
+Stat Alignment: 固执
+守住
+击掌奇袭
+青草滑梯
+急速折返
+蚊香蛙皇
+SC
+Ability: 降雨
+Held Item: 文柚果
+Stat Alignment: 温和
+守住
+气象球
+终焉之歌
+再来一次
+铝钢桥龙
+SC
+Ability: 持久力
+Held Item: 吃剩的东西
+Stat Alignment: 内敛
+守住
+电光束
+龙之波动
+波导弹
+耿鬼
+SC
+Ability: 咒术之躯
+Held Item: 耿鬼进化石
+Stat Alignment: 内敛
+守住
+终焉之歌
+污泥炸弹
+暗影球
+炽焰咆哮虎
+SC
+Ability: 威吓
+Held Item: 千香果
+Stat Alignment: 慎重
+守住
+击掌奇袭
+深渊突刺
+抛下狠话
+具甲武者
+SC
+Ability: 危险回避
+Held Item: 具甲武者进化石
+Stat Alignment: 固执
+守住
+汲取
+突袭
+剑舞
+-->
+轟擂金剛猩
+TC
+Ability: 青草製造者
+Held Item: 奇跡種子
+Stat Alignment: 固執
+守住
+擊掌奇襲
+青草滑梯
+急速折返
+蚊香蛙皇
+TC
+Ability: 降雨
+Held Item: 文柚果
+Stat Alignment: 溫和
+守住
+氣象球
+滅亡之歌
+再來一次
+鋁鋼橋龍
+TC
+Ability: 持久力
+Held Item: 吃剩的東西
+Stat Alignment: 內斂
+守住
+電光束
+龍之波動
+波導彈
+耿鬼
+TC
+Ability: 詛咒之軀
+Held Item: 耿鬼進化石
+Stat Alignment: 內斂
+守住
+滅亡之歌
+污泥炸彈
+暗影球
+熾焰咆哮虎
+TC
+Ability: 威嚇
+Held Item: 千香果
+Stat Alignment: 慎重
+守住
+擊掌奇襲
+地獄突刺
+拋下狠話
+具甲武者
+TC
+Ability: 危險迴避
+Held Item: 具甲武者進化石
+Stat Alignment: 固執
+守住
+吸血
+突襲
+劍舞

@@ -1,0 +1,494 @@
+Excadrill
+EN
+Ability: Sand Rush
+Held Item: Focus Sash
+Stat Alignment: Jolly
+Iron Head
+High Horsepower
+Rock Slide
+Protect
+Salamence
+EN
+Ability: Intimidate
+Held Item: Salamencite
+Stat Alignment: Timid
+Hyper Voice
+Draco Meteor
+Flamethrower
+Protect
+Tyranitar
+EN
+Ability: Sand Stream
+Held Item: Tyranitarite
+Stat Alignment: Jolly
+Rock Slide
+Knock Off
+Low Kick
+Protect
+Indeedee [Male]
+EN
+Ability: Psychic Surge
+Held Item: Choice Scarf
+Stat Alignment: Modest
+Expanding Force
+Mystical Fire
+Trick
+Protect
+Corviknight
+EN
+Ability: Mirror Armor
+Held Item: Psychic Seed
+Stat Alignment: Careful
+Brave Bird
+Power Trip
+Bulk Up
+Roost
+Sneasler
+EN
+Ability: Unburden
+Held Item: White Herb
+Stat Alignment: Adamant
+Dire Claw
+Close Combat
+Coaching
+Protect
+-->
+Minotaupe
+FR
+Ability: Baigne Sable
+Held Item: Ceinture Force
+Stat Alignment: Jovial
+Tête de Fer
+Cavalerie Lourde
+Éboulement
+Abri
+Drattak
+FR
+Ability: Intimidation
+Held Item: Drattakite
+Stat Alignment: Timide
+Mégaphone
+Draco-Météore
+Lance-Flammes
+Abri
+Tyranocif
+FR
+Ability: Sable Volant
+Held Item: Tyranocivite
+Stat Alignment: Jovial
+Éboulement
+Sabotage
+Balayage
+Abri
+Wimessir [Mâle]
+FR
+Ability: Créa-Psy
+Held Item: Mouchoir Choix
+Stat Alignment: Modeste
+Vaste Pouvoir
+Feu Ensorcelé
+Tour de Magie
+Abri
+Corvaillus
+FR
+Ability: Armure Miroir
+Held Item: Graine Psychique
+Stat Alignment: Prudent
+Rapace
+Arrogance
+Gonflette
+Atterrissage
+Farfurex
+FR
+Ability: Délestage
+Held Item: Herbe Blanche
+Stat Alignment: Rigide
+Griffes Funestes
+Close Combat
+Coaching
+Abri
+-->
+Excadrill
+IT
+Ability: Remasabbia
+Held Item: Focalnastro
+Stat Alignment: Allegra
+Metaltestata
+Forza Equina
+Frana
+Protezione
+Salamence
+IT
+Ability: Prepotenza
+Held Item: Salamencite
+Stat Alignment: Timida
+Granvoce
+Dragobolide
+Lanciafiamme
+Protezione
+Tyranitar
+IT
+Ability: Sabbiafiume
+Held Item: Tyranitarite
+Stat Alignment: Allegra
+Frana
+Privazione
+Colpo Basso
+Protezione
+Indeedee [Maschio]
+IT
+Ability: Psicogenesi
+Held Item: Stolascelta
+Stat Alignment: Modesta
+Vastenergia
+Magifiamma
+Raggiro
+Protezione
+Corviknight
+IT
+Ability: Blindospecchio
+Held Item: Psicoseme
+Stat Alignment: Cauta
+Baldeali
+Tracotanza
+Granfisico
+Trespolo
+Sneasler
+IT
+Ability: Agiltecnica
+Held Item: Erbachiara
+Stat Alignment: Decisa
+Artigli Fatali
+Zuffa
+Coaching
+Protezione
+-->
+Stalobor
+DE
+Ability: Sandscharrer
+Held Item: Fokusgurt
+Stat Alignment: Froh
+Eisenschädel
+Pferdestärke
+Steinhagel
+Schutzschild
+Brutalanda
+DE
+Ability: Bedroher
+Held Item: Brutalandanit
+Stat Alignment: Scheu
+Schallwelle
+Draco Meteor
+Flammenwurf
+Schutzschild
+Despotar
+DE
+Ability: Sandsturm
+Held Item: Despotarnit
+Stat Alignment: Froh
+Steinhagel
+Abschlag
+Fußkick
+Schutzschild
+Servol [Männlich]
+DE
+Ability: Psycho-Erzeuger
+Held Item: Wahlschal
+Stat Alignment: Mäßig
+Flächenmacht
+Magieflamme
+Trickbetrug
+Schutzschild
+Krarmor
+DE
+Ability: Spiegelrüstung
+Held Item: Psycho-Samen
+Stat Alignment: Sacht
+Sturzflug
+Überheblichkeit
+Protzer
+Ruheort
+Snieboss
+DE
+Ability: Entlastung
+Held Item: Schlohkraut
+Stat Alignment: Hart
+Unheilsklauen
+Nahkampf
+Coaching
+Schutzschild
+-->
+Excadrill
+ES
+Ability: Ímpetu Arena
+Held Item: Banda Aguante
+Stat Alignment: Alegre
+Cabeza de Hierro
+Fuerza Equina
+Avalancha
+Protección
+Salamence
+ES
+Ability: Intimidación
+Held Item: Salamencita
+Stat Alignment: Miedosa
+Vozarrón
+Cometa Draco
+Lanzallamas
+Protección
+Tyranitar
+ES
+Ability: Chorro Arena
+Held Item: Tyranitarita
+Stat Alignment: Alegre
+Avalancha
+Desarme
+Patada Baja
+Protección
+Indeedee [Macho]
+ES
+Ability: Psicogénesis
+Held Item: Pañuelo Elección
+Stat Alignment: Modesta
+Vasta Fuerza
+Llama Embrujada
+Truco
+Protección
+Corviknight
+ES
+Ability: Coraza Reflejo
+Held Item: Semilla Psique
+Stat Alignment: Cauta
+Pájaro Osado
+Chulería
+Corpulencia
+Respiro
+Sneasler
+ES
+Ability: Liviano
+Held Item: Hierba Blanca
+Stat Alignment: Firme
+Garra Nociva
+A Bocajarro
+Motivación
+Protección
+-->
+ドリュウズ
+JP
+Ability: すなかき
+Held Item: きあいのタスキ
+Stat Alignment: ようき
+アイアンヘッド
+１０まんばりき
+いわなだれ
+まもる
+ボーマンダ
+JP
+Ability: いかく
+Held Item: ボーマンダナイト
+Stat Alignment: おくびょう
+ハイパーボイス
+りゅうせいぐん
+かえんほうしゃ
+まもる
+バンギラス
+JP
+Ability: すなおこし
+Held Item: バンギラスナイト
+Stat Alignment: ようき
+いわなだれ
+はたきおとす
+けたぐり
+まもる
+イエッサン [オスのすがた]
+JP
+Ability: サイコメイカー
+Held Item: こだわりスカーフ
+Stat Alignment: ひかえめ
+ワイドフォース
+マジカルフレイム
+トリック
+まもる
+アーマーガア
+JP
+Ability: ミラーアーマー
+Held Item: サイコシード
+Stat Alignment: しんちょう
+ブレイブバード
+つけあがる
+ビルドアップ
+はねやすめ
+オオニューラ
+JP
+Ability: かるわざ
+Held Item: しろいハーブ
+Stat Alignment: いじっぱり
+フェイタルクロー
+インファイト
+コーチング
+まもる
+-->
+몰드류
+KO
+Ability: 모래헤치기
+Held Item: 기합의띠
+Stat Alignment: 명랑
+아이언헤드
+10만마력
+스톤샤워
+방어
+보만다
+KO
+Ability: 위협
+Held Item: 보만다나이트
+Stat Alignment: 겁쟁이
+하이퍼보이스
+용성군
+화염방사
+방어
+마기라스
+KO
+Ability: 모래날림
+Held Item: 마기라스나이트
+Stat Alignment: 명랑
+스톤샤워
+탁쳐서떨구기
+안다리걸기
+방어
+에써르 [수컷의 모습]
+KO
+Ability: 사이코메이커
+Held Item: 구애스카프
+Stat Alignment: 조심
+와이드포스
+매지컬플레임
+트릭
+방어
+아머까오
+KO
+Ability: 미러아머
+Held Item: 사이코시드
+Stat Alignment: 신중
+브레이브버드
+기어오르기
+벌크업
+날개쉬기
+포푸니크
+KO
+Ability: 곡예
+Held Item: 하양허브
+Stat Alignment: 고집
+페이탈클로
+인파이트
+코칭
+방어
+-->
+龙头地鼠
+SC
+Ability: 拨沙
+Held Item: 气势披带
+Stat Alignment: 爽朗
+铁头
+十万马力
+岩崩
+守住
+暴飞龙
+SC
+Ability: 威吓
+Held Item: 暴飞龙进化石
+Stat Alignment: 胆小
+巨声
+流星群
+喷射火焰
+守住
+班基拉斯
+SC
+Ability: 扬沙
+Held Item: 班基拉斯进化石
+Stat Alignment: 爽朗
+岩崩
+拍落
+踢倒
+守住
+爱管侍 [雄性的样子]
+SC
+Ability: 精神制造者
+Held Item: 讲究围巾
+Stat Alignment: 内敛
+广域战力
+魔法火焰
+戏法
+守住
+钢铠鸦
+SC
+Ability: 镜甲
+Held Item: 精神种子
+Stat Alignment: 慎重
+勇鸟猛攻
+嚣张
+健美
+羽栖
+大狃拉
+SC
+Ability: 轻装
+Held Item: 白色香草
+Stat Alignment: 固执
+克命爪
+近身战
+指导
+守住
+-->
+龍頭地鼠
+TC
+Ability: 撥沙
+Held Item: 氣勢披帶
+Stat Alignment: 爽朗
+鐵頭
+十萬馬力
+岩崩
+守住
+暴飛龍
+TC
+Ability: 威嚇
+Held Item: 暴飛龍進化石
+Stat Alignment: 膽小
+巨聲
+流星群
+噴射火焰
+守住
+班基拉斯
+TC
+Ability: 揚沙
+Held Item: 班基拉斯進化石
+Stat Alignment: 爽朗
+岩崩
+拍落
+踢倒
+守住
+愛管侍 [雄性的樣子]
+TC
+Ability: 精神製造者
+Held Item: 講究圍巾
+Stat Alignment: 內斂
+廣域戰力
+魔法火焰
+戲法
+守住
+鋼鎧鴉
+TC
+Ability: 鏡甲
+Held Item: 精神種子
+Stat Alignment: 慎重
+勇鳥猛攻
+囂張
+健美
+羽棲
+大狃拉
+TC
+Ability: 輕裝
+Held Item: 白色香草
+Stat Alignment: 固執
+剋命爪
+近身戰
+指導
+守住
