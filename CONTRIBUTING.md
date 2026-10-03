@@ -23,7 +23,7 @@ cd OpenTeamSheets
 pnpm install
 pnpm db:start   # local Supabase; prints the URL and keys
 # copy .env.example to apps/web/.env.local and apps/worker/.env, filled in from `pnpm supabase status`
-pnpm db:seed    # loads the game data into the local database
+pnpm db:seed    # game data plus one tournament; the first run takes about 40 minutes
 pnpm dev        # http://localhost:3000
 ```
 
@@ -86,6 +86,15 @@ Champions game data (species, moves, abilities, items, type chart, and each regu
 - **The team validator** (`packages/core/src/teams/validate.ts`) follows Showdown's Champions rules. Its tests run every team in `src/teams/__fixtures__/validator` and expect the same verdict as Showdown's own validator, saved in `showdown-verdicts.json` by `pnpm data:pull`. To cover a new rule, add a team there and re-run `pnpm data:pull`.
 - **A new regulation:** a regulation's rules usually only become known once it goes live. Add it to `showdown-sources.json` once Showdown supports it, and keep it `partial` in `regulation-status.json` until the data has been checked.
 - **Loading it locally:** `pnpm data:sync` copies the data into your local database. It needs `apps/worker/.env`; see `.env.example`.
+
+## Tournament data
+
+Tournament teams come from official Play! Pokémon events, as published on [Limitless VGC](https://limitlessvgc.com): every Masters player's placement, record, whether they made day 2 and top cut, and their team.
+
+- **The events** are listed in `data/official-events.yaml`. Adding one is a single entry: its id on limitlessvgc.com and its standings site id (the "Standings" link on the event's page).
+- **Importing:** `pnpm import:limitless` imports every listed event into your local database; `--event 0037` imports just one, and `--dry-run` checks without writing. Running it again is safe: identical teams are stored once, with a placement for each player who used them.
+- **Be gentle with Limitless.** The importer reads one page per second and caches every page in `~/.cache/openteamsheets/limitless`, so a large event takes about 40 minutes the first time and seconds after that. Use `--refresh` only when an event's results have changed.
+- **Skipped teams:** players without a teamlist, and teams that break the regulation's rules, are skipped and listed in the output rather than stopping the import.
 
 ## License
 

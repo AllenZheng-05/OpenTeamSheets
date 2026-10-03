@@ -1,11 +1,8 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import {
-  getCurrentRegulation,
-  getNextRegulation,
-  type Regulation,
-} from "@ots/core";
+import { useRouter } from "next/navigation";
+import { useEffect, useRef, useState } from "react";
+import { getCurrentRegulation, getNextRegulation } from "@ots/core";
 
 // Countdown starts 72 hours before the next regulation
 const COUNTDOWN_WINDOW_MS = 72 * 60 * 60 * 1000;
@@ -13,12 +10,15 @@ const COUNTDOWN_WINDOW_MS = 72 * 60 * 60 * 1000;
 const MAX_TIMEOUT_MS = 2 ** 31 - 1;
 
 /**
- * The current regulation, plus a live countdown once the next one is within
- * 72 hours. Switches to the new regulation at zero without a reload.
+ * A live countdown once the next regulation is within 72 hours; nothing
+ * otherwise. When it starts, the page reloads its data, so Browse switches
+ * to the new regulation without a manual reload.
  */
-export function RegulationStatus({ initial }: { initial: Regulation }) {
+export function RegulationCountdown() {
+  const router = useRouter();
   // Null until mounted, so the server and the first browser render match.
   const [now, setNow] = useState<Date | null>(null);
+  const regulationAtLoad = useRef<string | null>(null);
 
   useEffect(() => {
     let timer: ReturnType<typeof setTimeout>;
@@ -26,6 +26,13 @@ export function RegulationStatus({ initial }: { initial: Regulation }) {
     function tick() {
       const current = new Date();
       setNow(current);
+
+      const regulation = getCurrentRegulation(current);
+      regulationAtLoad.current ??= regulation;
+      if (regulation !== regulationAtLoad.current) {
+        regulationAtLoad.current = regulation;
+        router.refresh();
+      }
 
       const next = getNextRegulation(current);
       if (!next) return;
@@ -42,25 +49,19 @@ export function RegulationStatus({ initial }: { initial: Regulation }) {
 
     tick();
     return () => clearTimeout(timer);
-  }, []);
+  }, [router]);
 
-  const regulation = now ? getCurrentRegulation(now) : initial;
   const next = now ? getNextRegulation(now) : undefined;
   const msLeft = now && next ? Date.parse(next.startsAt) - now.getTime() : null;
+  if (!next || msLeft === null || msLeft > COUNTDOWN_WINDOW_MS) return null;
 
   return (
-    <>
-      Regulation {regulation}
-      {next && msLeft !== null && msLeft <= COUNTDOWN_WINDOW_MS && (
-        <>
-          {" · "}
-          {next.id} starts in{" "}
-          <time role="timer" dateTime={next.startsAt}>
-            {formatCountdown(msLeft)}
-          </time>
-        </>
-      )}
-    </>
+    <p className="text-sm text-neutral-500">
+      Regulation {next.id} starts in{" "}
+      <time role="timer" dateTime={next.startsAt} className="tabular-nums">
+        {formatCountdown(msLeft)}
+      </time>
+    </p>
   );
 }
 

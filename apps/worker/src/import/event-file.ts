@@ -21,6 +21,8 @@ export interface EventFile {
     name: string;
     source: (typeof SOURCES)[number];
     sourceId: string;
+    /** The event's name in URLs ("baltimore-2027"); defaults to the file's name. */
+    slug: string;
     regulation: Regulation;
     official: boolean;
     startsOn: string;
@@ -31,7 +33,8 @@ export interface EventFile {
   teams: {
     player: string;
     placement?: number;
-    record?: string;
+    wins?: number;
+    losses?: number;
     teamlistUrl?: string;
     paste: string;
     media?: {
@@ -47,8 +50,14 @@ type Fields = Record<string, unknown>;
 const isObject = (value: unknown): value is Fields =>
   typeof value === "object" && value !== null && !Array.isArray(value);
 
-/** Reads an event file, or throws listing everything wrong with its shape. */
-export function readEventFile(text: string): EventFile {
+const SLUG = /^[a-z0-9]+(-[a-z0-9]+)*$/;
+
+/**
+ * Reads an event file, or throws listing everything wrong with its shape.
+ * `fileSlug` (the file's name, such as "baltimore-2027") is the event's
+ * slug unless the file sets its own.
+ */
+export function readEventFile(text: string, fileSlug?: string): EventFile {
   const problems: string[] = [];
   const data: unknown = parseYaml(text);
   if (!isObject(data) || !isObject(data.event) || !Array.isArray(data.teams)) {
@@ -56,6 +65,7 @@ export function readEventFile(text: string): EventFile {
       "An event file needs an `event` section and a `teams` list",
     );
   }
+  data.event.slug ??= fileSlug;
 
   const check = (ok: boolean, message: string) => {
     if (!ok) problems.push(message);
@@ -96,6 +106,10 @@ export function readEventFile(text: string): EventFile {
   );
   textField(event, "sourceId", "event");
   check(
+    typeof event.slug === "string" && SLUG.test(event.slug),
+    "event: `slug` must be lowercase words joined by hyphens, such as baltimore-2027",
+  );
+  check(
     typeof event.regulation === "string" && isRegulation(event.regulation),
     "event: `regulation` must be a regulation such as M-C",
   );
@@ -118,7 +132,13 @@ export function readEventFile(text: string): EventFile {
     textField(team, "player", where);
     textField(team, "paste", where);
     numberField(team, "placement", where);
-    textField(team, "record", where, false);
+    for (const key of ["wins", "losses"]) {
+      check(
+        team[key] === undefined ||
+          (Number.isInteger(team[key]) && (team[key] as number) >= 0),
+        `${where}: \`${key}\` must be a whole number`,
+      );
+    }
     textField(team, "teamlistUrl", where, false);
     if (typeof team.player === "string") {
       check(
@@ -233,7 +253,8 @@ export async function prepareImport(
       archetypes: report.archetypes,
       playerName: entry.player,
       placement: entry.placement ?? null,
-      record: entry.record ?? null,
+      wins: entry.wins ?? null,
+      losses: entry.losses ?? null,
       teamlistUrl: entry.teamlistUrl ?? null,
       sets: team.sets.map((set, index) => ({
         slot: index + 1,

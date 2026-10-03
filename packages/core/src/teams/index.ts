@@ -11,3 +11,4 @@ export {
 } from "./validate";
 export { teamFingerprint } from "./fingerprint";
 export { deriveArchetypes } from "./archetypes";
+export { displaySpecies, findId, getSpecies, itemForm, nameOf } from "./lookup";

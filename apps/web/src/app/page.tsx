@@ -1,36 +1,66 @@
+import Link from "next/link";
 import { connection } from "next/server";
 import { getCurrentRegulation } from "@ots/core";
-import { RegulationStatus } from "@/components/regulation-status";
+import { getRegulationDataStatus } from "@ots/core/game-data";
+import { RegulationCountdown } from "@/components/regulation-countdown";
 
+/**
+ * The home page: one search bar. Search, with filters and box matching,
+ * arrives in milestone 2; until then the bar points to the two tabs.
+ */
 export default async function Home() {
-  // Render on each request, so the regulation is correct the moment it changes.
+  // Render on each request, so the regulation is right the moment it changes.
   await connection();
+  const regulation = getCurrentRegulation();
+  const rulesPending = getRegulationDataStatus(regulation) !== "complete";
 
   return (
-    <>
-      <main className="flex flex-1 flex-col items-center justify-center gap-6 px-4 py-16 text-center">
-        <p className="rounded-full border border-current/20 px-3 py-1 text-sm opacity-70">
-          Coming soon · <RegulationStatus initial={getCurrentRegulation()} />
-        </p>
-        <h1 className="text-4xl font-semibold tracking-tight sm:text-5xl">
-          Open Team Sheets
-        </h1>
-        <p className="max-w-xl text-lg opacity-80">
-          A free hub for finding, building and sharing Pokémon Champions VGC
-          teams. Search tournament and community teams, match them to your box,
-          and tune them in a builder with a built-in damage calculator.
-        </p>
-        <a
-          href="https://github.com/AllenZheng-05/OpenTeamSheets"
-          className="rounded-md bg-foreground px-4 py-2 text-sm font-medium text-background hover:opacity-90"
+    <div className="flex flex-col items-center pt-16 text-center sm:pt-24">
+      <h1 className="text-3xl font-semibold tracking-tight sm:text-4xl">
+        Open Team Sheets
+      </h1>
+      <p className="mt-2 text-neutral-500">
+        Find, build and share Pokémon Champions VGC teams.
+      </p>
+
+      <form role="search" className="mt-8 w-full max-w-xl">
+        <label htmlFor="search" className="sr-only">
+          Search teams
+        </label>
+        <input
+          id="search"
+          type="search"
+          disabled
+          placeholder="Search teams by Pokémon, player or event"
+          className="w-full rounded-xl border border-neutral-300 px-4 py-3 text-base shadow-sm placeholder:text-neutral-400 disabled:cursor-not-allowed disabled:bg-neutral-50"
+        />
+      </form>
+      <p className="mt-3 text-sm text-neutral-500">
+        Search is coming soon. For now, browse{" "}
+        <Link
+          href="/tournament"
+          className="text-neutral-900 underline underline-offset-2"
         >
-          Follow along on GitHub
-        </a>
-      </main>
-      <footer className="px-4 py-6 text-center text-xs opacity-60">
-        Open Team Sheets is an unofficial fan project, not affiliated with or
-        endorsed by Nintendo, Game Freak, Creatures or The Pokémon Company.
-      </footer>
-    </>
+          tournament teams
+        </Link>{" "}
+        or{" "}
+        <Link
+          href="/community"
+          className="text-neutral-900 underline underline-offset-2"
+        >
+          community teams
+        </Link>
+        .
+      </p>
+
+      <div className="mt-10 space-y-1 text-sm text-neutral-500">
+        <p>
+          Current format:{" "}
+          <span className="text-neutral-900">Regulation {regulation}</span>
+          {rulesPending && " · rules still being added"}
+        </p>
+        <RegulationCountdown />
+      </div>
+    </div>
   );
 }

@@ -3,7 +3,7 @@
 -- in a transaction that is rolled back, so the database is left unchanged.
 begin;
 create extension if not exists pgtap with schema extensions;
-select plan(46);
+select plan(54);
 
 -- The game data these tests need. It may already be there from
 -- `pnpm data:sync`, so existing rows are left alone.
@@ -30,17 +30,25 @@ insert into public.regulations (id, starts_at, data_status) values ('M-C', '2026
 
 -- A one-Pokémon payload is enough here: completeness is checked by the
 -- importer before it calls import_event().
-create function pg_temp.payload(source_id text, fingerprint text, move text default 'heatwave')
+create function pg_temp.payload(
+  source_id text,
+  fingerprint text,
+  move text default 'heatwave',
+  top_cut boolean default true
+)
 returns jsonb language sql as $$
   select jsonb_build_object(
     'event', jsonb_build_object(
-      'source', 'other', 'sourceId', source_id, 'name', 'Test event ' || source_id,
+      'source', 'other', 'sourceId', source_id, 'slug', source_id,
+      'name', 'Test event ' || source_id,
       'regulationId', 'M-C', 'official', true,
-      'startsOn', '2026-09-19', 'endsOn', '2026-09-20', 'playerCount', 100
+      'startsOn', '2026-09-19', 'endsOn', '2026-09-20', 'playerCount', 100,
+      'topCutSize', 8
     ),
     'teams', jsonb_build_array(jsonb_build_object(
       'fingerprint', fingerprint, 'archetypes', jsonb_build_array('sun'),
-      'playerName', 'Test Player', 'placement', 1, 'record', '10-2',
+      'playerName', 'Test Player', 'sourcePlayerId', '991', 'placement', 1,
+      'wins', 15, 'losses', 2, 'madeDayTwo', true, 'madeTopCut', top_cut,
       'teamlistUrl', 'https://example.com/teamlist',
       'sets', jsonb_build_array(jsonb_build_object(
         'slot', 1, 'speciesId', 'charizard', 'itemId', 'charizarditey',
@@ -101,6 +109,18 @@ select is(
   2,
   'the same team at a second event gains a second source'
 );
+select is(
+  (select slug from public.events where source = 'other' and source_id = 'test-a'),
+  'test-a',
+  'an imported event keeps its slug'
+);
+select throws_ok(
+  $$ insert into public.events (source, source_id, slug, name, regulation_id, starts_on, ends_on)
+     values ('rk9', 'another-event', 'test-a', 'Another event', 'M-C', '2026-10-01', '2026-10-01') $$,
+  '23505',
+  null,
+  'two events cannot share a slug'
+);
 
 -- Tournament teams: integrity
 
@@ -147,6 +167,38 @@ select throws_ok(
   'a level over 100 or an IV over 31 is rejected'
 );
 
+-- Official results: record, day 2 and top cut
+
+select is(
+  (select wins || '-' || losses || '/' || made_day_two || '/' || made_top_cut
+    from public.team_sources
+    join public.events on events.id = team_sources.event_id
+    where events.source_id = 'test-a'),
+  '15-2/true/true',
+  'a placement stores the record and whether it made day 2 and top cut'
+);
+select is(
+  (select top_cut_size from public.events where source_id = 'test-a'),
+  8::smallint,
+  'an event stores its top cut size'
+);
+select public.import_event(pg_temp.payload('test-a', 'test-fingerprint', 'heatwave', false));
+select is(
+  (select made_top_cut from public.team_sources
+    join public.events on events.id = team_sources.event_id
+    where events.source_id = 'test-a'),
+  false,
+  're-importing updates a placement''s flags'
+);
+select lives_ok(
+  $$ insert into public.team_sources (team_id, event_id, player_name, source_player_id)
+     select team_id, event_id, player_name, '992' from public.team_sources
+     join public.events on events.id = team_sources.event_id
+     where events.source_id = 'test-a' $$,
+  'two players with the same name can both place at an event'
+);
+delete from public.team_sources where source_player_id = '992';
+
 -- Anonymous visitors
 
 set local role anon;
@@ -161,6 +213,17 @@ select is(
     where teams.fingerprint = 'test-fingerprint'),
   2, -- the imported set, plus the Mega added above
   'anyone can read the sets of public teams'
+);
+select is(
+  (select count(*)::integer from public.tournament_placements where event_slug in ('test-a', 'test-b')),
+  2,
+  'anyone can browse tournament placements, with their event'
+);
+select is(
+  (select made_top_cut::text || '/' || top_cut_size from public.tournament_placements
+    where event_slug = 'test-a'),
+  'false/8',
+  'browsing shows whether a placement made top cut'
 );
 select throws_ok(
   $$ insert into public.teams (regulation_id, origin) values ('M-C', 'community') $$,

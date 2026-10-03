@@ -44,7 +44,10 @@ for (const file of files) {
   const name = path.relative(base, file);
   let result: PreparedImport;
   try {
-    result = await prepareImport(readEventFile(readFileSync(file, "utf8")));
+    const slug = path.basename(file).replace(/\.ya?ml$/, "");
+    result = await prepareImport(
+      readEventFile(readFileSync(file, "utf8"), slug),
+    );
   } catch (error) {
     console.error(`${name}:\n${(error as Error).message}`);
     failed = true;
