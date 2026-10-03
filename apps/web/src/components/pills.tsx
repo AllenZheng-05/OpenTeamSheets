@@ -1,5 +1,5 @@
-// Small labels. Type pills carry each type's usual colour; everything else
-// stays neutral, so colour always means a Pokémon type.
+// Small labels. Type pills carry each type's usual colour; amber marks a
+// team sheet's errors; everything else stays neutral.
 
 const TYPE_COLORS: Record<string, string> = {
   normal: "#9fa19f",
@@ -50,6 +50,15 @@ export function StageBadge({ stage }: { stage: "top-cut" | "day-2" }) {
       }`}
     >
       {stage === "top-cut" ? "Top cut" : "Day 2"}
+    </span>
+  );
+}
+
+/** A team sheet with errors as published, such as a move it can't learn. */
+export function SheetErrorsBadge() {
+  return (
+    <span className="rounded bg-amber-100 px-1.5 py-0.5 text-[11px] font-medium normal-case tracking-normal text-amber-900">
+      Sheet errors
     </span>
   );
 }

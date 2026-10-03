@@ -7,6 +7,7 @@ const row: Tables<"team_sets"> = {
   slot: 2,
   species_id: "salamence",
   item_id: "salamencite",
+  listed_item: null,
   ability_id: "intimidate",
   nature_id: "timid",
   move_1_id: "hypervoice",
@@ -36,6 +37,7 @@ describe("setFromRow", () => {
       nickname: null,
       speciesId: "salamence",
       itemId: "salamencite",
+      listedItem: null,
       abilityId: "intimidate",
       natureId: "timid",
       moveIds: ["hypervoice", "dracometeor"],
@@ -87,5 +89,22 @@ describe("pokemonView", () => {
     expect(
       pokemonView(setFromRow({ ...row, item_id: null }), 2).itemSpriteNum,
     ).toBeNull();
+  });
+
+  it("marks a sheet's errors on the listed ability and moves", () => {
+    const view = pokemonView(setFromRow(row), 2, [
+      {
+        slot: 1,
+        message: "Salamence can't learn Hyper Voice",
+        field: "move",
+        value: "hypervoice",
+        reading: "Double-Edge",
+      },
+    ]);
+    expect(view.abilityMark).toBeNull();
+    expect(view.moveMarks).toEqual([
+      { message: "Salamence can't learn Hyper Voice", reading: "Double-Edge" },
+      null,
+    ]);
   });
 });

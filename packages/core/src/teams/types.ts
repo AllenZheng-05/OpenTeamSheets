@@ -17,6 +17,11 @@ export interface TeamSet {
   /** May be a battle-only form such as a Mega, as in Showdown. */
   speciesId: string | null;
   itemId: string | null;
+  /**
+   * An item an official team sheet lists that isn't in the game (Choice
+   * Band), as written; itemId is then null. Only imported sheets have one.
+   */
+  listedItem?: string | null;
   abilityId: string | null;
   natureId: string | null;
   /** Up to four, in order. */
@@ -44,6 +49,10 @@ export interface Problem {
   message: string;
   /** For parse problems, the line of the pasted text (1-based). */
   line?: number;
+  /** For an illegal item, ability or move, which one. */
+  field?: "item" | "ability" | "move";
+  /** Its id, or for an item that isn't in the game, its name as listed. */
+  value?: string;
 }
 
 export interface ParseResult {

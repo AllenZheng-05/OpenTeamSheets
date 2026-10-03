@@ -185,7 +185,8 @@ export function exportShowdown(team: Team): string {
       const lines: string[] = [];
       const species = set.speciesId ? nameOf("species", set.speciesId) : "";
       const name = set.nickname ? `${set.nickname} (${species})` : species;
-      lines.push(set.itemId ? `${name} @ ${nameOf("item", set.itemId)}` : name);
+      const item = set.itemId ? nameOf("item", set.itemId) : set.listedItem;
+      lines.push(item ? `${name} @ ${item}` : name);
       if (set.abilityId) {
         lines.push(`Ability: ${nameOf("ability", set.abilityId)}`);
       }

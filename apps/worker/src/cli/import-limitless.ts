@@ -2,17 +2,21 @@
  * Imports official events from Limitless VGC (data/official-events.yaml).
  *
  * Usage: pnpm import:limitless [--event 0037]... [--dry-run] [--refresh] [--prod]
+ *          [--report flagged.md]
  *
  *   --event    only these events (by standings id); default: all of them
  *   --dry-run  fetch and check everything, write nothing
  *   --refresh  download standings and teamlists again instead of using the cache
  *   --prod     import into production (asks first)
+ *   --report   also write the teams skipped, or imported with errors on their
+ *              sheet, to this Markdown file with links to their teamlists,
+ *              for checking by hand
  *
  * Pages are fetched one per second and cached in ~/.cache/openteamsheets,
  * so the first run of a large event takes about 20 minutes and later runs
  * take seconds.
  */
-import { readFileSync } from "node:fs";
+import { readFileSync, writeFileSync } from "node:fs";
 import path from "node:path";
 import type { Json } from "@ots/core/db";
 import {
@@ -33,6 +37,8 @@ const BATCH_SIZE = 250;
 const args = process.argv.slice(2);
 const dryRun = args.includes("--dry-run");
 const refresh = args.includes("--refresh");
+const reportPath = args[args.indexOf("--report") + 1];
+const report: string[] = [];
 const only = args.flatMap((arg, i) => (args[i - 1] === "--event" ? [arg] : []));
 
 const configPath = path.join(
@@ -81,16 +87,31 @@ for (const config of events) {
   }
 
   const prepared = prepareOfficialEvent(config, standings, teamlists);
-  const invalid = prepared.skipped.filter(
+  const unknown = prepared.skipped.filter(
     (s) => s.reasons[0] !== "No teamlist",
   );
   console.log(
-    `  ${prepared.teams.length} teams to import, ${prepared.skipped.length - invalid.length} without a teamlist, ${invalid.length} skipped as invalid`,
+    `  ${prepared.teams.length} teams to import (${prepared.sheetErrors.length} with errors on the sheet), ${prepared.skipped.length - unknown.length} without a teamlist, ${unknown.length} skipped`,
   );
-  for (const skip of invalid) {
-    console.log(
-      `    ${skip.placement ?? "-"}. ${skip.player}: ${skip.reasons.join("; ")}`,
+  const sections = [
+    ["Skipped", unknown],
+    ["Imported with errors on the sheet", prepared.sheetErrors],
+  ] as const;
+  for (const [heading, notes] of sections) {
+    if (notes.length === 0) continue;
+    console.log(`  ${heading}:`);
+    report.push(
+      `## ${config.name} (Reg ${config.regulation}): ${heading.toLowerCase()}\n`,
     );
+    for (const note of notes) {
+      const reasons = note.reasons.join("; ");
+      console.log(`    ${note.placement ?? "-"}. ${note.player}: ${reasons}`);
+      const player = note.teamlistUrl
+        ? `[${note.player}](${note.teamlistUrl})`
+        : note.player;
+      report.push(`- [ ] ${note.placement ?? "-"}. ${player}: ${reasons}`);
+    }
+    report.push("");
   }
 
   if (!db) continue;
@@ -111,6 +132,15 @@ for (const config of events) {
     merged += summary.teamsMerged;
   }
   console.log(`  imported: ${created} new teams, ${merged} already known`);
+}
+
+if (args.includes("--report")) {
+  if (!reportPath || reportPath.startsWith("--")) {
+    console.error("--report needs a file name");
+    process.exit(1);
+  }
+  writeFileSync(reportPath, ["# Team sheets to check\n", ...report].join("\n"));
+  console.log(`\nWrote the teams to check to ${reportPath}`);
 }
 
 console.log(

@@ -3,7 +3,7 @@
 -- in a transaction that is rolled back, so the database is left unchanged.
 begin;
 create extension if not exists pgtap with schema extensions;
-select plan(54);
+select plan(58);
 
 -- The game data these tests need. It may already be there from
 -- `pnpm data:sync`, so existing rows are left alone.
@@ -114,6 +114,29 @@ select is(
   'test-a',
   'an imported event keeps its slug'
 );
+-- A sheet listing an item that isn't in the game keeps it as written.
+select public.import_event(jsonb_set(
+  pg_temp.payload('test-listed', 'test-listed-item'),
+  '{teams,0,sets,0}',
+  pg_temp.payload('test-listed', 'test-listed-item') #> '{teams,0,sets,0}'
+    || '{"itemId": null, "listedItem": "Choice Band"}'
+));
+select is(
+  (select listed_item from public.team_sets
+    join public.teams on teams.id = team_sets.team_id
+    where teams.fingerprint = 'test-listed-item'),
+  'Choice Band',
+  'an item that isn''t in the game is stored as listed'
+);
+select throws_ok(
+  $$ update public.team_sets set item_id = 'charizarditey'
+     from public.teams
+     where teams.id = team_sets.team_id and teams.fingerprint = 'test-listed-item' $$,
+  '23514',
+  null,
+  'a set has an item or a listed item, not both'
+);
+
 select throws_ok(
   $$ insert into public.events (source, source_id, slug, name, regulation_id, starts_on, ends_on)
      values ('rk9', 'another-event', 'test-a', 'Another event', 'M-C', '2026-10-01', '2026-10-01') $$,
@@ -285,6 +308,18 @@ select throws_ok(
   'P0001',
   null,
   'an incomplete team cannot be published'
+);
+select throws_ok(
+  $$ update public.team_sets set listed_item = 'Choice Band'
+     where team_id = 'cccccccc-0000-0000-0000-000000000001' $$,
+  'P0001',
+  'Only official team sheets can list an item that isn''t in the game',
+  'community teams cannot list an item that isn''t in the game'
+);
+select lives_ok(
+  $$ update public.team_sets set listed_item = null
+     where team_id = 'cccccccc-0000-0000-0000-000000000001' $$,
+  'clearing a listed item is fine'
 );
 
 -- Misty can't see Ash's draft.

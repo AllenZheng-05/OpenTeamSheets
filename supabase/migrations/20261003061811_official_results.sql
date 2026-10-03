@@ -26,10 +26,41 @@ alter table public.team_sources
 create index team_sources_stage_idx
   on public.team_sources (made_top_cut, made_day_two);
 
+-- Official team sheets are stored as published, typos included. An item
+-- that isn't in the game (Choice Band) can't be an item_id, so it's kept as
+-- written, with item_id null.
+alter table public.team_sets
+  add column listed_item text
+    check (char_length(listed_item) between 1 and 50),
+  add constraint team_sets_one_item check (item_id is null or listed_item is null);
+
+comment on column public.team_sets.listed_item is
+  'An item an official team sheet lists that isn''t in the game, as written. Only imported tournament teams have one.';
+
+-- Only imported tournament teams can list an item that isn't in the game.
+create function public.check_listed_item()
+returns trigger
+language plpgsql
+set search_path = ''
+as $$
+begin
+  if new.listed_item is not null and not exists (
+    select 1 from public.teams where id = new.team_id and origin = 'tournament'
+  ) then
+    raise exception 'Only official team sheets can list an item that isn''t in the game';
+  end if;
+  return new;
+end;
+$$;
+
+create trigger team_sets_listed_item
+  before insert or update of listed_item on public.team_sets
+  for each row execute function public.check_listed_item();
+
 -- import_event() now stores those fields:
 --   event: { ..., topCutSize }
 --   teams: [{ ..., sourcePlayerId, wins, losses, madeDayTwo, madeTopCut,
---             droppedRound }]
+--             droppedRound, sets: [{ ..., listedItem }] }]
 create or replace function public.import_event(payload jsonb)
 returns jsonb
 language plpgsql
@@ -86,7 +117,8 @@ begin
         team_id, slot, species_id, item_id, ability_id, nature_id,
         move_1_id, move_2_id, move_3_id, move_4_id,
         sp_hp, sp_atk, sp_def, sp_spa, sp_spd, sp_spe,
-        level, iv_hp, iv_atk, iv_def, iv_spa, iv_spd, iv_spe, shiny
+        level, iv_hp, iv_atk, iv_def, iv_spa, iv_spd, iv_spe, shiny,
+        listed_item
       )
       select
         v_team_id,
@@ -112,7 +144,8 @@ begin
         coalesce((s -> 'ivs' ->> 'spa')::smallint, 31),
         coalesce((s -> 'ivs' ->> 'spd')::smallint, 31),
         coalesce((s -> 'ivs' ->> 'spe')::smallint, 31),
-        coalesce((s ->> 'shiny')::boolean, false)
+        coalesce((s ->> 'shiny')::boolean, false),
+        s ->> 'listedItem'
       from jsonb_array_elements(team -> 'sets') as s;
     else
       merged := merged + 1;

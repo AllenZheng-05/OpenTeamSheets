@@ -2,7 +2,7 @@ import Link from "next/link";
 import { placement } from "@/lib/format";
 import type { PlacementRow } from "@/lib/teams";
 import { CopyTeamButton } from "./copy-team-button";
-import { ArchetypePill, StageBadge } from "./pills";
+import { ArchetypePill, SheetErrorsBadge, StageBadge } from "./pills";
 import { TeamSheet } from "./team-sheet";
 
 /**
@@ -18,7 +18,7 @@ export function TeamRow({ row }: { row: PlacementRow }) {
             spilling over the Pokémon. */}
         <div className="flex gap-3 lg:w-48 lg:shrink-0 lg:flex-col">
           <div className="min-w-0 flex-1 wrap-break-word">
-            {(place || row.stage) && (
+            {(place || row.stage || row.hasSheetErrors) && (
               <p className="flex flex-wrap items-center gap-x-2 gap-y-1 text-xs font-semibold uppercase tracking-wide text-neutral-500">
                 {place}
                 {row.record && (
@@ -27,6 +27,7 @@ export function TeamRow({ row }: { row: PlacementRow }) {
                   </span>
                 )}
                 {row.stage && <StageBadge stage={row.stage} />}
+                {row.hasSheetErrors && <SheetErrorsBadge />}
               </p>
             )}
             <h2 className="font-semibold">

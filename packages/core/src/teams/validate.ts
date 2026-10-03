@@ -62,9 +62,12 @@ export function validateTeam(
 
   team.sets.forEach((set, index) => {
     const slot = index + 1;
-    const error = (message: string) => errors.push({ slot, message });
-    const illegal = (message: string) =>
-      legalityProblems.push({ slot, message });
+    const error = (message: string, about?: Pick<Problem, "field" | "value">) =>
+      errors.push({ slot, message, ...about });
+    const illegal = (
+      message: string,
+      about?: Pick<Problem, "field" | "value">,
+    ) => legalityProblems.push({ slot, message, ...about });
 
     if (!set.speciesId) {
       if (complete) error("Choose a Pokémon");
@@ -74,6 +77,13 @@ export function validateTeam(
     if (!species) {
       error(`Unknown Pokémon "${set.speciesId}"`);
       return;
+    }
+
+    if (set.listedItem) {
+      error(`${set.listedItem} isn't in Pokémon Champions`, {
+        field: "item",
+        value: set.listedItem,
+      });
     }
 
     // As in Showdown, a battle-only form (a Mega) needs what makes it
@@ -118,12 +128,16 @@ export function validateTeam(
         if (set.abilityId && !abilities.includes(set.abilityId)) {
           illegal(
             `${form.name} can't have ${nameOf("ability", set.abilityId)}`,
+            { field: "ability", value: set.abilityId },
           );
         }
         const learnset = data.learnsets[form.id] ?? [];
         for (const move of set.moveIds) {
           if (!learnset.includes(move)) {
-            illegal(`${form.name} can't learn ${nameOf("move", move)}`);
+            illegal(`${form.name} can't learn ${nameOf("move", move)}`, {
+              field: "move",
+              value: move,
+            });
           }
         }
       }

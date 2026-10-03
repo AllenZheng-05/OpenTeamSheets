@@ -1,5 +1,10 @@
 import { isRegulation, type Regulation } from "@ots/core";
-import { exportShowdown, type Team } from "@ots/core/teams";
+import {
+  describeSheetError,
+  exportShowdown,
+  sheetErrors,
+  type Team,
+} from "@ots/core/teams";
 import { dateRange } from "./format";
 import { pokemonView, setFromRow, type PokemonView } from "./pokemon";
 import { supabase } from "./supabase";
@@ -48,6 +53,8 @@ export interface PlacementRow {
   pokemon: PokemonView[];
   /** The team as a Showdown paste, for Copy team. */
   showdown: string;
+  /** Whether the team sheet, as published, has errors. */
+  hasSheetErrors: boolean;
 }
 
 interface TeamDetails {
@@ -55,6 +62,12 @@ interface TeamDetails {
   pokemon: PokemonView[];
   archetypes: Archetype[];
   showdown: string;
+  /**
+   * What's wrong with the team sheet as published, such as "Slot 5:
+   * Basculegion can't learn Last Resort (probably Last Respects)".
+   * Official sheets are stored as published, typos included.
+   */
+  sheetErrors: string[];
 }
 
 /** Throws a Supabase error so the page shows its error state. */
@@ -66,8 +79,14 @@ function check<T>(result: {
   return result.data as T;
 }
 
-/** Sets and archetypes for teams, keyed by team id. */
-async function loadTeams(ids: string[]): Promise<Map<string, TeamDetails>> {
+/**
+ * Sets, archetypes and sheet errors for teams, keyed by team id. Takes
+ * each team's regulation, which its sheet is checked against.
+ */
+async function loadTeams(
+  regulations: Map<string, Regulation>,
+): Promise<Map<string, TeamDetails>> {
+  const ids = [...regulations.keys()];
   if (ids.length === 0) return new Map();
   const [sets, tags] = await Promise.all([
     supabase().from("team_sets").select("*").in("team_id", ids).order("slot"),
@@ -81,13 +100,21 @@ async function loadTeams(ids: string[]): Promise<Map<string, TeamDetails>> {
   for (const id of ids) {
     const rows = check(sets).filter((row) => row.team_id === id);
     const team: Team = { sets: rows.map(setFromRow) };
+    const errors = sheetErrors(team, regulations.get(id)!);
     details.set(id, {
       team,
-      pokemon: team.sets.map((set, i) => pokemonView(set, rows[i]!.slot)),
+      pokemon: team.sets.map((set, i) =>
+        pokemonView(
+          set,
+          rows[i]!.slot,
+          errors.filter((e) => e.slot === i + 1),
+        ),
+      ),
       archetypes: check(tags)
         .filter((tag) => tag.team_id === id && tag.archetypes)
         .map((tag) => tag.archetypes!),
       showdown: exportShowdown(team),
+      sheetErrors: errors.map(describeSheetError),
     });
   }
   return details;
@@ -152,24 +179,36 @@ export async function browsePlacements(
   if (error?.code === "PGRST103") return { rows: [], total: count ?? 0 };
   if (error) throw new Error(error.message);
   const records = data ?? [];
-  const teams = await loadTeams([...new Set(records.map((r) => r.team_id!))]);
+  const teams = await loadTeams(
+    new Map(
+      records.flatMap((r): [string, Regulation][] =>
+        r.regulation_id && isRegulation(r.regulation_id)
+          ? [[r.team_id!, r.regulation_id]]
+          : [],
+      ),
+    ),
+  );
 
   return {
-    rows: records.map((row) => {
-      const details = teams.get(row.team_id!)!;
-      return {
-        id: row.id!,
-        teamId: row.team_id!,
-        player: row.player_name ?? "",
-        placement: row.placement,
-        record: record(row),
-        stage: stage(row),
-        event: eventSummary(row),
-        archetypes: details.archetypes,
-        pokemon: details.pokemon,
-        showdown: details.showdown,
-      };
-    }),
+    // Every team has a regulation; one without would be skipped, not shown.
+    rows: records
+      .filter((row) => teams.has(row.team_id!))
+      .map((row) => {
+        const details = teams.get(row.team_id!)!;
+        return {
+          id: row.id!,
+          teamId: row.team_id!,
+          player: row.player_name ?? "",
+          placement: row.placement,
+          record: record(row),
+          stage: stage(row),
+          event: eventSummary(row),
+          archetypes: details.archetypes,
+          pokemon: details.pokemon,
+          showdown: details.showdown,
+          hasSheetErrors: details.sheetErrors.length > 0,
+        };
+      }),
     total: count ?? 0,
   };
 }
@@ -179,7 +218,7 @@ export interface TeamPage extends TeamDetails {
   regulation: Regulation;
   placements: (Omit<
     PlacementRow,
-    "pokemon" | "archetypes" | "showdown" | "teamId"
+    "pokemon" | "archetypes" | "showdown" | "teamId" | "hasSheetErrors"
   > & {
     teamlistUrl: string | null;
   })[];
@@ -206,7 +245,7 @@ export async function getTeamPage(id: string): Promise<TeamPage | null> {
   if (!team || !isRegulation(team.regulation_id)) return null;
 
   const [details, placements, media] = await Promise.all([
-    loadTeams([id]),
+    loadTeams(new Map([[id, team.regulation_id]])),
     supabase()
       .from("tournament_placements")
       .select("*")

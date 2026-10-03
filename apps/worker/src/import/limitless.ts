@@ -2,10 +2,11 @@ import { parse as parseYaml } from "yaml";
 import { isRegulation, type Regulation } from "@ots/core";
 import {
   deriveArchetypes,
+  describeSheetError,
   emptySet,
   findId,
+  sheetErrors,
   teamFingerprint,
-  validateTeam,
   type Team,
   type TeamSet,
 } from "@ots/core/teams";
@@ -210,12 +211,21 @@ export function eventSlug(
     .replace(/^-|-$/g, "");
 }
 
+/**
+ * Limitless species ids that don't reduce to ours: plain "tauros-paldea"
+ * is the Combat Breed, which has no suffix in-game.
+ */
+const SPECIES_ALIASES: Record<string, string> = {
+  "tauros-paldea": "taurospaldeacombat",
+};
+
 export const teamlistUrl = (standings: string, tpId: number) =>
   `${STANDINGS_SITE}/${standings}/player/${String(tpId).padStart(4, "0")}/teamlist`;
 
 /**
- * A teamlist as a core team. Names that aren't in the game data are
- * reported; Limitless's species ids ("indeedee-f") reduce to ours.
+ * A teamlist as a core team. An item that isn't in the game is kept as
+ * listed; other names that aren't in the game data are reported. Limitless's
+ * species ids ("indeedee-f") reduce to ours.
  */
 export function teamFromLimitless(sets: LimitlessSet[]): {
   team: Team;
@@ -229,27 +239,35 @@ export function teamFromLimitless(sets: LimitlessSet[]): {
     return id;
   };
   const team: Team = {
-    sets: sets.map((set): TeamSet => ({
-      ...emptySet(),
-      speciesId: lookup("species", set.id),
+    sets: sets.map((set): TeamSet => {
       // A Pokémon with no item comes through as the bare label "Held Item:".
-      itemId: lookup(
-        "item",
-        set.item && /^held item:?$/i.test(set.item.trim()) ? null : set.item,
-      ),
-      abilityId: lookup("ability", set.ability),
-      natureId: lookup("nature", set.nature),
-      moveIds: set.moves
-        .map((move) => lookup("move", move))
-        .filter((move): move is string => move !== null),
-    })),
+      const item =
+        set.item && !/^held item:?$/i.test(set.item.trim())
+          ? set.item.trim()
+          : null;
+      const itemId = item ? findId("item", item) : null;
+      return {
+        ...emptySet(),
+        speciesId: lookup("species", SPECIES_ALIASES[set.id] ?? set.id),
+        itemId,
+        listedItem: item && !itemId ? item : null,
+        abilityId: lookup("ability", set.ability),
+        natureId: lookup("nature", set.nature),
+        moveIds: set.moves
+          .map((move) => lookup("move", move))
+          .filter((move): move is string => move !== null),
+      };
+    }),
   };
   return { team, unknown };
 }
 
-export interface SkippedPlayer {
+/** A player skipped, or imported with errors on their team sheet. */
+export interface PlayerNote {
   player: string;
   placement: number | null;
+  /** Their teamlist page, when they have one. */
+  teamlistUrl: string | null;
   reasons: string[];
 }
 
@@ -257,14 +275,18 @@ export interface PreparedEvent {
   /** The argument for import_event(), without its teams. */
   event: Record<string, unknown>;
   teams: Record<string, unknown>[];
-  skipped: SkippedPlayer[];
+  /** Players without a teamlist, or whose teamlist names something unknown. */
+  skipped: PlayerNote[];
+  /** Players imported with their sheet as published, errors and all. */
+  sheetErrors: PlayerNote[];
 }
 
 /**
  * Builds the import for one event from its standings and the teamlists
- * fetched so far (by tp_id). Players without a teamlist, and teams that
- * don't pass validation, are skipped and reported rather than blocking the
- * rest.
+ * fetched so far (by tp_id). Players without a teamlist, or whose teamlist
+ * names something that isn't in the game data, are skipped. A team sheet
+ * with errors (typos made when it was entered) is imported as published,
+ * since the official record is what it says, and reported.
  */
 export function prepareOfficialEvent(
   config: OfficialEvent,
@@ -273,34 +295,33 @@ export function prepareOfficialEvent(
 ): PreparedEvent {
   const { tournament, players } = standings;
   const { startsOn, endsOn } = readDates(tournament.date);
-  const skipped: SkippedPlayer[] = [];
+  const skipped: PlayerNote[] = [];
+  const flagged: PlayerNote[] = [];
   const teams: Record<string, unknown>[] = [];
 
   for (const player of players) {
-    const skip = (reasons: string[]) =>
-      skipped.push({
+    const note = (list: PlayerNote[], reasons: string[]) =>
+      list.push({
         player: player.name,
         placement: player.placement,
+        teamlistUrl: player.teamlist
+          ? teamlistUrl(config.standings, player.tp_id)
+          : null,
         reasons,
       });
+    const skip = (reasons: string[]) => note(skipped, reasons);
     const sets = teamlists.get(player.tp_id);
     if (player.placement === null || !player.teamlist || !sets) {
       skip(["No teamlist"]);
       continue;
     }
     const { team, unknown } = teamFromLimitless(sets);
-    const { errors } = validateTeam(team, config.regulation, {
-      complete: true,
-    });
-    if (unknown.length > 0 || errors.length > 0) {
-      skip([
-        ...unknown.map((name) => `Unknown ${name}`),
-        ...errors.map((e) =>
-          e.slot ? `Slot ${e.slot}: ${e.message}` : e.message,
-        ),
-      ]);
+    if (unknown.length > 0) {
+      skip(unknown.map((name) => `Unknown ${name}`));
       continue;
     }
+    const errors = sheetErrors(team, config.regulation);
+    if (errors.length > 0) note(flagged, errors.map(describeSheetError));
     teams.push({
       fingerprint: teamFingerprint(team, config.regulation),
       archetypes: deriveArchetypes(team),
@@ -317,6 +338,7 @@ export function prepareOfficialEvent(
         slot: index + 1,
         speciesId: set.speciesId,
         itemId: set.itemId,
+        listedItem: set.listedItem ?? null,
         abilityId: set.abilityId,
         natureId: set.natureId,
         moves: set.moveIds,
@@ -345,5 +367,6 @@ export function prepareOfficialEvent(
     },
     teams,
     skipped,
+    sheetErrors: flagged,
   };
 }
