@@ -1,35 +1,40 @@
--- Official results from Limitless (standings.limitlessvgc.com): every
--- player's placement, record, and whether they made day 2 and top cut.
+-- An item an official team sheet lists that isn't in the game (Choice Band),
+-- kept as written. This was first added by editing official_results after
+-- it had been applied in production, so production never got it.
 
--- Events: the official results site as a source, and each event's top cut size.
-alter table public.events drop constraint events_source_check;
-alter table public.events
-  add constraint events_source_check
-    check (source in ('limitlessvgc', 'limitless', 'rk9', 'other')),
-  add column top_cut_size smallint check (top_cut_size >= 0);
+-- Official team sheets are stored as published, typos included. An item
+-- that isn't in the game (Choice Band) can't be an item_id, so it's kept as
+-- written, with item_id null.
+alter table public.team_sets
+  add column listed_item text
+    check (char_length(listed_item) between 1 and 50),
+  add constraint team_sets_one_item check (item_id is null or listed_item is null);
 
--- Placements: wins and losses replace the free-text record (official VGC
--- has no ties); day 2 and top cut flags; and the player's id on the source
--- platform, since two players at a large event can share a name.
-alter table public.team_sources
-  drop column record,
-  add column source_player_id text,
-  add column wins smallint check (wins >= 0),
-  add column losses smallint check (losses >= 0),
-  add column made_day_two boolean not null default false,
-  add column made_top_cut boolean not null default false,
-  add column dropped_round smallint check (dropped_round > 0),
-  drop constraint team_sources_event_id_player_name_key,
-  add constraint team_sources_player_key
-    unique nulls not distinct (event_id, player_name, source_player_id);
+comment on column public.team_sets.listed_item is
+  'An item an official team sheet lists that isn''t in the game, as written. Only imported tournament teams have one.';
 
-create index team_sources_stage_idx
-  on public.team_sources (made_top_cut, made_day_two);
+-- Only imported tournament teams can list an item that isn't in the game.
+create function public.check_listed_item()
+returns trigger
+language plpgsql
+set search_path = ''
+as $$
+begin
+  if new.listed_item is not null and not exists (
+    select 1 from public.teams where id = new.team_id and origin = 'tournament'
+  ) then
+    raise exception 'Only official team sheets can list an item that isn''t in the game';
+  end if;
+  return new;
+end;
+$$;
 
--- import_event() now stores those fields:
---   event: { ..., topCutSize }
---   teams: [{ ..., sourcePlayerId, wins, losses, madeDayTwo, madeTopCut,
---             droppedRound }]
+create trigger team_sets_listed_item
+  before insert or update of listed_item on public.team_sets
+  for each row execute function public.check_listed_item();
+
+-- import_event() also stores each set's listedItem:
+--   teams: [{ ..., sets: [{ ..., listedItem }] }]
 create or replace function public.import_event(payload jsonb)
 returns jsonb
 language plpgsql
@@ -86,7 +91,8 @@ begin
         team_id, slot, species_id, item_id, ability_id, nature_id,
         move_1_id, move_2_id, move_3_id, move_4_id,
         sp_hp, sp_atk, sp_def, sp_spa, sp_spd, sp_spe,
-        level, iv_hp, iv_atk, iv_def, iv_spa, iv_spd, iv_spe, shiny
+        level, iv_hp, iv_atk, iv_def, iv_spa, iv_spd, iv_spe, shiny,
+        listed_item
       )
       select
         v_team_id,
@@ -112,7 +118,8 @@ begin
         coalesce((s -> 'ivs' ->> 'spa')::smallint, 31),
         coalesce((s -> 'ivs' ->> 'spd')::smallint, 31),
         coalesce((s -> 'ivs' ->> 'spe')::smallint, 31),
-        coalesce((s ->> 'shiny')::boolean, false)
+        coalesce((s ->> 'shiny')::boolean, false),
+        s ->> 'listedItem'
       from jsonb_array_elements(team -> 'sets') as s;
     else
       merged := merged + 1;
@@ -173,37 +180,15 @@ begin
 end;
 $$;
 
--- One row per tournament placement (a player's team at an event), with the
--- event alongside, for browsing tournament teams in event-date order. The
--- same team can place at several events, so a placement, not a team, is
--- what a browse row shows.
---
--- security_invoker makes the view apply the reader's own row-level
--- security, so it only shows placements of teams the reader can see.
-create view public.tournament_placements
-with (security_invoker = true)
-as
-select
-  team_sources.id,
-  team_sources.team_id,
-  team_sources.player_name,
-  team_sources.placement,
-  team_sources.wins,
-  team_sources.losses,
-  team_sources.made_day_two,
-  team_sources.made_top_cut,
-  team_sources.teamlist_url,
-  events.id as event_id,
-  events.slug as event_slug,
-  events.name as event_name,
-  events.regulation_id,
-  events.official,
-  events.starts_on,
-  events.ends_on,
-  events.player_count,
-  events.top_cut_size,
-  events.standings_url
-from public.team_sources
-join public.events on events.id = team_sources.event_id
-join public.teams on teams.id = team_sources.team_id
-where teams.visibility = 'public';
+-- Teams imported before this migration lost their listed item, and
+-- re-importing merges into them without rewriting their sets. The
+-- fingerprint still has it ("|indeedee:listed=Choice Band:..."), so it's
+-- restored from there.
+update public.team_sets s
+set listed_item = substring(t.fingerprint from '\|' || s.species_id || ':listed=([^:|]*):')
+from public.teams t
+where t.id = s.team_id
+  and s.item_id is null
+  and s.listed_item is null
+  and t.fingerprint like '%:listed=%'
+  and substring(t.fingerprint from '\|' || s.species_id || ':listed=([^:|]*):') is not null;
