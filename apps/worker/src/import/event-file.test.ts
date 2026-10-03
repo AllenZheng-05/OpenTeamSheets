@@ -135,7 +135,12 @@ ${indent(team(kingambit.replace("Iron Head", "Moonblast")))}
     const result = await prepareImport(file, async () => "");
     expect(result.ok).toBe(false);
     expect(result.reports[0]?.errors).toEqual([
-      { slot: 1, message: "Kingambit can't learn Moonblast" },
+      {
+        slot: 1,
+        message: "Kingambit can't learn Moonblast",
+        field: "move",
+        value: "moonblast",
+      },
     ]);
   });
 

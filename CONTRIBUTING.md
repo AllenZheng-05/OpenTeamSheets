@@ -80,6 +80,7 @@ Champions game data (species, moves, abilities, items, type chart, and each regu
 | `showdown-sources.json`  | Hand: the Showdown commit and format per regulation |
 | `overrides.json`         | Hand: corrections where Showdown is wrong           |
 | `regulation-status.json` | Hand: `pending`, `partial` or `complete`            |
+| `sheet-readings.json`    | Hand: likely meanings of typos on official sheets   |
 
 - **Something wrong in the data?** Add a correction to `overrides.json`, run `pnpm data:pull`, and link a source (an in-game screenshot or an official announcement) in the pull request. Consider reporting it to Showdown too.
 - **Updating from Showdown:** bump the commit in `showdown-sources.json` and run `pnpm data:pull`. The first run builds Showdown (a few minutes; it's cached in `~/.cache/openteamsheets`). Review the diff in `generated/` like any other change.
@@ -94,7 +95,9 @@ Tournament teams come from official Play! Pokémon events, as published on [Limi
 - **The events** are listed in `data/official-events.yaml`. Adding one is a single entry: its id on limitlessvgc.com and its standings site id (the "Standings" link on the event's page).
 - **Importing:** `pnpm import:limitless` imports every listed event into your local database; `--event 0037` imports just one, and `--dry-run` checks without writing. Running it again is safe: identical teams are stored once, with a placement for each player who used them.
 - **Be gentle with Limitless.** The importer reads one page per second and caches every page in `~/.cache/openteamsheets/limitless`, so a large event takes about 40 minutes the first time and seconds after that. Use `--refresh` only when an event's results have changed.
-- **Skipped teams:** players without a teamlist, and teams that break the regulation's rules, are skipped and listed in the output rather than stopping the import.
+- **Typos on team sheets:** official sheets are imported exactly as published, even when they break the rules (Basculegion with Last Resort, a Mega's ability on the base form). The site marks those errors, and the import lists them. Never correct a sheet in the data.
+- **Suggested readings:** where a typo's meaning is clear, add it to `packages/core/data/sheet-readings.json` (Last Resort → Last Respects for Basculegion; an item that isn't in the game goes under `items` by its name as listed). The site shows it as "probably Last Respects" beside the published sheet, never in place of it. Its tests check that each reading is legal and each listing isn't.
+- **Skipped teams:** players without a teamlist, and teamlists naming a Pokémon, ability or move not in the game data, are skipped. An item that isn't in the game (Choice Band) is kept as listed and marked like any other error. `--report flagged.md` writes skipped teams and sheets with errors to a checklist with links to their teamlists.
 
 ## License
 

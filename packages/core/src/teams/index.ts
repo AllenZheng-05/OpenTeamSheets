@@ -10,5 +10,11 @@ export {
   type ValidationResult,
 } from "./validate";
 export { teamFingerprint } from "./fingerprint";
+export {
+  describeSheetError,
+  sheetErrors,
+  sheetReading,
+  type SheetError,
+} from "./sheet-errors";
 export { deriveArchetypes } from "./archetypes";
 export { displaySpecies, findId, getSpecies, itemForm, nameOf } from "./lookup";

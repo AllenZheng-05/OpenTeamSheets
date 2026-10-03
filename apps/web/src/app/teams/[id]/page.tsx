@@ -69,6 +69,25 @@ export default async function TeamPage({ params }: PageProps<"/teams/[id]">) {
 
       <TeamSheet pokemon={team.pokemon} variant="full" />
 
+      {team.sheetErrors.length > 0 && (
+        <section className="rounded-xl border border-amber-200 bg-amber-50 p-4 text-sm">
+          <h2 className="font-semibold text-amber-900">
+            This team sheet has errors as published
+          </h2>
+          <p className="mt-1 text-amber-900/80">
+            It&apos;s shown exactly as listed in the official results. Where a
+            typo&apos;s meaning seems clear, our reading is marked
+            &ldquo;probably&rdquo;; it&apos;s a guess and isn&apos;t applied.
+            Showdown will reject the copied team until these are fixed.
+          </p>
+          <ul className="mt-2 list-disc space-y-0.5 pl-5 text-amber-950">
+            {team.sheetErrors.map((error) => (
+              <li key={error}>{error}</li>
+            ))}
+          </ul>
+        </section>
+      )}
+
       {statPointsUnknown && (
         <p className="text-sm text-neutral-500">
           Stat points aren&apos;t public on official team sheets.

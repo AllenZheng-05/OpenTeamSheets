@@ -76,6 +76,25 @@ describe("readTeamlistPage and teamFromLimitless", () => {
     expect(team.sets[0]?.speciesId).toBe("floetteeternal");
   });
 
+  it.each([
+    ["tauros-paldea", "taurospaldeacombat"],
+    ["tauros-paldea-aqua", "taurospaldeaaqua"],
+    ["tauros-paldea-blaze", "taurospaldeablaze"],
+  ])("maps %s", (id, speciesId) => {
+    const { team, unknown } = teamFromLimitless([
+      {
+        id,
+        name: "Paldean Tauros",
+        item: null,
+        ability: "Intimidate",
+        nature: "Jolly",
+        moves: ["Protect"],
+      },
+    ]);
+    expect(unknown).toEqual([]);
+    expect(team.sets[0]?.speciesId).toBe(speciesId);
+  });
+
   it('reads the bare label "Held Item:" as no item', () => {
     const { team, unknown } = teamFromLimitless([
       {
@@ -91,18 +110,36 @@ describe("readTeamlistPage and teamFromLimitless", () => {
     expect(team.sets[0]?.itemId).toBeNull();
   });
 
-  it("reports names that aren't in the game data", () => {
+  it("keeps an item that isn't in the game as listed", () => {
+    const { team, unknown } = teamFromLimitless([
+      {
+        id: "indeedee",
+        name: "Indeedee",
+        item: "Choice Band",
+        ability: "Psychic Surge",
+        nature: "Modest",
+        moves: ["Trick"],
+      },
+    ]);
+    expect(unknown).toEqual([]);
+    expect(team.sets[0]).toMatchObject({
+      itemId: null,
+      listedItem: "Choice Band",
+    });
+  });
+
+  it("reports other names that aren't in the game data", () => {
     const { unknown } = teamFromLimitless([
       {
         id: "kingambit",
         name: "Kingambit",
-        item: "Not An Item",
-        ability: "Defiant",
+        item: "Black Glasses",
+        ability: "Not An Ability",
         nature: "Adamant",
         moves: ["Protect"],
       },
     ]);
-    expect(unknown).toEqual(['item "Not An Item"']);
+    expect(unknown).toEqual(['ability "Not An Ability"']);
   });
 });
 
@@ -160,18 +197,35 @@ describe("prepareOfficialEvent", () => {
     });
   });
 
-  it("skips players without a teamlist, and invalid teams, with reasons", () => {
-    const withIllegalTeam = new Map(teamlists);
-    withIllegalTeam.set(991, [
+  it("imports a sheet with errors as published, and reports them", () => {
+    const withTypos = new Map(teamlists);
+    withTypos.set(991, [
       ...teamlists.get(991)!.slice(0, 5),
       { ...teamlists.get(991)![5]!, moves: ["Moonblast"] },
     ]);
-    const result = prepareOfficialEvent(baltimore, standings, withIllegalTeam);
-    expect(result.skipped.find((s) => s.player === "Joseph Ugarte")).toEqual({
-      player: "Joseph Ugarte",
-      placement: 1,
-      reasons: ["Slot 6: Sneasler can't learn Moonblast"],
-    });
+    const result = prepareOfficialEvent(baltimore, standings, withTypos);
+    expect(result.teams).toHaveLength(2);
+    expect(result.sheetErrors).toEqual([
+      {
+        player: "Joseph Ugarte",
+        placement: 1,
+        teamlistUrl:
+          "https://standings.limitlessvgc.com/0037/player/0991/teamlist",
+        reasons: ["Slot 6: Sneasler can't learn Moonblast"],
+      },
+    ]);
+  });
+
+  it("skips players without a teamlist, and names it doesn't know", () => {
+    const withUnknown = new Map(teamlists);
+    withUnknown.set(991, [
+      { ...teamlists.get(991)![0]!, ability: "Not An Ability" },
+    ]);
+    const result = prepareOfficialEvent(baltimore, standings, withUnknown);
+    expect(result.teams).toHaveLength(1);
+    expect(
+      result.skipped.find((s) => s.player === "Joseph Ugarte")?.reasons,
+    ).toEqual(['Unknown ability "Not An Ability"']);
     expect(
       result.skipped.filter((s) => s.reasons[0] === "No teamlist").length,
     ).toBe(standings.players.length - 2);

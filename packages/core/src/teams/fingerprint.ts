@@ -20,7 +20,7 @@ export function teamFingerprint(team: Team, regulation: Regulation): string {
       : "";
     return [
       species?.battleOnlyFromId ?? set.speciesId ?? "",
-      set.itemId ?? "",
+      set.itemId ?? (set.listedItem ? `listed=${set.listedItem}` : ""),
       set.abilityId ?? "",
       set.natureId ?? "",
       [...set.moveIds].sort().join("+"),

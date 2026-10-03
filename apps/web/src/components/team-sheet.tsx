@@ -1,4 +1,4 @@
-import type { PokemonView } from "@/lib/pokemon";
+import type { PokemonView, SheetMark } from "@/lib/pokemon";
 import { ItemIcon } from "./item-icon";
 import { TypePill } from "./pills";
 import { PokemonSprite } from "./pokemon-sprite";
@@ -11,6 +11,39 @@ const STAT_LABELS = {
   spd: "SpD",
   spe: "Spe",
 } as const;
+
+/**
+ * An ability or move as the sheet lists it. One with an error is underlined,
+ * with the error (and our reading, if any) for hover and screen readers;
+ * the full variant also shows the reading.
+ */
+function Listed({
+  text,
+  mark,
+  showReading = false,
+}: {
+  text: string;
+  mark: SheetMark | null;
+  showReading?: boolean;
+}) {
+  if (!mark) return text;
+  const reading = mark.reading ? `probably ${mark.reading}` : null;
+  const explanation = reading ? `${mark.message}; ${reading}` : mark.message;
+  return (
+    <span title={explanation}>
+      <span className="text-amber-800 underline decoration-amber-500 decoration-wavy underline-offset-2">
+        {text}
+      </span>
+      <span className="sr-only"> (error on the sheet: {explanation})</span>
+      {showReading && reading && (
+        <span aria-hidden className="text-xs text-amber-700">
+          {" "}
+          · {reading}
+        </span>
+      )}
+    </span>
+  );
+}
 
 /**
  * A team's six Pokémon. Compact, for Browse rows: what an open team sheet
@@ -43,20 +76,20 @@ export function TeamSheet({
                 )}
                 <span className="truncate">
                   <span className="sr-only">Item: </span>
-                  {p.item}
+                  <Listed text={p.item} mark={p.itemMark} />
                 </span>
               </p>
             )}
             {p.ability && (
               <p className="truncate text-xs text-neutral-500">
                 <span className="sr-only">Ability: </span>
-                {p.ability}
+                <Listed text={p.ability} mark={p.abilityMark} />
               </p>
             )}
             <ul className="mt-1.5 space-y-0.5 text-xs text-neutral-700">
-              {p.moves.map((move) => (
+              {p.moves.map((move, i) => (
                 <li key={move} className="truncate">
-                  {move}
+                  <Listed text={move} mark={p.moveMarks[i] ?? null} />
                 </li>
               ))}
             </ul>
@@ -92,17 +125,27 @@ export function TeamSheet({
               {p.itemSpriteNum !== null && (
                 <ItemIcon spriteNum={p.itemSpriteNum} />
               )}
-              {p.item ?? "—"}
+              {p.item ? (
+                <Listed text={p.item} mark={p.itemMark} showReading />
+              ) : (
+                "—"
+              )}
             </dd>
             <dt className="text-neutral-500">Ability</dt>
-            <dd>{p.ability ?? "—"}</dd>
+            <dd>
+              {p.ability ? (
+                <Listed text={p.ability} mark={p.abilityMark} showReading />
+              ) : (
+                "—"
+              )}
+            </dd>
             <dt className="text-neutral-500">Nature</dt>
             <dd>{p.nature ?? "—"}</dd>
           </dl>
           <ul className="mt-3 grid grid-cols-2 gap-1 text-sm">
-            {p.moves.map((move) => (
+            {p.moves.map((move, i) => (
               <li key={move} className="rounded-md bg-neutral-50 px-2 py-1">
-                {move}
+                <Listed text={move} mark={p.moveMarks[i] ?? null} showReading />
               </li>
             ))}
           </ul>

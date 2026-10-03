@@ -1,11 +1,24 @@
 import type { Tables } from "@ots/core/db";
 import { gameData } from "@ots/core/game-data";
-import type { StatTable, TeamSet } from "@ots/core/teams";
+import type { SheetError, StatTable, TeamSet } from "@ots/core/teams";
 import { displaySpecies, nameOf } from "@ots/core/teams";
 
 const itemSprites = new Map(
   gameData.items.map((item) => [item.id, item.spriteNum]),
 );
+
+/**
+ * An error on an official team sheet as published (a typo when it was
+ * entered), marked on the listed ability or move.
+ */
+export interface SheetMark {
+  message: string;
+  /**
+   * What it probably meant, from our reviewed readings ("Last Respects"),
+   * or "left blank"; never applied.
+   */
+  reading: string | null;
+}
 
 /** One Pokémon as the site shows it, with names resolved on the server. */
 export interface PokemonView {
@@ -15,12 +28,17 @@ export interface PokemonView {
   spriteId: string | null;
   shiny: boolean;
   types: string[];
+  /** The item's name, or as listed when it isn't in the game. */
   item: string | null;
+  itemMark: SheetMark | null;
   /** The item's position in Showdown's item sprite sheet. */
   itemSpriteNum: number | null;
   ability: string | null;
+  abilityMark: SheetMark | null;
   nature: string | null;
   moves: string[];
+  /** Marks for the moves, in the same order. */
+  moveMarks: (SheetMark | null)[];
   statPoints: StatTable | null;
 }
 
@@ -33,6 +51,7 @@ export function setFromRow(row: Tables<"team_sets">): TeamSet {
     nickname: null,
     speciesId: row.species_id,
     itemId: row.item_id,
+    listedItem: row.listed_item,
     abilityId: row.ability_id,
     natureId: row.nature_id,
     moveIds: [
@@ -55,9 +74,25 @@ export function setFromRow(row: Tables<"team_sets">): TeamSet {
   };
 }
 
-/** What the site shows for a set: the Mega when it holds its stone. */
-export function pokemonView(set: TeamSet, slot: number): PokemonView {
+/**
+ * What the site shows for a set: the Mega when it holds its stone, and
+ * this set's sheet errors (from sheetErrors) on what they're about.
+ */
+export function pokemonView(
+  set: TeamSet,
+  slot: number,
+  errors: SheetError[] = [],
+): PokemonView {
   const shown = displaySpecies(set);
+  const mark = (field: "item" | "ability" | "move", value: string | null) => {
+    const error = errors.find((e) => e.field === field && e.value === value);
+    return error
+      ? {
+          message: error.message,
+          reading: error.reading ?? (error.leftBlank ? "left blank" : null),
+        }
+      : null;
+  };
   return {
     slot,
     name: shown?.name ?? "Unknown Pokémon",
@@ -66,11 +101,14 @@ export function pokemonView(set: TeamSet, slot: number): PokemonView {
     types: shown
       ? [shown.type1, shown.type2].filter((t): t is string => t !== null)
       : [],
-    item: set.itemId ? nameOf("item", set.itemId) : null,
+    item: set.itemId ? nameOf("item", set.itemId) : (set.listedItem ?? null),
+    itemMark: mark("item", set.listedItem ?? null),
     itemSpriteNum: set.itemId ? (itemSprites.get(set.itemId) ?? null) : null,
     ability: set.abilityId ? nameOf("ability", set.abilityId) : null,
+    abilityMark: mark("ability", set.abilityId),
     nature: set.natureId ? nameOf("nature", set.natureId) : null,
     moves: set.moveIds.map((move) => nameOf("move", move)),
+    moveMarks: set.moveIds.map((move) => mark("move", move)),
     statPoints: set.statPoints,
   };
 }

@@ -1,0 +1,108 @@
+{
+  "items": [
+    {
+      "species": "indeedee",
+      "listed": "Choice Band",
+      "reading": "choicescarf"
+    }
+  ],
+  "abilities": [
+    {
+      "species": "arcaninehisui",
+      "listed": "punkrock",
+      "reading": "rockhead"
+    },
+    {
+      "species": "aerodactyl",
+      "listed": "unaware",
+      "reading": "unnerve"
+    },
+    {
+      "species": "floetteeternal",
+      "listed": "sweetveil",
+      "reading": "flowerveil"
+    },
+    {
+      "species": "hatterene",
+      "listed": "magicguard",
+      "reading": "magicbounce"
+    },
+    {
+      "species": "milotic",
+      "listed": "defiant",
+      "reading": "competitive"
+    },
+    {
+      "species": "sinistcha",
+      "listed": "regenerator",
+      "reading": "hospitality"
+    },
+    {
+      "species": "sneasler",
+      "listed": "poisonpoint",
+      "reading": "poisontouch"
+    },
+    {
+      "species": "tyranitar",
+      "listed": "sandforce",
+      "reading": "sandstream"
+    },
+    {
+      "species": "tyranitar",
+      "listed": "sandrush",
+      "reading": "sandstream"
+    }
+  ],
+  "moves": [
+    {
+      "species": "basculegion",
+      "listed": "lastresort",
+      "reading": "lastrespects"
+    },
+    {
+      "species": "garchomp",
+      "listed": "highhorsepower",
+      "reading": "stompingtantrum"
+    },
+    {
+      "species": "garchomp",
+      "listed": "rockblast",
+      "reading": "rockslide"
+    },
+    {
+      "species": "garchomp",
+      "listed": "wavecrash",
+      "reading": "liquidation"
+    },
+    {
+      "species": "garchomp",
+      "listed": "rockpolish",
+      "reading": "rockslide"
+    },
+    {
+      "species": "golisopod",
+      "listed": "sacredsword",
+      "reading": "closecombat"
+    },
+    {
+      "species": "primarina",
+      "listed": "moonlight",
+      "reading": "moonblast"
+    },
+    {
+      "species": "salamence",
+      "listed": "doubleteam",
+      "reading": "doubleedge"
+    },
+    {
+      "species": "sinistcha",
+      "listed": "followme",
+      "reading": "ragepowder"
+    },
+    {
+      "species": "tyranitar",
+      "listed": "lowsweep",
+      "reading": "lowkick"
+    }
+  ]
+}

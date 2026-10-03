@@ -663,6 +663,7 @@ export type Database = {
           iv_spd: number;
           iv_spe: number;
           level: number;
+          listed_item: string | null;
           move_1_id: string | null;
           move_2_id: string | null;
           move_3_id: string | null;
@@ -690,6 +691,7 @@ export type Database = {
           iv_spd?: number;
           iv_spe?: number;
           level?: number;
+          listed_item?: string | null;
           move_1_id?: string | null;
           move_2_id?: string | null;
           move_3_id?: string | null;
@@ -717,6 +719,7 @@ export type Database = {
           iv_spd?: number;
           iv_spe?: number;
           level?: number;
+          listed_item?: string | null;
           move_1_id?: string | null;
           move_2_id?: string | null;
           move_3_id?: string | null;
