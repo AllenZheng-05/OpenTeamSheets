@@ -22,7 +22,8 @@
     "data:pull": "pnpm --filter @ots/tools data:pull",
     "data:sync": "pnpm --filter @ots/worker data:sync",
     "import:event": "pnpm --filter @ots/worker import:event",
-    "db:seed": "pnpm data:sync && pnpm import:event data/events"
+    "import:limitless": "pnpm --filter @ots/worker import:limitless",
+    "db:seed": "pnpm data:sync && pnpm import:limitless --event 0037"
   },
   "devDependencies": {
     "prettier": "^3",

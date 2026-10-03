@@ -79,10 +79,12 @@ export type Database = {
           official: boolean;
           player_count: number | null;
           regulation_id: string;
+          slug: string;
           source: string;
           source_id: string;
           standings_url: string | null;
           starts_on: string;
+          top_cut_size: number | null;
         };
         Insert: {
           created_at?: string;
@@ -92,10 +94,12 @@ export type Database = {
           official?: boolean;
           player_count?: number | null;
           regulation_id: string;
+          slug: string;
           source: string;
           source_id: string;
           standings_url?: string | null;
           starts_on: string;
+          top_cut_size?: number | null;
         };
         Update: {
           created_at?: string;
@@ -105,10 +109,12 @@ export type Database = {
           official?: boolean;
           player_count?: number | null;
           regulation_id?: string;
+          slug?: string;
           source?: string;
           source_id?: string;
           standings_url?: string | null;
           starts_on?: string;
+          top_cut_size?: number | null;
         };
         Relationships: [
           {
@@ -796,31 +802,46 @@ export type Database = {
       };
       team_sources: {
         Row: {
+          dropped_round: number | null;
           event_id: string;
           id: string;
+          losses: number | null;
+          made_day_two: boolean;
+          made_top_cut: boolean;
           placement: number | null;
           player_name: string;
-          record: string | null;
+          source_player_id: string | null;
           team_id: string;
           teamlist_url: string | null;
+          wins: number | null;
         };
         Insert: {
+          dropped_round?: number | null;
           event_id: string;
           id?: string;
+          losses?: number | null;
+          made_day_two?: boolean;
+          made_top_cut?: boolean;
           placement?: number | null;
           player_name: string;
-          record?: string | null;
+          source_player_id?: string | null;
           team_id: string;
           teamlist_url?: string | null;
+          wins?: number | null;
         };
         Update: {
+          dropped_round?: number | null;
           event_id?: string;
           id?: string;
+          losses?: number | null;
+          made_day_two?: boolean;
+          made_top_cut?: boolean;
           placement?: number | null;
           player_name?: string;
-          record?: string | null;
+          source_player_id?: string | null;
           team_id?: string;
           teamlist_url?: string | null;
+          wins?: number | null;
         };
         Relationships: [
           {
@@ -829,6 +850,13 @@ export type Database = {
             isOneToOne: false;
             referencedRelation: "events";
             referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "team_sources_event_id_fkey";
+            columns: ["event_id"];
+            isOneToOne: false;
+            referencedRelation: "tournament_placements";
+            referencedColumns: ["event_id"];
           },
           {
             foreignKeyName: "team_sources_team_id_fkey";
@@ -1012,7 +1040,45 @@ export type Database = {
       };
     };
     Views: {
-      [_ in never]: never;
+      tournament_placements: {
+        Row: {
+          ends_on: string | null;
+          event_id: string | null;
+          event_name: string | null;
+          event_slug: string | null;
+          id: string | null;
+          losses: number | null;
+          made_day_two: boolean | null;
+          made_top_cut: boolean | null;
+          official: boolean | null;
+          placement: number | null;
+          player_count: number | null;
+          player_name: string | null;
+          regulation_id: string | null;
+          standings_url: string | null;
+          starts_on: string | null;
+          team_id: string | null;
+          teamlist_url: string | null;
+          top_cut_size: number | null;
+          wins: number | null;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "events_regulation_id_fkey";
+            columns: ["regulation_id"];
+            isOneToOne: false;
+            referencedRelation: "regulations";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "team_sources_team_id_fkey";
+            columns: ["team_id"];
+            isOneToOne: false;
+            referencedRelation: "teams";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
     };
     Functions: {
       fork_team: { Args: { p_team_id: string }; Returns: string };

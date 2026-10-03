@@ -1,5 +1,3 @@
-import { readFileSync } from "node:fs";
-import path from "node:path";
 import { describe, expect, it } from "vitest";
 import { prepareImport, readEventFile } from "./event-file";
 
@@ -8,6 +6,7 @@ event:
   name: Test Regional
   source: other
   sourceId: test-regional
+  slug: test-regional
   regulation: M-C
   official: true
   startsOn: 2026-09-19
@@ -60,6 +59,7 @@ teams:
     ).toThrow(
       [
         "event: `source` must be one of rk9, limitless, other",
+        "event: `slug` must be lowercase words joined by hyphens, such as baltimore-2027",
         "event: `regulation` must be a regulation such as M-C",
         "event: `official` must be true or false",
         "event: `startsOn` must be a date like 2026-09-19",
@@ -73,28 +73,39 @@ teams:
   it("needs an event and a list of teams", () => {
     expect(() => readEventFile("hello: world")).toThrow(/`event` section/);
   });
+
+  it("takes the slug from the file's name unless the file sets one", () => {
+    const withoutSlug = event.replace("  slug: test-regional\n", "");
+    const teams = "teams: []\n";
+    expect(
+      readEventFile(`${withoutSlug}${teams}`, "baltimore-2027").event.slug,
+    ).toBe("baltimore-2027");
+    expect(readEventFile(`${event}${teams}`, "ignored").event.slug).toBe(
+      "test-regional",
+    );
+    expect(() =>
+      readEventFile(`${withoutSlug}${teams}`, "Baltimore 2027"),
+    ).toThrow(/`slug` must be lowercase/);
+  });
 });
 
 describe("prepareImport", () => {
-  it("prepares the Baltimore top cut without errors", async () => {
-    const file = readEventFile(
-      readFileSync(
-        path.join(
-          import.meta.dirname,
-          "../../../../data/events/baltimore-2027.yaml",
-        ),
-        "utf8",
-      ),
-    );
-    const result = await prepareImport(file);
+  it("prepares a legal team without errors", async () => {
+    const file = readEventFile(`${event}
+teams:
+  - player: Ash
+    paste: |
+${indent(team(kingambit))}
+`);
+    const result = await prepareImport(file, async () => "");
     expect(result.ok).toBe(true);
-    expect(result.reports).toHaveLength(13);
     expect(result.reports[0]).toMatchObject({
-      player: "Joseph Ugarte",
-      archetypes: ["sand", "psychic-terrain"],
+      player: "Ash",
+      archetypes: ["tailwind"],
     });
     expect(result.payload.event).toMatchObject({
-      source: "rk9",
+      source: "other",
+      slug: "test-regional",
       regulationId: "M-C",
     });
   });
@@ -133,7 +144,8 @@ ${indent(team(kingambit.replace("Iron Head", "Moonblast")))}
 teams:
   - player: Ash
     placement: 1
-    record: 10-2
+    wins: 10
+    losses: 2
     teamlistUrl: https://example.com/ash
     media:
       - kind: stream_vod
@@ -146,7 +158,8 @@ ${indent(team(kingambit))}
     expect(payload.teams[0]).toMatchObject({
       playerName: "Ash",
       placement: 1,
-      record: "10-2",
+      wins: 10,
+      losses: 2,
       teamlistUrl: "https://example.com/ash",
       archetypes: ["tailwind"],
       media: [

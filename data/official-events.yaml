@@ -1,0 +1,41 @@
+# Official Play! Pokémon events, imported from Limitless VGC with
+# `pnpm import:limitless`. Masters division only.
+#
+#   id:         the event on limitlessvgc.com (https://limitlessvgc.com/tournaments/{id})
+#   standings:  its standings site id (https://standings.limitlessvgc.com/{standings}/standings),
+#               linked as "Standings" from the event's page
+#   name:       the event's name on limitlessvgc.com
+#   regulation: the regulation it was played in
+#
+# Adding an event is one entry; the importer reads everything else
+# (dates, players, placements, records, teams) from Limitless.
+
+events:
+  - id: 434
+    standings: "0033"
+    name: Regional Indianapolis, IN
+    regulation: M-A
+  - id: 435
+    standings: "0034"
+    name: Special Event Turin
+    regulation: M-A
+  - id: 436
+    standings: "0035"
+    name: NAIC 2026, New Orleans
+    regulation: M-A
+  - id: 437
+    standings: "0036"
+    name: World Championships 2026
+    regulation: M-B
+  - id: 441
+    standings: "0037"
+    name: Regional Baltimore, MD
+    regulation: M-C
+  - id: 442
+    standings: "0038"
+    name: Regional Brisbane
+    regulation: M-C
+  - id: 443
+    standings: "0039"
+    name: Regional Frankfurt
+    regulation: M-C

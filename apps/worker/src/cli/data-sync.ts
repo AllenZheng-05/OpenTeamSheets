@@ -51,7 +51,17 @@ await upsert(
   ),
 );
 await upsert(db, "abilities", abilities);
-await upsert(db, "items", items);
+// The sprite position is only for the site's icons, not a database column.
+await upsert(
+  db,
+  "items",
+  items.map(({ id, num, name, description }) => ({
+    id,
+    num,
+    name,
+    description,
+  })),
+);
 await upsert(
   db,
   "natures",

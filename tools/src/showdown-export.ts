@@ -32,6 +32,7 @@ interface ShowdownSpecies extends ShowdownEffect {
   types: string[];
   abilities: Record<string, string | undefined>;
   baseStats: Record<StatId, number>;
+  spriteid: string;
   requiredItem?: string;
   requiredAbility?: string;
   requiredMove?: string;
@@ -45,6 +46,10 @@ interface ShowdownMove extends ShowdownEffect {
   pp: number;
   priority: number;
   target: string;
+}
+interface ShowdownItem extends ShowdownEffect {
+  /** The icon's position in Showdown's item sprite sheet. */
+  spritenum: number;
 }
 interface ShowdownNature {
   id: string;
@@ -66,7 +71,7 @@ type TextTable = Record<string, { shortDesc?: string; desc?: string }>;
 interface ShowdownDex {
   species: ShowdownTable<ShowdownSpecies>;
   moves: ShowdownTable<ShowdownMove>;
-  items: ShowdownTable<ShowdownEffect>;
+  items: ShowdownTable<ShowdownItem>;
   abilities: ShowdownTable<ShowdownEffect>;
   natures: ShowdownTable<ShowdownNature>;
   types: ShowdownTable<ShowdownType>;
@@ -249,6 +254,7 @@ function exportFormat(showdownDir: string, formatId: string): ShowdownExport {
           ? null
           : dex.species.get(species.baseSpecies).id,
       battleOnlyFromId: battleOnlyFrom(species)?.id ?? null,
+      spriteId: species.spriteid,
       type1: dex.types.get(species.types[0]!).id,
       type2: species.types[1] ? dex.types.get(species.types[1]).id : null,
       ability1: abilityId(species.abilities["0"]),
@@ -295,6 +301,7 @@ function exportFormat(showdownDir: string, formatId: string): ShowdownExport {
         num: item.num,
         name: item.name,
         description: description(text.Items, item.id),
+        spriteNum: item.spritenum,
       };
     }),
     legalSpecies: legalSpecies.map((species) => species.id),

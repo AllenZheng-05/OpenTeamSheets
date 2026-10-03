@@ -1,0 +1,76 @@
+import type { Tables } from "@ots/core/db";
+import { gameData } from "@ots/core/game-data";
+import type { StatTable, TeamSet } from "@ots/core/teams";
+import { displaySpecies, nameOf } from "@ots/core/teams";
+
+const itemSprites = new Map(
+  gameData.items.map((item) => [item.id, item.spriteNum]),
+);
+
+/** One Pokémon as the site shows it, with names resolved on the server. */
+export interface PokemonView {
+  slot: number;
+  name: string;
+  /** The Showdown sprite id of the form shown. */
+  spriteId: string | null;
+  shiny: boolean;
+  types: string[];
+  item: string | null;
+  /** The item's position in Showdown's item sprite sheet. */
+  itemSpriteNum: number | null;
+  ability: string | null;
+  nature: string | null;
+  moves: string[];
+  statPoints: StatTable | null;
+}
+
+const STATS = ["hp", "atk", "def", "spa", "spd", "spe"] as const;
+
+/** A `team_sets` row as a core TeamSet. */
+export function setFromRow(row: Tables<"team_sets">): TeamSet {
+  const points = STATS.map((stat) => row[`sp_${stat}`]);
+  return {
+    nickname: null,
+    speciesId: row.species_id,
+    itemId: row.item_id,
+    abilityId: row.ability_id,
+    natureId: row.nature_id,
+    moveIds: [
+      row.move_1_id,
+      row.move_2_id,
+      row.move_3_id,
+      row.move_4_id,
+    ].filter((move): move is string => move !== null),
+    // Stat points are all known or all unknown (official team sheets).
+    statPoints: points.every((value) => value === null)
+      ? null
+      : (Object.fromEntries(
+          STATS.map((stat, i) => [stat, points[i] ?? 0]),
+        ) as StatTable),
+    level: row.level,
+    ivs: Object.fromEntries(
+      STATS.map((stat) => [stat, row[`iv_${stat}`]]),
+    ) as StatTable,
+    shiny: row.shiny,
+  };
+}
+
+/** What the site shows for a set: the Mega when it holds its stone. */
+export function pokemonView(set: TeamSet, slot: number): PokemonView {
+  const shown = displaySpecies(set);
+  return {
+    slot,
+    name: shown?.name ?? "Unknown Pokémon",
+    spriteId: shown?.spriteId ?? null,
+    shiny: set.shiny,
+    types: shown
+      ? [shown.type1, shown.type2].filter((t): t is string => t !== null)
+      : [],
+    item: set.itemId ? nameOf("item", set.itemId) : null,
+    itemSpriteNum: set.itemId ? (itemSprites.get(set.itemId) ?? null) : null,
+    ability: set.abilityId ? nameOf("ability", set.abilityId) : null,
+    nature: set.natureId ? nameOf("nature", set.natureId) : null,
+    moves: set.moveIds.map((move) => nameOf("move", move)),
+    statPoints: set.statPoints,
+  };
+}

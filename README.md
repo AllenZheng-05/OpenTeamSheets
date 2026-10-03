@@ -38,7 +38,7 @@ cd OpenTeamSheets
 pnpm install
 pnpm db:start   # local Supabase; prints the URL and keys
 # copy .env.example to apps/web/.env.local and apps/worker/.env, filled in from `pnpm supabase status`
-pnpm db:seed    # loads the game data into the local database
+pnpm db:seed    # game data plus one tournament; the first run takes about 40 minutes
 pnpm dev        # http://localhost:3000
 ```
 

@@ -29,6 +29,8 @@ export interface Species {
    * legal list. Null for other forms.
    */
   battleOnlyFromId: string | null;
+  /** The file name of the form's sprite on Pokémon Showdown ("charizard-megay"). */
+  spriteId: string;
   type1: string;
   type2: string | null;
   ability1: string | null;
@@ -77,6 +79,8 @@ export interface Item {
   num: number;
   name: string;
   description: string;
+  /** The icon's position in Pokémon Showdown's item sprite sheet. */
+  spriteNum: number;
 }
 
 export interface Nature {
