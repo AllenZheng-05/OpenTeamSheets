@@ -8,6 +8,7 @@ import {
 import type { Json } from "@ots/core/db";
 import { dateRange } from "./format";
 import { pokemonView, setFromRow, type PokemonView } from "./pokemon";
+import { setDetails } from "./pokemon-details";
 import { rpcFilters, type Filters } from "./search";
 import { supabase } from "./supabase";
 
@@ -243,10 +244,15 @@ export async function getTeamPage(id: string): Promise<TeamPage | null> {
       .eq("team_id", id),
   ]);
 
+  const loaded = details.get(id)!;
   return {
     id,
     regulation: team.regulation_id,
-    ...details.get(id)!,
+    ...loaded,
+    pokemon: loaded.pokemon.map((p, i) => ({
+      ...p,
+      details: setDetails(loaded.team.sets[i]!),
+    })),
     placements: check(placements).map((row) => ({
       id: row.id!,
       player: row.player_name ?? "",
