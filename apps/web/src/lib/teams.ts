@@ -1,3 +1,5 @@
+import { unstable_cache } from "next/cache";
+import { cache } from "react";
 import { isRegulation, type Regulation } from "@ots/core";
 import {
   describeSheetError,
@@ -151,26 +153,25 @@ const stage = (row: PlacementRecord) =>
 
 /**
  * A page of tournament placements matching a search, newest event first,
- * then by placement, with the total for page numbers.
+ * then by placement, and whether there's a page after it. Counting every
+ * match is separate (countPlacements), so the page needn't wait for it.
  */
 export async function searchPlacements(
   filters: Filters,
   page: number,
-  /** The player's box, for filters.box. */
-  owned: string[] = [],
-): Promise<{ rows: PlacementRow[]; total: number }> {
+): Promise<{ rows: PlacementRow[]; hasNext: boolean }> {
   const from = page * PAGE_SIZE;
-  const { data, count, error } = await supabase()
-    .rpc(
-      "search_placements",
-      { filters: rpcFilters(filters, owned) as unknown as Json },
-      { count: "exact" },
-    )
-    .range(from, from + PAGE_SIZE - 1);
-  // Asking for rows past the end is an error (PGRST103); it's an empty page.
-  if (error?.code === "PGRST103") return { rows: [], total: count ?? 0 };
+  // One more than a page, to know whether another follows.
+  const { data, error } = await supabase()
+    .rpc("search_placements", {
+      filters: rpcFilters(filters) as unknown as Json,
+    })
+    .range(from, from + PAGE_SIZE);
+  // Asking for rows past the end can be an error (PGRST103): an empty page.
+  if (error?.code === "PGRST103") return { rows: [], hasNext: false };
   if (error) throw new Error(error.message);
-  const records = data ?? [];
+  const hasNext = (data?.length ?? 0) > PAGE_SIZE;
+  const records = (data ?? []).slice(0, PAGE_SIZE);
   const teams = await loadTeams(
     new Map(
       records.flatMap((r): [string, Regulation][] =>
@@ -201,8 +202,19 @@ export async function searchPlacements(
           hasSheetErrors: details.sheetErrors.length > 0,
         };
       }),
-    total: count ?? 0,
+    hasNext,
   };
+}
+
+/** How many placements match a search. */
+export async function countPlacements(filters: Filters): Promise<number> {
+  const { count, error } = await supabase().rpc(
+    "search_placements",
+    { filters: rpcFilters(filters) as unknown as Json },
+    { count: "exact", head: true },
+  );
+  if (error) throw new Error(error.message);
+  return count ?? 0;
 }
 
 export interface TeamPage extends TeamDetails {
@@ -276,3 +288,39 @@ export async function getTeamPage(id: string): Promise<TeamPage | null> {
     })),
   };
 }
+
+// Searches and counts are cached across visitors by their filters (every
+// filter, the box included, is in the URL) and by when search data last
+// changed, so an import starts fresh results within a minute.
+
+/** When search data last changed, checked at most once a minute. */
+const dataVersion = unstable_cache(
+  async () => {
+    const { data, error } = await supabase()
+      .from("search_data_version")
+      .select("changed_at")
+      .single();
+    if (error) throw new Error(error.message);
+    return data.changed_at;
+  },
+  ["search-data-version"],
+  { revalidate: 60 },
+);
+
+/** The cache key for a search's filters, at the current data version. */
+export const searchKey = async (filters: Filters) =>
+  `${await dataVersion()} ${JSON.stringify(rpcFilters(filters))}`;
+
+export const cachedSearch = async (filters: Filters, page: number) =>
+  unstable_cache(
+    () => searchPlacements(filters, page),
+    ["search", await searchKey(filters), String(page)],
+    { revalidate: 86400 },
+  )();
+
+/** countPlacements(), cached, and shared by everything on one page. */
+export const cachedCount = cache((key: string, filters: Filters) =>
+  unstable_cache(() => countPlacements(filters), ["count", key], {
+    revalidate: 86400,
+  })(),
+);

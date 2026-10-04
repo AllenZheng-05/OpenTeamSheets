@@ -4,7 +4,7 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "data:pull": "tsx src/data-pull.ts",
+    "data:pull": "tsx src/data-pull.ts && tsx src/box-order.ts",
     "typecheck": "tsc --noEmit",
     "test": "vitest run"
   },

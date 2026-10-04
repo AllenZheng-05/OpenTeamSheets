@@ -120,6 +120,7 @@ export function TeamSearch({
   archetypes,
   events,
   boxCount,
+  boxCode,
   size = "md",
 }: {
   /** The page searching: "/" for everything, "/tournament" for tournament teams. */
@@ -133,6 +134,8 @@ export function TeamSearch({
   events: EventOption[];
   /** How many Pokémon are in the player's box. */
   boxCount: number;
+  /** The player's box as URL text, put in the URL of box searches. */
+  boxCode: string;
   size?: "md" | "lg";
 }) {
   const router = useRouter();
@@ -191,9 +194,17 @@ export function TeamSearch({
   }
   const go = (next: Filters) => setFilters(next);
   const changed = filtersHref(path, filters, current) !== appliedHref;
+  // A box search carries the player's current box in its URL.
   const search = () =>
     startTransition(() =>
-      router.push(filtersHref(path, filters, current), { scroll: false }),
+      router.push(
+        filtersHref(
+          path,
+          { ...filters, have: filters.box !== null ? boxCode : null },
+          current,
+        ),
+        { scroll: false },
+      ),
     );
   const copy = (): Filters => structuredClone(filters);
 

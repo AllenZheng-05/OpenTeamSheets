@@ -3,29 +3,44 @@ import { count } from "@/lib/format";
 
 /**
  * "Showing 26–50 of 1,079" with Previous, page numbers and Next. Pages are
- * numbered from 1 in the URL (`?page=2`); `query` holds the other filters.
+ * numbered from 1 in the URL (`?page=2`). While the total is still being
+ * counted (null), it shows just Previous and Next.
  */
 export function Pagination({
   page,
   pageSize,
   total,
+  rowsShown,
+  hasNext,
   href,
 }: {
   /** The current page, from 1. */
   page: number;
   pageSize: number;
-  total: number;
+  /** Every match, or null while it's being counted. */
+  total: number | null;
+  /** How many results this page shows. */
+  rowsShown: number;
+  /** Whether a page follows this one. */
+  hasNext: boolean;
   /** The link to a page number. */
   href: (page: number) => string;
 }) {
-  const pages = Math.max(1, Math.ceil(total / pageSize));
+  // Without the total, the pages are this one and its neighbours.
+  const pages =
+    total === null
+      ? page + (hasNext ? 1 : 0)
+      : Math.max(1, Math.ceil(total / pageSize));
   const first = (page - 1) * pageSize + 1;
-  const last = Math.min(page * pageSize, total);
+  const last = first + rowsShown - 1;
 
-  // The first and last pages, plus two either side of the current one.
-  const shown = [
-    ...new Set([1, page - 2, page - 1, page, page + 1, page + 2, pages]),
-  ]
+  // The first and last pages, plus two either side of the current one;
+  // while counting, only the pages known to exist.
+  const shown = (
+    total === null
+      ? [page]
+      : [...new Set([1, page - 2, page - 1, page, page + 1, page + 2, pages])]
+  )
     .filter((n) => n >= 1 && n <= pages)
     .sort((a, b) => a - b);
 
@@ -38,9 +53,10 @@ export function Pagination({
       className="flex flex-col items-center gap-3 pt-2 sm:flex-row sm:justify-between"
     >
       <p className="text-sm text-neutral-500">
-        Showing {count(first)}–{count(last)} of {count(total)}
+        Showing {count(first)}–{count(last)}
+        {total !== null && <> of {count(total)}</>}
       </p>
-      {pages > 1 && (
+      {(pages > 1 || page > 1) && (
         <ol className="flex flex-wrap items-center gap-1">
           {page > 1 && (
             <li>

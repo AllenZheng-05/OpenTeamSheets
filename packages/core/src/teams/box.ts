@@ -1,3 +1,4 @@
+import boxOrder from "../../data/box-order.json";
 import { regulationData } from "../game-data/data";
 import type { Regulation } from "../regulation";
 import { getSpecies } from "./lookup";
@@ -73,4 +74,69 @@ export function boxTiles(): BoxTile[] {
     (a, b) => a.num - b.num || a.id.localeCompare(b.id),
   );
   return tiles;
+}
+
+// Box bitsets. Each box species has a permanent index, its position in
+// data/box-order.json, which `pnpm data:pull` only ever appends to. A box,
+// or a team's Pokémon, is then a 1024-bit mask: bit i set means the box
+// species at index i. Indexes never move, so masks and links stay valid as
+// Pokémon are added; widening past 1024 means padding with zeros.
+
+/** How many box species a mask can hold. */
+export const BOX_BITS = 1024;
+
+const indexes = new Map(boxOrder.map((id, index) => [id, index]));
+
+/** A box species' permanent index, or undefined if it has none yet. */
+export const boxIndex = (id: string): number | undefined => indexes.get(id);
+
+/**
+ * Box species as compact URL text: the mask's bytes (bit i is byte i / 8,
+ * from its high bit), trailing zero bytes trimmed, in base64url.
+ */
+export function encodeBoxBits(ids: Iterable<string>): string {
+  const bytes = new Uint8Array(BOX_BITS / 8);
+  for (const id of ids) {
+    const index = boxIndex(id);
+    if (index !== undefined) bytes[index >> 3]! |= 0x80 >> (index & 7);
+  }
+  let end = bytes.length;
+  while (end > 0 && bytes[end - 1] === 0) end--;
+  let binary = "";
+  for (const byte of bytes.subarray(0, end))
+    binary += String.fromCharCode(byte);
+  return btoa(binary)
+    .replace(/\+/g, "-")
+    .replace(/\//g, "_")
+    .replace(/=+$/, "");
+}
+
+/** The box species in encodeBoxBits() text, or null if it isn't valid. */
+export function decodeBoxBits(text: string): Set<string> | null {
+  if (!/^[A-Za-z0-9_-]*$/.test(text)) return null;
+  let binary: string;
+  try {
+    binary = atob(text.replace(/-/g, "+").replace(/_/g, "/"));
+  } catch {
+    return null;
+  }
+  if (binary.length > BOX_BITS / 8) return null;
+  const ids = new Set<string>();
+  for (let i = 0; i < binary.length * 8; i++) {
+    if (binary.charCodeAt(i >> 3) & (0x80 >> (i & 7))) {
+      const id = boxOrder[i];
+      if (id) ids.add(id);
+    }
+  }
+  return ids;
+}
+
+/** A mask as Postgres bit(1024) text: "0" and "1", index 0 first. */
+export function boxBitString(ids: Iterable<string>): string {
+  const bits = new Array<string>(BOX_BITS).fill("0");
+  for (const id of ids) {
+    const index = boxIndex(id);
+    if (index !== undefined) bits[index] = "1";
+  }
+  return bits.join("");
 }

@@ -1,9 +1,10 @@
 import Link from "next/link";
+import { Suspense, type ReactNode } from "react";
 import { notFound } from "next/navigation";
 import type { Regulation } from "@ots/core";
-import { readBox } from "@/lib/box-server";
+import { decodeBoxBits } from "@ots/core/teams";
 import { filtersHref, hasFilters, type Filters } from "@/lib/search";
-import { PAGE_SIZE, searchPlacements } from "@/lib/teams";
+import { cachedCount, cachedSearch, PAGE_SIZE, searchKey } from "@/lib/teams";
 import { EmptyState } from "./empty-state";
 import { Pagination } from "./pagination";
 import { SearchMetrics } from "./search-metrics";
@@ -25,12 +26,18 @@ export async function SearchResults({
   /** From 1. */
   page: number;
 }) {
-  const owned = filters.box !== null ? await readBox() : null;
-  const { rows, total } = await searchPlacements(
-    filters,
-    page - 1,
-    owned ? [...owned] : [],
-  );
+  // The box matched is in the URL, so the results are the same for anyone
+  // with this URL and can be cached.
+  const owned =
+    filters.box !== null
+      ? (decodeBoxBits(filters.have ?? "") ?? new Set<string>())
+      : null;
+  // An empty box can't build a team (teams have at least four Pokémon), so
+  // there's nothing to ask the database.
+  const { rows, hasNext } =
+    owned?.size === 0
+      ? { rows: [], hasNext: false }
+      : await cachedSearch(filters, page - 1);
   if (rows.length === 0 && page > 1) notFound();
 
   if (rows.length === 0) {
@@ -69,9 +76,26 @@ export async function SearchResults({
     );
   }
 
+  // The rows show straight away; the total (for the Results card and the
+  // page numbers) streams in once it's counted.
+  const key = await searchKey(filters);
+  const pagination = (total: number | null) => (
+    <Pagination
+      page={page}
+      pageSize={PAGE_SIZE}
+      total={total}
+      rowsShown={rows.length}
+      hasNext={hasNext}
+      href={(n) => filtersHref(path, filters, current, n)}
+    />
+  );
   return (
     <>
-      <SearchMetrics total={total} />
+      <Suspense fallback={<SearchMetrics total={null} />}>
+        <Counted counting={cachedCount(key, filters)}>
+          {(total) => <SearchMetrics total={total} />}
+        </Counted>
+      </Suspense>
       <ol className="space-y-3">
         {rows.map((row) => (
           <li key={row.id}>
@@ -79,12 +103,9 @@ export async function SearchResults({
           </li>
         ))}
       </ol>
-      <Pagination
-        page={page}
-        pageSize={PAGE_SIZE}
-        total={total}
-        href={(n) => filtersHref(path, filters, current, n)}
-      />
+      <Suspense fallback={pagination(null)}>
+        <Counted counting={cachedCount(key, filters)}>{pagination}</Counted>
+      </Suspense>
     </>
   );
 }
@@ -93,4 +114,15 @@ export async function SearchResults({
 export function readPage(value: string | string[] | undefined): number | null {
   const page = Number(value ?? 1);
   return Number.isInteger(page) && page >= 1 ? page : null;
+}
+
+/** Renders its children with the total once it's counted. */
+async function Counted({
+  counting,
+  children,
+}: {
+  counting: Promise<number>;
+  children: (total: number) => ReactNode;
+}) {
+  return children(await counting);
 }

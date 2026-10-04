@@ -71,6 +71,7 @@ describe("readFilters and filtersHref", () => {
     top: 32,
     kind: "online",
     box: 1,
+    have: "gA",
   };
 
   it("round-trips every filter through the URL", () => {
@@ -112,6 +113,7 @@ describe("readFilters and filtersHref", () => {
           top: "-3",
           kind: "both",
           box: "7",
+          have: "not a box!",
           player: ["  wolfe  ", "", "x".repeat(51)],
         },
         "M-C",
@@ -179,12 +181,13 @@ describe("readPlacement", () => {
 });
 
 describe("rpcFilters and the box", () => {
-  it("sends the box only when matching it", () => {
-    expect(rpcFilters(emptyFilters("M-C"), ["charizard"])).not.toHaveProperty(
-      "box",
-    );
+  it("sends the box as a mask only when matching it", () => {
     expect(
-      rpcFilters({ ...emptyFilters("M-C"), box: 1 }, ["charizard"]),
-    ).toMatchObject({ box: ["charizard"], boxMissing: 1 });
+      rpcFilters({ ...emptyFilters("M-C"), have: "gA" }),
+    ).not.toHaveProperty("boxBits");
+    const sent = rpcFilters({ ...emptyFilters("M-C"), box: 1, have: "gA" });
+    expect(sent.boxMissing).toBe(1);
+    expect(sent.boxBits).toHaveLength(1024);
+    expect(sent.boxBits?.startsWith("10")).toBe(true);
   });
 });
