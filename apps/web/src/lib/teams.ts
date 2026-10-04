@@ -156,12 +156,14 @@ const stage = (row: PlacementRecord) =>
 export async function searchPlacements(
   filters: Filters,
   page: number,
+  /** The player's box, for filters.box. */
+  owned: string[] = [],
 ): Promise<{ rows: PlacementRow[]; total: number }> {
   const from = page * PAGE_SIZE;
   const { data, count, error } = await supabase()
     .rpc(
       "search_placements",
-      { filters: rpcFilters(filters) as unknown as Json },
+      { filters: rpcFilters(filters, owned) as unknown as Json },
       { count: "exact" },
     )
     .range(from, from + PAGE_SIZE - 1);

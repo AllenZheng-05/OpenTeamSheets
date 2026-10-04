@@ -60,6 +60,15 @@ export const EVENT_KINDS: { id: EventKind; label: string }[] = [
   { id: "online", label: "Online only" },
 ];
 
+/** How many of a team's Pokémon may be missing from the player's box. */
+export type BoxMatch = 0 | 1 | 2;
+
+export const BOX_MATCHES: { id: BoxMatch; label: string }[] = [
+  { id: 0, label: "Only teams I can build" },
+  { id: 1, label: "Missing at most 1" },
+  { id: 2, label: "Missing at most 2" },
+];
+
 export type SheetErrorFilter = "any" | "unexplained" | "none";
 
 export const SHEET_ERROR_FILTERS: { id: SheetErrorFilter; label: string }[] = [
@@ -87,6 +96,8 @@ export interface Filters {
   /** Only placements this good or better, such as 8 for the top 8. */
   top: number | null;
   kind: EventKind;
+  /** Match the player's box (from their cookie); null for any team. */
+  box: BoxMatch | null;
 }
 
 export const emptyFilters = (regulation: Regulation): Filters => ({
@@ -102,6 +113,7 @@ export const emptyFilters = (regulation: Regulation): Filters => ({
   stage: "all",
   top: null,
   kind: "all",
+  box: null,
 });
 
 const ID = /^[a-z0-9-]+$/;
@@ -205,6 +217,10 @@ export function readFilters(params: Params, current: Regulation): Filters {
   if (Number.isInteger(top) && top >= 1 && top <= MAX_TOP) filters.top = top;
   const kind = params.kind;
   if (kind === "official" || kind === "online") filters.kind = kind;
+  const box = params.box;
+  if (box === "0" || box === "1" || box === "2") {
+    filters.box = Number(box) as BoxMatch;
+  }
   return filters;
 }
 
@@ -230,6 +246,7 @@ export function filtersHref(
   if (filters.stage !== "all") params.set("stage", filters.stage);
   if (filters.top) params.set("top", String(filters.top));
   if (filters.kind !== "all") params.set("kind", filters.kind);
+  if (filters.box !== null) params.set("box", String(filters.box));
   if (filters.regulation !== current) params.set("reg", filters.regulation);
   if (page > 1) params.set("page", String(page));
   // Keep the separators readable: "has=pokemon:incineroar,move:knockoff".
@@ -242,9 +259,14 @@ export function hasFilters(filters: Filters, current: Regulation): boolean {
   return filtersHref("", filters, current) !== "";
 }
 
-/** The argument for search_placements(). */
-export function rpcFilters(filters: Filters) {
+/**
+ * The argument for search_placements(), with the player's box when the
+ * search matches it. The box keys are left out otherwise, since the
+ * function matches a box whenever one is given.
+ */
+export function rpcFilters(filters: Filters, owned: string[] = []) {
   return {
+    ...(filters.box !== null && { box: owned, boxMissing: filters.box }),
     has: filters.has,
     not: filters.not,
     archetypes: filters.archetypes,

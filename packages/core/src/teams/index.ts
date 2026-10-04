@@ -9,6 +9,7 @@ export {
   type ValidateOptions,
   type ValidationResult,
 } from "./validate";
+export { boxSpecies, boxTiles, type BoxTile } from "./box";
 export { teamFingerprint } from "./fingerprint";
 export {
   describeSheetError,

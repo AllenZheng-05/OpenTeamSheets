@@ -1,6 +1,7 @@
 import { REGULATIONS, type Regulation } from "@ots/core";
 import { gameData, regulationData } from "@ots/core/game-data";
 import { getSpecies } from "@ots/core/teams";
+import { readBox } from "./box-server";
 import { supabase } from "./supabase";
 
 // What the search bar can suggest. Built on the server from core's game
@@ -123,10 +124,16 @@ export async function searchBarProps(): Promise<{
   archetypes: SearchOption[];
   events: EventOption[];
   regulations: Regulation[];
+  /** How many Pokémon are in the player's box, from their cookie. */
+  boxCount: number;
 }> {
   cachedGameDataOptions ??= gameDataOptions();
-  const { archetypes, events } = await databaseOptions();
+  const [{ archetypes, events }, box] = await Promise.all([
+    databaseOptions(),
+    readBox(),
+  ]);
   return {
+    boxCount: box.size,
     options: cachedGameDataOptions,
     archetypes,
     events,

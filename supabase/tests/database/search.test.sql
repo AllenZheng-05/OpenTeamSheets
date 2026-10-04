@@ -2,7 +2,7 @@
 -- `pnpm db:test`. Everything runs in a transaction that is rolled back.
 begin;
 create extension if not exists pgtap with schema extensions;
-select plan(42);
+select plan(49);
 
 -- The game data these tests need. It may already be there from
 -- `pnpm data:sync`, so existing rows are left alone.
@@ -153,6 +153,35 @@ select is(
   pg_temp.found('{"has": [{"pokemon": "charizard"}], "not": [{"moves": ["knockoff"]}], "stage": "day-2"}'),
   '{Misty_Waterflower}',
   'filters combine'
+);
+
+-- Box matching: Megas count as the Pokémon they Mega Evolve from
+select is(pg_temp.found('{"box": ["charizard", "incineroar"]}'), '{Ash,Brock,Misty_Waterflower}', 'a box with everything builds every team');
+select is(pg_temp.found('{"box": ["charizard"]}'), '{Brock}', 'a Mega counts as its base form; a missing Pokémon rules a team out');
+select is(pg_temp.found('{"box": ["charizard"], "boxMissing": 1}'), '{Ash,Brock,Misty_Waterflower}', 'missing at most one');
+select is(pg_temp.found('{"box": []}'), '{}', 'an empty box builds nothing');
+select is(pg_temp.found('{"box": [], "boxMissing": 1}'), '{Brock}', 'an empty box, missing at most one');
+
+-- Box usage, checked against the team sheets directly (other data may be
+-- loaded too). Megas count as their base form.
+create function pg_temp.placements_with(species text)
+returns bigint language sql as $$
+  select count(*) from public.tournament_placements as p
+  where p.regulation_id = 'M-C' and exists (
+    select 1 from public.team_sets as s
+    join public.species as sp on sp.id = s.species_id
+    where s.team_id = p.team_id and coalesce(sp.battle_only_from_id, sp.id) = species
+  );
+$$;
+select is(
+  (select placements from public.box_usage('M-C') where box_species = 'charizard'),
+  pg_temp.placements_with('charizard'),
+  'usage counts placements whose team has the Pokémon, Megas as their base'
+);
+select is(
+  (select total from public.box_usage('M-C') limit 1),
+  (select count(*) from public.tournament_placements where regulation_id = 'M-C'),
+  'usage is out of every placement in the regulation'
 );
 
 -- Official or online

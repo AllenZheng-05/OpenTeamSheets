@@ -14,7 +14,14 @@ import { TeamSheet } from "./team-sheet";
  * One team in a list, readable without clicking. The whole card links to
  * the team's page; Copy team sits above the link so it doesn't open it.
  */
-export function TeamRow({ row }: { row: PlacementRow }) {
+export function TeamRow({
+  row,
+  owned = null,
+}: {
+  row: PlacementRow;
+  /** The player's box, when searching by it: missing Pokémon are dimmed. */
+  owned?: Set<string> | null;
+}) {
   const place = row.placement ? placement(row.placement) : null;
   return (
     <article className="relative rounded-xl border border-neutral-200 bg-white p-4 transition-shadow hover:shadow-md has-[a:focus-visible]:ring-2 has-[a:focus-visible]:ring-neutral-900">
@@ -63,7 +70,7 @@ export function TeamRow({ row }: { row: PlacementRow }) {
             <CopyTeamButton paste={row.showdown} />
           </div>
         </div>
-        <TeamSheet pokemon={row.pokemon} variant="compact" />
+        <TeamSheet pokemon={row.pokemon} variant="compact" owned={owned} />
         <div className="relative z-10 hidden lg:block lg:shrink-0">
           <CopyTeamButton paste={row.showdown} />
         </div>
