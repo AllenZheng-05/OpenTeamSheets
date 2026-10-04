@@ -9,7 +9,16 @@ export {
   type ValidateOptions,
   type ValidationResult,
 } from "./validate";
-export { boxSpecies, boxTiles, type BoxTile } from "./box";
+export {
+  BOX_BITS,
+  boxBitString,
+  boxIndex,
+  boxSpecies,
+  boxTiles,
+  decodeBoxBits,
+  encodeBoxBits,
+  type BoxTile,
+} from "./box";
 export { teamFingerprint } from "./fingerprint";
 export {
   describeSheetError,

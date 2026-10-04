@@ -1,5 +1,14 @@
 import { describe, expect, it } from "vitest";
-import { boxSpecies, boxTiles } from "./box";
+import boxOrder from "../../data/box-order.json";
+import {
+  BOX_BITS,
+  boxBitString,
+  boxIndex,
+  boxSpecies,
+  boxTiles,
+  decodeBoxBits,
+  encodeBoxBits,
+} from "./box";
 
 describe("boxSpecies", () => {
   it.each([
@@ -49,5 +58,52 @@ describe("boxTiles", () => {
     expect(tiles.find((t) => t.id === "incineroar")?.regulations).toContain(
       "M-C",
     );
+  });
+});
+
+describe("box indexes", () => {
+  it("gives every box species a permanent index within the mask", () => {
+    const missing = boxTiles()
+      .map((t) => t.id)
+      .filter((id) => boxIndex(id) === undefined);
+    // If this fails, run `pnpm data:pull`, which appends new box species to
+    // data/box-order.json.
+    expect(missing).toEqual([]);
+    expect(boxOrder.length).toBeLessThanOrEqual(BOX_BITS);
+    expect(new Set(boxOrder).size).toBe(boxOrder.length);
+  });
+});
+
+describe("encodeBoxBits and decodeBoxBits", () => {
+  it.each([[[]], [["charizard"]], [["venusaur", "incineroar", "rotomwash"]]])(
+    "round-trips %j",
+    (ids) => {
+      expect([...decodeBoxBits(encodeBoxBits(ids))!].sort()).toEqual(
+        [...ids].sort(),
+      );
+    },
+  );
+
+  it("keeps a full box short", () => {
+    const all = boxTiles().map((t) => t.id);
+    const text = encodeBoxBits(all);
+    expect(text.length).toBeLessThan(Math.ceil(all.length / 6) + 4);
+    expect(decodeBoxBits(text)!.size).toBe(all.length);
+  });
+
+  it("drops trailing zeros, so masks read the same at any width", () => {
+    expect(encodeBoxBits(["venusaur"])).toBe("gA");
+    expect([...decodeBoxBits("gAAAAA")!]).toEqual(["venusaur"]);
+  });
+
+  it("rejects text that isn't a box", () => {
+    expect(decodeBoxBits("not a box!")).toBeNull();
+    expect(decodeBoxBits("A".repeat(200))).toBeNull();
+  });
+
+  it("writes Postgres bit text with index 0 first", () => {
+    const bits = boxBitString(["venusaur"]);
+    expect(bits).toHaveLength(BOX_BITS);
+    expect(bits.startsWith("10")).toBe(true);
   });
 });

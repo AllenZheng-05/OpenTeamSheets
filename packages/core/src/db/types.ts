@@ -391,6 +391,21 @@ export type Database = {
         };
         Relationships: [];
       };
+      search_data_version: {
+        Row: {
+          changed_at: string;
+          id: boolean;
+        };
+        Insert: {
+          changed_at?: string;
+          id?: boolean;
+        };
+        Update: {
+          changed_at?: string;
+          id?: boolean;
+        };
+        Relationships: [];
+      };
       species: {
         Row: {
           ability_1_id: string | null;
@@ -399,6 +414,7 @@ export type Database = {
           atk: number;
           base_species_id: string | null;
           battle_only_from_id: string | null;
+          box_index: number | null;
           box_species_id: string | null;
           def: number;
           hp: number;
@@ -421,6 +437,7 @@ export type Database = {
           atk: number;
           base_species_id?: string | null;
           battle_only_from_id?: string | null;
+          box_index?: number | null;
           box_species_id?: string | null;
           def: number;
           hp: number;
@@ -443,6 +460,7 @@ export type Database = {
           atk?: number;
           base_species_id?: string | null;
           battle_only_from_id?: string | null;
+          box_index?: number | null;
           box_species_id?: string | null;
           def?: number;
           hp?: number;

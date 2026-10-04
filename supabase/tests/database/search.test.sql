@@ -2,7 +2,7 @@
 -- `pnpm db:test`. Everything runs in a transaction that is rolled back.
 begin;
 create extension if not exists pgtap with schema extensions;
-select plan(51);
+select plan(52);
 
 -- The game data these tests need. It may already be there from
 -- `pnpm data:sync`, so existing rows are left alone.
@@ -33,6 +33,21 @@ insert into public.species (id, num, name, base_species_id, battle_only_from_id,
   on conflict do nothing;
 insert into public.regulations (id, starts_at, data_status) values ('M-C', '2026-09-09T02:00:00Z', 'complete')
   on conflict do nothing;
+-- Box indexes for the test species (data:sync sets the real ones).
+update public.species set box_index = 1 where id in ('charizard', 'charizardmegax', 'charizardmegay');
+update public.species set box_index = 600 where id = 'incineroar';
+
+-- A box as a mask: bit(1024) text with these indexes set.
+create function pg_temp.bits(variadic indexes integer[])
+returns text language sql as $$
+  select string_agg(case when i = any (indexes) then '1' else '0' end, '' order by i)
+  from generate_series(0, 1023) as i;
+$$;
+
+-- When search data last changed, before the imports below.
+create temporary table version_before as
+  select changed_at from public.search_data_version;
+grant select on version_before to anon;
 
 -- One player's team at the test event.
 create function pg_temp.import(
@@ -156,11 +171,11 @@ select is(
 );
 
 -- Box matching: Megas count as the Pokémon they Mega Evolve from
-select is(pg_temp.found('{"box": ["charizard", "incineroar"]}'), '{Ash,Brock,Misty_Waterflower}', 'a box with everything builds every team');
-select is(pg_temp.found('{"box": ["charizard"]}'), '{Brock}', 'a Mega counts as its base form; a missing Pokémon rules a team out');
-select is(pg_temp.found('{"box": ["charizard"], "boxMissing": 1}'), '{Ash,Brock,Misty_Waterflower}', 'missing at most one');
-select is(pg_temp.found('{"box": []}'), '{}', 'an empty box builds nothing');
-select is(pg_temp.found('{"box": [], "boxMissing": 1}'), '{Brock}', 'an empty box, missing at most one');
+select is(pg_temp.found(jsonb_build_object('boxBits', pg_temp.bits(1, 600))), '{Ash,Brock,Misty_Waterflower}', 'a box with everything builds every team');
+select is(pg_temp.found(jsonb_build_object('boxBits', pg_temp.bits(1))), '{Brock}', 'a Mega counts as its base form; a missing Pokémon rules a team out');
+select is(pg_temp.found(jsonb_build_object('boxBits', pg_temp.bits(1), 'boxMissing', 1)), '{Ash,Brock,Misty_Waterflower}', 'missing at most one');
+select is(pg_temp.found(jsonb_build_object('boxBits', pg_temp.bits(-1))), '{}', 'an empty box builds nothing');
+select is(pg_temp.found(jsonb_build_object('boxBits', pg_temp.bits(-1), 'boxMissing', 1)), '{Brock}', 'an empty box, missing at most one');
 
 -- Box usage, checked against the team sheets directly (other data may be
 -- loaded too). Megas count as their base form.
@@ -205,8 +220,14 @@ select is(
   (select count(distinct team_id)::integer from public.team_sets),
   'a batch of one team at a time covers every team, then stops'
 );
-select is(pg_temp.found('{"box": ["charizard"]}'), '{Brock}', 'search still works after a refresh');
+select is(pg_temp.found(jsonb_build_object('boxBits', pg_temp.bits(1))), '{Brock}', 'search still works after a refresh');
 set local role anon;
+
+-- The data version moves on with an import, so cached searches start fresh
+select ok(
+  (select changed_at from public.search_data_version) > (select changed_at from version_before),
+  'importing teams moves the search data version on'
+);
 
 -- Official or online
 select is(pg_temp.found('{"kind": "official"}'), '{Ash,Brock,Misty_Waterflower}', 'official events only');

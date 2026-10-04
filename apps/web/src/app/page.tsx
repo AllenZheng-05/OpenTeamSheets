@@ -5,6 +5,7 @@ import { getRegulationDataStatus } from "@ots/core/game-data";
 import { RegulationCountdown } from "@/components/regulation-countdown";
 import { readPage, SearchResults } from "@/components/search-results";
 import { TeamSearch } from "@/components/team-search";
+import { fillBoxInUrl } from "@/lib/box-server";
 import { hasFilters, readFilters } from "@/lib/search";
 import { searchBarProps } from "@/lib/search-options";
 
@@ -24,6 +25,7 @@ export default async function Home({ searchParams }: PageProps<"/">) {
   const regulation = getCurrentRegulation();
   const rulesPending = getRegulationDataStatus(regulation) !== "complete";
   const filters = readFilters(params, regulation);
+  await fillBoxInUrl("/", filters, regulation, page);
   const searching = hasFilters(filters, regulation);
 
   return (

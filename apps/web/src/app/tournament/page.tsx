@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import { getCurrentRegulation } from "@ots/core";
 import { readPage, SearchResults } from "@/components/search-results";
 import { TeamSearch } from "@/components/team-search";
+import { fillBoxInUrl } from "@/lib/box-server";
 import { readFilters } from "@/lib/search";
 import { searchBarProps } from "@/lib/search-options";
 
@@ -17,6 +18,7 @@ export default async function TournamentTeams({
   if (page === null) notFound();
   const current = getCurrentRegulation();
   const filters = readFilters(params, current);
+  await fillBoxInUrl("/tournament", filters, current, page);
 
   return (
     <div className="space-y-5">

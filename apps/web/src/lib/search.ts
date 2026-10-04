@@ -1,4 +1,5 @@
 import { isRegulation, type Regulation } from "@ots/core";
+import { boxBitString, decodeBoxBits } from "@ots/core/teams";
 
 // Search filters, as the URL holds them and as search_placements() takes
 // them. Pure, so pages and the search bar share it.
@@ -96,8 +97,14 @@ export interface Filters {
   /** Only placements this good or better, such as 8 for the top 8. */
   top: number | null;
   kind: EventKind;
-  /** Match the player's box (from their cookie); null for any team. */
+  /** Match a box; null for any team. */
   box: BoxMatch | null;
+  /**
+   * The box matched, as core's encodeBoxBits() text, so the URL alone
+   * decides the results (and they can be cached and shared). Null until
+   * filled in from the player's box.
+   */
+  have: string | null;
 }
 
 export const emptyFilters = (regulation: Regulation): Filters => ({
@@ -114,6 +121,7 @@ export const emptyFilters = (regulation: Regulation): Filters => ({
   top: null,
   kind: "all",
   box: null,
+  have: null,
 });
 
 const ID = /^[a-z0-9-]+$/;
@@ -221,6 +229,10 @@ export function readFilters(params: Params, current: Regulation): Filters {
   if (box === "0" || box === "1" || box === "2") {
     filters.box = Number(box) as BoxMatch;
   }
+  const have = params.have;
+  if (typeof have === "string" && decodeBoxBits(have) !== null) {
+    filters.have = have;
+  }
   return filters;
 }
 
@@ -246,7 +258,10 @@ export function filtersHref(
   if (filters.stage !== "all") params.set("stage", filters.stage);
   if (filters.top) params.set("top", String(filters.top));
   if (filters.kind !== "all") params.set("kind", filters.kind);
-  if (filters.box !== null) params.set("box", String(filters.box));
+  if (filters.box !== null) {
+    params.set("box", String(filters.box));
+    if (filters.have !== null) params.set("have", filters.have);
+  }
   if (filters.regulation !== current) params.set("reg", filters.regulation);
   if (page > 1) params.set("page", String(page));
   // Keep the separators readable: "has=pokemon:incineroar,move:knockoff".
@@ -260,13 +275,15 @@ export function hasFilters(filters: Filters, current: Regulation): boolean {
 }
 
 /**
- * The argument for search_placements(), with the player's box when the
- * search matches it. The box keys are left out otherwise, since the
- * function matches a box whenever one is given.
+ * The argument for search_placements(), with the box as a bit mask when
+ * the search matches one (an empty box without `have`).
  */
-export function rpcFilters(filters: Filters, owned: string[] = []) {
+export function rpcFilters(filters: Filters) {
   return {
-    ...(filters.box !== null && { box: owned, boxMissing: filters.box }),
+    ...(filters.box !== null && {
+      boxBits: boxBitString(decodeBoxBits(filters.have ?? "") ?? []),
+      boxMissing: filters.box,
+    }),
     has: filters.has,
     not: filters.not,
     archetypes: filters.archetypes,

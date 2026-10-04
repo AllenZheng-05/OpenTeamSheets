@@ -10,7 +10,7 @@ import {
   getRegulationDataStatus,
   regulationData,
 } from "@ots/core/game-data";
-import { boxSpecies } from "@ots/core/teams";
+import { boxIndex, boxSpecies } from "@ots/core/teams";
 import { check, connect, type Db } from "./supabase";
 
 type TableName = keyof Database["public"]["Tables"];
@@ -121,6 +121,8 @@ await upsert(
       required_move_id: s.requiredMoveId,
       // Which Pokémon a player owns to have this one, for box matching.
       box_species_id: boxSpecies(s.id),
+      // Its permanent index in box masks (core's box-order.json).
+      box_index: boxIndex(boxSpecies(s.id)) ?? null,
     })),
 );
 
