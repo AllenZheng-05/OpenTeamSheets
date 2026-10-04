@@ -69,6 +69,7 @@ describe("readFilters and filtersHref", () => {
     event: "baltimore-2026",
     stage: "top-cut",
     top: 32,
+    kind: "online",
   };
 
   it("round-trips every filter through the URL", () => {
@@ -108,6 +109,7 @@ describe("readFilters and filtersHref", () => {
           event: "../etc",
           stage: "finals",
           top: "-3",
+          kind: "both",
           player: ["  wolfe  ", "", "x".repeat(51)],
         },
         "M-C",

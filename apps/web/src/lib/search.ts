@@ -51,6 +51,15 @@ export function readPlacement(
   return Number.isInteger(n) && n >= 1 ? { stage: "all", top: n } : null;
 }
 
+/** Which events: official ones, online ones, or both. */
+export type EventKind = "all" | "official" | "online";
+
+export const EVENT_KINDS: { id: EventKind; label: string }[] = [
+  { id: "all", label: "Official and online" },
+  { id: "official", label: "Official only" },
+  { id: "online", label: "Online only" },
+];
+
 export type SheetErrorFilter = "any" | "unexplained" | "none";
 
 export const SHEET_ERROR_FILTERS: { id: SheetErrorFilter; label: string }[] = [
@@ -77,6 +86,7 @@ export interface Filters {
   stage: Stage;
   /** Only placements this good or better, such as 8 for the top 8. */
   top: number | null;
+  kind: EventKind;
 }
 
 export const emptyFilters = (regulation: Regulation): Filters => ({
@@ -91,6 +101,7 @@ export const emptyFilters = (regulation: Regulation): Filters => ({
   event: null,
   stage: "all",
   top: null,
+  kind: "all",
 });
 
 const ID = /^[a-z0-9-]+$/;
@@ -192,6 +203,8 @@ export function readFilters(params: Params, current: Regulation): Filters {
   if (stage === "day-2" || stage === "top-cut") filters.stage = stage;
   const top = Number(params.top);
   if (Number.isInteger(top) && top >= 1 && top <= MAX_TOP) filters.top = top;
+  const kind = params.kind;
+  if (kind === "official" || kind === "online") filters.kind = kind;
   return filters;
 }
 
@@ -216,6 +229,7 @@ export function filtersHref(
   if (filters.event) params.set("event", filters.event);
   if (filters.stage !== "all") params.set("stage", filters.stage);
   if (filters.top) params.set("top", String(filters.top));
+  if (filters.kind !== "all") params.set("kind", filters.kind);
   if (filters.regulation !== current) params.set("reg", filters.regulation);
   if (page > 1) params.set("page", String(page));
   // Keep the separators readable: "has=pokemon:incineroar,move:knockoff".
@@ -242,5 +256,6 @@ export function rpcFilters(filters: Filters) {
     event: filters.event,
     stage: filters.stage === "all" ? null : filters.stage,
     top: filters.top,
+    kind: filters.kind === "all" ? null : filters.kind,
   };
 }

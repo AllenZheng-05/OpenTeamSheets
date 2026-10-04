@@ -154,7 +154,7 @@ export function validateTeam(
     }
     if (complete) {
       if (!set.abilityId) error("Choose an ability");
-      if (!set.natureId) error("Choose a nature");
+      if (!set.natureId) error("Choose a nature", { field: "nature" });
       if (set.moveIds.length === 0) error("Choose at least one move");
     }
 

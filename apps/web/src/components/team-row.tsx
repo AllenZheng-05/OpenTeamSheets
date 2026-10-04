@@ -2,7 +2,12 @@ import Link from "next/link";
 import { placement } from "@/lib/format";
 import type { PlacementRow } from "@/lib/teams";
 import { CopyTeamButton } from "./copy-team-button";
-import { ArchetypePill, SheetErrorsBadge, StageBadge } from "./pills";
+import {
+  ArchetypePill,
+  OnlineBadge,
+  SheetErrorsBadge,
+  StageBadge,
+} from "./pills";
 import { TeamSheet } from "./team-sheet";
 
 /**
@@ -41,7 +46,10 @@ export function TeamRow({ row }: { row: PlacementRow }) {
                 </span>
               </Link>
             </h2>
-            <p className="mt-0.5 text-sm text-neutral-500">{row.event.name}</p>
+            <p className="mt-0.5 text-sm text-neutral-500">
+              {row.event.name}
+              {!row.event.official && <OnlineBadge />}
+            </p>
             <p className="text-xs text-neutral-500">{row.event.dates}</p>
             {row.archetypes.length > 0 && (
               <div className="mt-2 flex flex-wrap gap-1">

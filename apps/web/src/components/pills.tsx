@@ -63,6 +63,15 @@ export function SheetErrorsBadge() {
   );
 }
 
+/** An online tournament, rather than an official Play! Pokémon event. */
+export function OnlineBadge() {
+  return (
+    <span className="ml-1.5 rounded border border-neutral-300 px-1 py-px align-[1px] text-[10px] font-medium tracking-wide text-neutral-600 uppercase">
+      Online
+    </span>
+  );
+}
+
 export function ArchetypePill({ name }: { name: string }) {
   return (
     <span className="rounded-full border border-neutral-200 px-2 py-0.5 text-xs text-neutral-600">

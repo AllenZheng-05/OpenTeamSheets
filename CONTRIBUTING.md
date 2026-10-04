@@ -90,7 +90,9 @@ Champions game data (species, moves, abilities, items, type chart, and each regu
 
 ## Tournament data
 
-Tournament teams come from official Play! Pokémon events, as published on [Limitless VGC](https://limitlessvgc.com): every Masters player's placement, record, whether they made day 2 and top cut, and their team.
+Tournament teams come from official Play! Pokémon events, as published on [Limitless VGC](https://limitlessvgc.com): every Masters player's placement, record, whether they made day 2 and top cut, and their team. Large online tournaments (64+ players) come from [Limitless](https://play.limitlesstcg.com)'s public API and are marked as online.
+
+- **Online tournaments:** `pnpm import:online` imports every finished Champions tournament on Limitless with public teamlists and at least 64 players (`--min-players` changes that; `--format M-C` and `--since 2026-09-01` narrow it). The API allows 50 requests every five minutes, so the importer sends one every 6.5 seconds: the first full run takes about an hour. Later runs pick up where the database left off: they list tournaments back to the newest online event already imported and import only new ones, so they take a few requests. `--all` scans and imports everything again from the cache (`~/.cache/openteamsheets/limitless-api`), for example after editing `sheet-readings.json`. Tournaments from the last two days are left until their results are final.
 
 - **The events** are listed in `data/official-events.yaml`. Adding one is a single entry: its id on limitlessvgc.com and its standings site id (the "Standings" link on the event's page).
 - **Importing:** `pnpm import:limitless` imports every listed event into your local database; `--event 0037` imports just one, and `--dry-run` checks without writing. Running it again is safe: identical teams are stored once, with a placement for each player who used them.

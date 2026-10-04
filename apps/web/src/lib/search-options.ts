@@ -18,6 +18,7 @@ export interface SearchOption {
 export interface EventOption {
   slug: string;
   name: string;
+  official: boolean;
 }
 
 const byName = (a: { name: string }, b: { name: string }) =>
@@ -99,7 +100,7 @@ export async function databaseOptions(): Promise<{
     supabase().from("archetypes").select("id, name").order("name"),
     supabase()
       .from("events")
-      .select("slug, name")
+      .select("slug, name, official")
       .order("starts_on", { ascending: false }),
   ]);
   if (archetypes.error) throw new Error(archetypes.error.message);

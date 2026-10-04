@@ -25,7 +25,8 @@ export default async function TournamentTeams({
           Tournament teams
         </h1>
         <p className="text-sm text-neutral-500">
-          Every team played at official tournaments, newest first.
+          Teams from official tournaments and large online ones (64+ players),
+          newest first.
         </p>
       </header>
 

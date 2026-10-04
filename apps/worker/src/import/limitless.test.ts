@@ -80,6 +80,8 @@ describe("readTeamlistPage and teamFromLimitless", () => {
     ["tauros-paldea", "taurospaldeacombat"],
     ["tauros-paldea-aqua", "taurospaldeaaqua"],
     ["tauros-paldea-blaze", "taurospaldeablaze"],
+    ["floette", "floetteeternal"],
+    ["floette-eternal", "floetteeternal"],
   ])("maps %s", (id, speciesId) => {
     const { team, unknown } = teamFromLimitless([
       {
@@ -95,12 +97,12 @@ describe("readTeamlistPage and teamFromLimitless", () => {
     expect(team.sets[0]?.speciesId).toBe(speciesId);
   });
 
-  it('reads the bare label "Held Item:" as no item', () => {
+  it.each(["Held Item:", "No Item"])("reads %j as no item", (item) => {
     const { team, unknown } = teamFromLimitless([
       {
         id: "garchomp",
         name: "Garchomp",
-        item: "Held Item:",
+        item,
         ability: "Rough Skin",
         nature: "Jolly",
         moves: ["Protect"],

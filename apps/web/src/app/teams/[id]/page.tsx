@@ -3,7 +3,7 @@ import { notFound } from "next/navigation";
 import { cache } from "react";
 import { BackLink } from "@/components/back-link";
 import { CopyTeamButton } from "@/components/copy-team-button";
-import { ArchetypePill, StageBadge } from "@/components/pills";
+import { ArchetypePill, OnlineBadge, StageBadge } from "@/components/pills";
 import { TeamSheet } from "@/components/team-sheet";
 import { placement } from "@/lib/format";
 import { getTeamPage } from "@/lib/teams";
@@ -51,8 +51,9 @@ export default async function TeamPage({ params }: PageProps<"/teams/[id]">) {
               {top.record && <span>{top.record}</span>}
               {top.stage && <StageBadge stage={top.stage} />}
               <span>
-                {top.event.name} · {top.event.dates} · Regulation{" "}
-                {team.regulation}
+                {top.event.name}
+                {!top.event.official && <OnlineBadge />} · {top.event.dates} ·
+                Regulation {team.regulation}
               </span>
             </p>
           )}
@@ -108,6 +109,7 @@ export default async function TeamPage({ params }: PageProps<"/teams/[id]">) {
                   {p.placement ? `${placement(p.placement)} · ` : ""}
                   {p.player}
                   {p.record ? ` · ${p.record}` : ""} at {p.event.name}
+                  {!p.event.official && <OnlineBadge />}
                 </p>
                 <p className="space-x-3 text-neutral-500">
                   {p.teamlistUrl && (

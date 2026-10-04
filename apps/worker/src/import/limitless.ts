@@ -213,14 +213,23 @@ export function eventSlug(
 
 /**
  * Limitless species ids that don't reduce to ours: plain "tauros-paldea"
- * is the Combat Breed, which has no suffix in-game.
+ * is the Combat Breed, which has no suffix in-game, and plain "floette"
+ * (often in online teamlists) is Eternal Floette, the only Floette in
+ * Champions and the only one that can hold Floettite.
  */
 const SPECIES_ALIASES: Record<string, string> = {
   "tauros-paldea": "taurospaldeacombat",
+  floette: "floetteeternal",
 };
 
 export const teamlistUrl = (standings: string, tpId: number) =>
   `${STANDINGS_SITE}/${standings}/player/${String(tpId).padStart(4, "0")}/teamlist`;
+
+/**
+ * What sheets list for a Pokémon with no item: the bare label "Held Item:"
+ * on official sheets, "No Item" online.
+ */
+const NO_ITEM = /^(?:held item:?|no item|none)$/i;
 
 /**
  * A teamlist as a core team. An item that isn't in the game is kept as
@@ -240,11 +249,9 @@ export function teamFromLimitless(sets: LimitlessSet[]): {
   };
   const team: Team = {
     sets: sets.map((set): TeamSet => {
-      // A Pokémon with no item comes through as the bare label "Held Item:".
+      // A Pokémon with no item comes through as a placeholder.
       const item =
-        set.item && !/^held item:?$/i.test(set.item.trim())
-          ? set.item.trim()
-          : null;
+        set.item && !NO_ITEM.test(set.item.trim()) ? set.item.trim() : null;
       const itemId = item ? findId("item", item) : null;
       return {
         ...emptySet(),
@@ -281,20 +288,33 @@ export interface PreparedEvent {
   sheetErrors: PlayerNote[];
 }
 
+/** One player's result and team, from either Limitless source. */
+export interface PlayerEntry {
+  name: string;
+  /** Their id on the source, which tells apart players sharing a name. */
+  sourcePlayerId: string;
+  placement: number | null;
+  wins: number;
+  losses: number;
+  droppedRound: number | null;
+  madeDayTwo: boolean;
+  madeTopCut: boolean;
+  teamlistUrl: string | null;
+  /** Their team, or null without a public teamlist. */
+  sets: LimitlessSet[] | null;
+}
+
 /**
- * Builds the import for one event from its standings and the teamlists
- * fetched so far (by tp_id). Players without a teamlist, or whose teamlist
- * names something that isn't in the game data, are skipped. A team sheet
- * with errors (typos made when it was entered) is imported as published,
- * since the official record is what it says, and reported.
+ * The teams to import for an event's players. Players without a teamlist,
+ * or whose teamlist names something that isn't in the game data, are
+ * skipped. Players without a placement (online, those who dropped) are
+ * imported with their record. A team sheet with errors (typos made when it was entered) is
+ * imported as published, since the record is what it says, and reported.
  */
-export function prepareOfficialEvent(
-  config: OfficialEvent,
-  standings: { tournament: LimitlessTournament; players: LimitlessStanding[] },
-  teamlists: Map<number, LimitlessSet[]>,
-): PreparedEvent {
-  const { tournament, players } = standings;
-  const { startsOn, endsOn } = readDates(tournament.date);
+export function prepareTeams(
+  players: PlayerEntry[],
+  regulation: Regulation,
+): Pick<PreparedEvent, "teams" | "skipped" | "sheetErrors"> {
   const skipped: PlayerNote[] = [];
   const flagged: PlayerNote[] = [];
   const teams: Record<string, unknown>[] = [];
@@ -304,38 +324,37 @@ export function prepareOfficialEvent(
       list.push({
         player: player.name,
         placement: player.placement,
-        teamlistUrl: player.teamlist
-          ? teamlistUrl(config.standings, player.tp_id)
-          : null,
+        teamlistUrl: player.teamlistUrl,
         reasons,
       });
-    const skip = (reasons: string[]) => note(skipped, reasons);
-    const sets = teamlists.get(player.tp_id);
-    if (player.placement === null || !player.teamlist || !sets) {
-      skip(["No teamlist"]);
+    if (!player.sets) {
+      note(skipped, ["No teamlist"]);
       continue;
     }
-    const { team, unknown } = teamFromLimitless(sets);
+    const { team, unknown } = teamFromLimitless(player.sets);
     if (unknown.length > 0) {
-      skip(unknown.map((name) => `Unknown ${name}`));
+      note(
+        skipped,
+        unknown.map((name) => `Unknown ${name}`),
+      );
       continue;
     }
-    const errors = sheetErrors(team, config.regulation);
+    const errors = sheetErrors(team, regulation);
     if (errors.length > 0) note(flagged, errors.map(describeSheetError));
     teams.push({
-      fingerprint: teamFingerprint(team, config.regulation),
+      fingerprint: teamFingerprint(team, regulation),
       archetypes: deriveArchetypes(team),
       // For search; team pages work out their own when they load.
       sheetErrors: errors,
       playerName: player.name,
-      sourcePlayerId: String(player.player_id),
+      sourcePlayerId: player.sourcePlayerId,
       placement: player.placement,
       wins: player.wins,
       losses: player.losses,
-      madeDayTwo: player.day2 === 1,
-      madeTopCut: player.topcut === 1,
-      droppedRound: player.drop_round,
-      teamlistUrl: teamlistUrl(config.standings, player.tp_id),
+      madeDayTwo: player.madeDayTwo,
+      madeTopCut: player.madeTopCut,
+      droppedRound: player.droppedRound,
+      teamlistUrl: player.teamlistUrl,
       sets: team.sets.map((set, index) => ({
         slot: index + 1,
         speciesId: set.speciesId,
@@ -352,7 +371,20 @@ export function prepareOfficialEvent(
       media: [],
     });
   }
+  return { teams, skipped, sheetErrors: flagged };
+}
 
+/**
+ * Builds the import for one official event from its standings and the
+ * teamlists fetched so far (by tp_id).
+ */
+export function prepareOfficialEvent(
+  config: OfficialEvent,
+  standings: { tournament: LimitlessTournament; players: LimitlessStanding[] },
+  teamlists: Map<number, LimitlessSet[]>,
+): PreparedEvent {
+  const { tournament, players } = standings;
+  const { startsOn, endsOn } = readDates(tournament.date);
   return {
     event: {
       source: "limitlessvgc",
@@ -367,8 +399,22 @@ export function prepareOfficialEvent(
       standingsUrl: `${STANDINGS_SITE}/${config.standings}/standings`,
       topCutSize: players.filter((p) => p.topcut === 1).length,
     },
-    teams,
-    skipped,
-    sheetErrors: flagged,
+    ...prepareTeams(
+      players.map((player) => ({
+        name: player.name,
+        sourcePlayerId: String(player.player_id),
+        placement: player.placement,
+        wins: player.wins,
+        losses: player.losses,
+        droppedRound: player.drop_round,
+        madeDayTwo: player.day2 === 1,
+        madeTopCut: player.topcut === 1,
+        teamlistUrl: player.teamlist
+          ? teamlistUrl(config.standings, player.tp_id)
+          : null,
+        sets: player.teamlist ? (teamlists.get(player.tp_id) ?? null) : null,
+      })),
+      config.regulation,
+    ),
   };
 }

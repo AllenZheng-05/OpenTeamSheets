@@ -14,7 +14,7 @@ export interface SheetError {
   slot: number | null;
   message: string;
   /** The listed item, ability or move the error is about. */
-  field?: "item" | "ability" | "move";
+  field?: "item" | "ability" | "move" | "nature";
   value?: string;
   /** What the listing probably meant, by name. */
   reading?: string;
@@ -60,12 +60,24 @@ export function sheetReading(
   return match ? match.reading : null;
 }
 
-/** What's wrong with a finished team sheet, as published. */
+/**
+ * What's wrong with a finished team sheet, as published. A sheet that
+ * doesn't list natures (online teamlists before natures were recorded)
+ * isn't wrong; it just doesn't say.
+ */
 export function sheetErrors(team: Team, regulation: Regulation): SheetError[] {
-  return validateTeam(team, regulation, { complete: true }).errors.map(
-    (error): SheetError => {
+  return validateTeam(team, regulation, { complete: true })
+    .errors.filter((error) => error.field !== "nature")
+    .map((error): SheetError => {
       const set = error.slot ? team.sets[error.slot - 1] : undefined;
-      if (!set?.speciesId || !error.field || !error.value) return error;
+      if (
+        !set?.speciesId ||
+        !error.field ||
+        error.field === "nature" ||
+        !error.value
+      ) {
+        return error;
+      }
       const species = getSpecies(set.speciesId);
       const form = species?.battleOnlyFromId ?? set.speciesId;
       const mega = itemForm(form, set.itemId);
@@ -86,8 +98,7 @@ export function sheetErrors(team: Team, regulation: Regulation): SheetError[] {
             reading: nameOf(error.field, reading),
           }
         : error;
-    },
-  );
+    });
 }
 
 /** "Slot 5: Basculegion can't learn Last Resort (probably Last Respects)" */

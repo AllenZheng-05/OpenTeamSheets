@@ -23,6 +23,7 @@
     "data:sync": "pnpm --filter @ots/worker data:sync",
     "import:event": "pnpm --filter @ots/worker import:event",
     "import:limitless": "pnpm --filter @ots/worker import:limitless",
+    "import:online": "pnpm --filter @ots/worker import:online",
     "db:seed": "pnpm data:sync && pnpm import:limitless --event 0037"
   },
   "devDependencies": {
