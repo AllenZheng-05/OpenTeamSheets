@@ -95,12 +95,21 @@ Tournament teams come from official Play! Pokémon events, as published on [Limi
 - **Online tournaments:** `pnpm import:online` imports every finished Champions tournament on Limitless with public teamlists and at least 64 players (`--min-players` changes that; `--format M-C` and `--since 2026-09-01` narrow it). The API allows 50 requests every five minutes, so the importer sends one every 6.5 seconds: the first full run takes about an hour. Later runs pick up where the database left off: they list tournaments back to the newest online event already imported and import only new ones, so they take a few requests. `--all` scans and imports everything again from the cache (`~/.cache/openteamsheets/limitless-api`), for example after editing `sheet-readings.json`. Tournaments from the last two days are left until their results are final.
 
 - **The events** are listed in `data/official-events.yaml`. Adding one is a single entry: its id on limitlessvgc.com and its standings site id (the "Standings" link on the event's page).
-- **Importing:** `pnpm import:limitless` imports every listed event into your local database; `--event 0037` imports just one, and `--dry-run` checks without writing. Running it again is safe: identical teams are stored once, with a placement for each player who used them.
+- **Importing:** `pnpm import:limitless` imports listed events that aren't in your local database yet; `--event 0037` imports just one (again, if it's there already), `--all` re-imports every one from the cache, and `--dry-run` checks without writing. Running it again is safe: identical teams are stored once, with a placement for each player who used them.
 - **Be gentle with Limitless.** The importer reads one page per second and caches every page in `~/.cache/openteamsheets/limitless`, so a large event takes about 40 minutes the first time and seconds after that. Use `--refresh` only when an event's results have changed.
 - **Typos on team sheets:** official sheets are imported exactly as published, even when they break the rules (Basculegion with Last Resort, a Mega's ability on the base form). The site marks those errors, and the import lists them. Never correct a sheet in the data.
 - **Suggested readings:** where a typo's meaning is clear, add it to `packages/core/data/sheet-readings.json` (Last Resort → Last Respects for Basculegion; an item that isn't in the game goes under `items` by its name as listed). The site shows it as "probably Last Respects" beside the published sheet, never in place of it. Its tests check that each reading is legal and each listing isn't.
 - **Search** finds sheets with errors too. The import stores each team's errors for it, so after editing `sheet-readings.json`, run `pnpm import:limitless` again (it reads saved pages, so it takes seconds) to refresh them.
 - **Skipped teams:** players without a teamlist, and teamlists naming a Pokémon, ability or move not in the game data, are skipped. An item that isn't in the game (Choice Band) is kept as listed and marked like any other error. `--report flagged.md` writes skipped teams and sheets with errors to a checklist with links to their teamlists.
+
+## Production data
+
+GitHub Actions keeps production's data current; maintainers don't run imports by hand.
+
+- **Online tournaments** are imported every day (`.github/workflows/import-online.yml`).
+- **Game data and official events** are synced when `packages/core/data` or `data/official-events.yaml` changes on `main` (`.github/workflows/sync-production-data.yml`). So adding an official event is a one-line pull request.
+- **Migrations are not applied automatically.** A maintainer runs `pnpm supabase db push` before merging a pull request that adds one, since merging deploys the site.
+- Both workflows can also be run by hand from the Actions tab. They use the `production` environment's secrets, `SUPABASE_URL` and `SUPABASE_SECRET_KEY`, which only `main` can use.
 
 ## License
 

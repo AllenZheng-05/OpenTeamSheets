@@ -1,7 +1,7 @@
 /**
  * Mirrors the game data in packages/core/data into the database.
  *
- * Usage: pnpm data:sync [--prod]
+ * Usage: pnpm data:sync [--prod [--yes]]
  */
 import { REGULATIONS } from "@ots/core";
 import type { Database, TablesInsert } from "@ots/core/db";

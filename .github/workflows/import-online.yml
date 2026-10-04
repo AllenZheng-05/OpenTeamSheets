@@ -1,0 +1,41 @@
+name: Import online tournaments
+
+# Every day, imports new online tournaments from Limitless's API into
+# production. Each run resumes from the newest online event already
+# imported, so it makes a few requests. Run it by hand from the Actions tab.
+
+on:
+  schedule:
+    - cron: "0 9 * * *" # 09:00 UTC daily
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+# Never two imports at once; a new run waits for the last.
+concurrency:
+  group: production-data
+  cancel-in-progress: false
+
+jobs:
+  online:
+    name: online
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    # Production secrets live in this environment, available only to main.
+    environment: production
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: pnpm/action-setup@v6
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm import:online --prod --yes
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SECRET_KEY: ${{ secrets.SUPABASE_SECRET_KEY }}

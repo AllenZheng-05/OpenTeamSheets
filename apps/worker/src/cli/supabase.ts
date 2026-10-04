@@ -8,15 +8,21 @@ export type Db = SupabaseClient<Database>;
 /**
  * A Supabase client with the secret key, for maintainer CLIs. Uses
  * apps/worker/.env (the local database) by default; `--prod` uses
- * .env.production after asking for confirmation.
+ * .env.production after asking for confirmation. Where SUPABASE_URL and
+ * SUPABASE_SECRET_KEY are already set, such as in GitHub Actions, no file
+ * is needed, and `--yes` answers the confirmation for unattended runs.
  */
 export async function connect(args: string[]): Promise<Db> {
   const production = args.includes("--prod");
   const envFile = production ? ".env.production" : ".env";
-  try {
-    process.loadEnvFile(path.join(import.meta.dirname, "../..", envFile));
-  } catch {
-    throw new Error(`Missing apps/worker/${envFile}; see .env.example`);
+  const fromEnvironment =
+    !!process.env.SUPABASE_URL && !!process.env.SUPABASE_SECRET_KEY;
+  if (!fromEnvironment) {
+    try {
+      process.loadEnvFile(path.join(import.meta.dirname, "../..", envFile));
+    } catch {
+      throw new Error(`Missing apps/worker/${envFile}; see .env.example`);
+    }
   }
 
   const url = process.env.SUPABASE_URL;
@@ -25,7 +31,9 @@ export async function connect(args: string[]): Promise<Db> {
     throw new Error(`Set SUPABASE_URL and SUPABASE_SECRET_KEY in ${envFile}`);
   }
 
-  if (production) {
+  if (production && args.includes("--yes")) {
+    console.log(`Writing to production (${url}).`);
+  } else if (production) {
     const prompt = createInterface({
       input: process.stdin,
       output: process.stdout,

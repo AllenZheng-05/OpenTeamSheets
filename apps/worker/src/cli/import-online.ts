@@ -13,7 +13,7 @@
  *                  (from the cache), such as after editing sheet readings
  *   --dry-run      fetch and check everything, write nothing
  *   --refresh      download tournaments again instead of using the cache
- *   --prod         import into production (asks first)
+ *   --prod         import into production (asks first; --yes doesn't)
  *   --report       also write the teams skipped, or imported with errors on
  *                  their sheet, to this Markdown file
  *

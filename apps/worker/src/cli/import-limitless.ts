@@ -1,13 +1,17 @@
 /**
  * Imports official events from Limitless VGC (data/official-events.yaml).
  *
- * Usage: pnpm import:limitless [--event 0037]... [--dry-run] [--refresh] [--prod]
+ * Usage: pnpm import:limitless [--event 0037]... [--all] [--dry-run] [--refresh]
+ *          [--prod [--yes]]
  *          [--report flagged.md]
  *
- *   --event    only these events (by standings id); default: all of them
+ *   --event    only these events (by standings id), imported again even if
+ *              already there; default: listed events not yet imported
+ *   --all      import every listed event again, such as after editing sheet
+ *              readings (from the cache, so it takes seconds)
  *   --dry-run  fetch and check everything, write nothing
  *   --refresh  download standings and teamlists again instead of using the cache
- *   --prod     import into production (asks first)
+ *   --prod     import into production (asks first; --yes doesn't)
  *   --report   also write the teams skipped, or imported with errors on their
  *              sheet, to this Markdown file with links to their teamlists,
  *              for checking by hand
@@ -27,6 +31,7 @@ import {
   STANDINGS_SITE,
   teamlistUrl,
   type LimitlessSet,
+  type OfficialEvent,
 } from "../import/limitless";
 import { createPoliteFetcher } from "../import/polite-fetch";
 import { check, connect } from "./supabase";
@@ -45,9 +50,9 @@ const configPath = path.join(
   import.meta.dirname,
   "../../../../data/official-events.yaml",
 );
-const events = readOfficialEvents(readFileSync(configPath, "utf8")).filter(
-  (event) => only.length === 0 || only.includes(event.standings),
-);
+const events: OfficialEvent[] = readOfficialEvents(
+  readFileSync(configPath, "utf8"),
+).filter((event) => only.length === 0 || only.includes(event.standings));
 if (events.length === 0) {
   console.error(
     `No events match ${only.join(", ")}; see data/official-events.yaml`,
@@ -56,6 +61,25 @@ if (events.length === 0) {
 }
 
 const db = dryRun ? null : await connect(args);
+
+// Events already in the database are skipped unless asked for: re-importing
+// one changes nothing, and fetching it without the cache takes an hour.
+if (db && only.length === 0 && !args.includes("--all")) {
+  const { data } = check(
+    await db.from("events").select("source_id").eq("source", "limitlessvgc"),
+    "Reading imported events",
+  );
+  const imported = new Set((data ?? []).map((e) => e.source_id));
+  const before = events.length;
+  events.splice(
+    0,
+    events.length,
+    ...events.filter((e) => !imported.has(e.standings)),
+  );
+  console.log(
+    `${before - events.length} events already imported; ${events.length} to import`,
+  );
+}
 const fetcher = createPoliteFetcher();
 
 for (const config of events) {
