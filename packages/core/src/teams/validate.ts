@@ -12,6 +12,8 @@ import type { Problem, Team } from "./types";
 
 export const MAX_STAT_POINTS = 32;
 export const MAX_TOTAL_STAT_POINTS = 66;
+/** VGC teams have four to six Pokémon, as in Showdown's VGC formats. */
+export const MIN_TEAM_SIZE = 4;
 
 const STAT_LABELS: Record<StatId, string> = {
   hp: "HP",
@@ -29,8 +31,8 @@ export interface ValidationResult {
 
 export interface ValidateOptions {
   /**
-   * Require a finished team: six Pokémon, each with an ability, a nature
-   * and a move. True for imports and publishing; false for drafts.
+   * Require a finished team: four to six Pokémon (VGC allows fewer than
+   * six, as does Showdown), each with an ability, a nature and a move. True for imports and publishing; false for drafts.
    */
   complete: boolean;
 }
@@ -56,8 +58,11 @@ export function validateTeam(
       message: `Reg ${regulation}'s rules aren't available yet, so legality wasn't checked`,
     });
   }
-  if (complete && team.sets.length !== 6) {
-    errors.push({ slot: null, message: "A team needs six Pokémon" });
+  if (complete && team.sets.length < MIN_TEAM_SIZE) {
+    errors.push({
+      slot: null,
+      message: `A team needs at least ${MIN_TEAM_SIZE} Pokémon`,
+    });
   }
 
   team.sets.forEach((set, index) => {

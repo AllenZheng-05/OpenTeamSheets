@@ -803,6 +803,50 @@ export type Database = {
           },
         ];
       };
+      team_sheet_errors: {
+        Row: {
+          field: string | null;
+          id: number;
+          left_blank: boolean;
+          mega_ability: boolean;
+          message: string;
+          reading: string | null;
+          slot: number | null;
+          team_id: string;
+          value: string | null;
+        };
+        Insert: {
+          field?: string | null;
+          id?: never;
+          left_blank?: boolean;
+          mega_ability?: boolean;
+          message: string;
+          reading?: string | null;
+          slot?: number | null;
+          team_id: string;
+          value?: string | null;
+        };
+        Update: {
+          field?: string | null;
+          id?: never;
+          left_blank?: boolean;
+          mega_ability?: boolean;
+          message?: string;
+          reading?: string | null;
+          slot?: number | null;
+          team_id?: string;
+          value?: string | null;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "team_sheet_errors_team_id_fkey";
+            columns: ["team_id"];
+            isOneToOne: false;
+            referencedRelation: "teams";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
       team_sources: {
         Row: {
           dropped_round: number | null;
@@ -1093,6 +1137,40 @@ export type Database = {
       };
       is_team_visible: { Args: { p_team_id: string }; Returns: boolean };
       publish_team: { Args: { p_team_id: string }; Returns: undefined };
+      refresh_search_tags: {
+        Args: Record<PropertyKey, never>;
+        Returns: undefined;
+      };
+      search_placements: {
+        Args: { filters?: Json };
+        Returns: {
+          ends_on: string | null;
+          event_id: string | null;
+          event_name: string | null;
+          event_slug: string | null;
+          id: string | null;
+          losses: number | null;
+          made_day_two: boolean | null;
+          made_top_cut: boolean | null;
+          official: boolean | null;
+          placement: number | null;
+          player_count: number | null;
+          player_name: string | null;
+          regulation_id: string | null;
+          standings_url: string | null;
+          starts_on: string | null;
+          team_id: string | null;
+          teamlist_url: string | null;
+          top_cut_size: number | null;
+          wins: number | null;
+        }[];
+        SetofOptions: {
+          from: "*";
+          to: "tournament_placements";
+          isOneToOne: false;
+          isSetofReturn: true;
+        };
+      };
     };
     Enums: {
       [_ in never]: never;

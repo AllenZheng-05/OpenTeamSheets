@@ -82,11 +82,23 @@ describe("validateTeam", () => {
     expect(
       messages(validateTeam(draft, "M-C", { complete: true }).errors),
     ).toEqual([
-      "A team needs six Pokémon",
+      "A team needs at least 4 Pokémon",
       "Choose an ability",
       "Choose a nature",
       "Choose at least one move",
     ]);
+  });
+
+  it("accepts teams of four or five, which VGC allows", () => {
+    const four = { sets: valid.sets.slice(0, 4) };
+    expect(validateTeam(four, "M-C", { complete: true }).errors).toEqual([]);
+    expect(
+      messages(
+        validateTeam({ sets: valid.sets.slice(0, 3) }, "M-C", {
+          complete: true,
+        }).errors,
+      ),
+    ).toEqual(["A team needs at least 4 Pokémon"]);
   });
 
   it("accepts official team sheets, which have no stat points", () => {

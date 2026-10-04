@@ -214,6 +214,16 @@ describe("prepareOfficialEvent", () => {
         reasons: ["Slot 6: Sneasler can't learn Moonblast"],
       },
     ]);
+    // Stored for search.
+    expect(result.teams[0]?.sheetErrors).toEqual([
+      {
+        slot: 6,
+        message: "Sneasler can't learn Moonblast",
+        field: "move",
+        value: "moonblast",
+      },
+    ]);
+    expect(prepared.teams[0]?.sheetErrors).toEqual([]);
   });
 
   it("skips players without a teamlist, and names it doesn't know", () => {

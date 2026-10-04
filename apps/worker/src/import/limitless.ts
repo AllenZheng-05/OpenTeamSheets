@@ -205,7 +205,7 @@ export function eventSlug(
   const place = tournament.type === "worlds" ? "worlds" : tournament.city;
   return `${place}-${year}`
     .normalize("NFKD")
-    .replace(/[̀-ͯ]/g, "")
+    .replace(/[\u0300-\u036f]/g, "")
     .toLowerCase()
     .replace(/[^a-z0-9]+/g, "-")
     .replace(/^-|-$/g, "");
@@ -325,6 +325,8 @@ export function prepareOfficialEvent(
     teams.push({
       fingerprint: teamFingerprint(team, config.regulation),
       archetypes: deriveArchetypes(team),
+      // For search; team pages work out their own when they load.
+      sheetErrors: errors,
       playerName: player.name,
       sourcePlayerId: String(player.player_id),
       placement: player.placement,

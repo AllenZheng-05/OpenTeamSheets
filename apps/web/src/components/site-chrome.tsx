@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { SearchShortcut } from "./search-shortcut";
 import { SiteTabs } from "./site-tabs";
 
 export function SiteHeader() {
@@ -9,6 +10,7 @@ export function SiteHeader() {
           Open Team Sheets
         </Link>
         <SiteTabs />
+        <SearchShortcut />
       </div>
     </header>
   );
