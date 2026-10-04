@@ -49,8 +49,8 @@ export interface Problem {
   message: string;
   /** For parse problems, the line of the pasted text (1-based). */
   line?: number;
-  /** For an illegal item, ability or move, which one. */
-  field?: "item" | "ability" | "move";
+  /** For an illegal item, ability or move (or a missing nature), which one. */
+  field?: "item" | "ability" | "move" | "nature";
   /** Its id, or for an item that isn't in the game, its name as listed. */
   value?: string;
 }

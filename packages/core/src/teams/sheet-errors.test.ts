@@ -85,6 +85,15 @@ describe("sheetErrors", () => {
     ]);
   });
 
+  it("doesn't count a sheet that lists no natures as wrong", () => {
+    const team = parseShowdown(
+      "Incineroar @ Sitrus Berry\nAbility: Intimidate\n- Fake Out",
+    ).team;
+    expect(sheetErrors(team, "M-A").map((e) => e.message)).not.toContain(
+      "Choose a nature",
+    );
+  });
+
   it("leaves other errors without a reading", () => {
     const [error] = errorsFor(
       "Incineroar @ Sitrus Berry\nAbility: Intimidate\nCareful Nature\n- Knock Off",

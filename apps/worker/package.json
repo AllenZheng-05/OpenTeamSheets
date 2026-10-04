@@ -11,7 +11,8 @@
     "test": "vitest run",
     "data:sync": "tsx src/cli/data-sync.ts",
     "import:event": "tsx src/cli/import-event.ts",
-    "import:limitless": "tsx src/cli/import-limitless.ts"
+    "import:limitless": "tsx src/cli/import-limitless.ts",
+    "import:online": "tsx src/cli/import-online.ts"
   },
   "dependencies": {
     "@hono/node-server": "^1",

@@ -5,11 +5,13 @@ import { useCallback, useId, useMemo, useState, useTransition } from "react";
 import type { Regulation } from "@ots/core";
 import { getPokemonDetails } from "@/app/search-actions";
 import {
+  EVENT_KINDS,
   filtersHref,
   placementLabel,
   readPlacement,
   SHEET_ERROR_FILTERS,
   TOP_CUTOFFS,
+  type EventKind,
   type Filters,
   type SheetErrorFilter,
   type Stage,
@@ -246,6 +248,7 @@ export function TeamSearch({
     filters.regulation !== current,
     filters.event !== null,
     filters.errors !== null,
+    filters.kind !== "all",
   ].filter(Boolean).length;
 
   const resetPanel = () =>
@@ -256,6 +259,7 @@ export function TeamSearch({
       regulation: current,
       event: null,
       errors: null,
+      kind: "all",
     });
 
   const select =
@@ -340,6 +344,23 @@ export function TeamSearch({
                 ))}
                 <option value="all">All regulations</option>
               </select>
+              <label className="sr-only" htmlFor="search-kind">
+                Official or online
+              </label>
+              <select
+                id="search-kind"
+                className={select}
+                value={filters.kind}
+                onChange={(e) =>
+                  go({ ...filters, kind: e.target.value as EventKind })
+                }
+              >
+                {EVENT_KINDS.map((k) => (
+                  <option key={k.id} value={k.id}>
+                    {k.label}
+                  </option>
+                ))}
+              </select>
               <label className="sr-only" htmlFor="search-event">
                 Event
               </label>
@@ -352,11 +373,25 @@ export function TeamSearch({
                 }
               >
                 <option value="">All events</option>
-                {events.map((e) => (
-                  <option key={e.slug} value={e.slug}>
-                    {e.name}
-                  </option>
-                ))}
+                {[
+                  { label: "Official", official: true },
+                  { label: "Online", official: false },
+                ].map((group) => {
+                  const list = events.filter(
+                    (e) => e.official === group.official,
+                  );
+                  return (
+                    list.length > 0 && (
+                      <optgroup key={group.label} label={group.label}>
+                        {list.map((e) => (
+                          <option key={e.slug} value={e.slug}>
+                            {e.name}
+                          </option>
+                        ))}
+                      </optgroup>
+                    )
+                  );
+                })}
               </select>
               <div className="ml-auto">
                 <label className="sr-only" htmlFor="search-errors">

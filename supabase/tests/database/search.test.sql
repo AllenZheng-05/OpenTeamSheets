@@ -2,7 +2,7 @@
 -- `pnpm db:test`. Everything runs in a transaction that is rolled back.
 begin;
 create extension if not exists pgtap with schema extensions;
-select plan(39);
+select plan(42);
 
 -- The game data these tests need. It may already be there from
 -- `pnpm data:sync`, so existing rows are left alone.
@@ -154,6 +154,17 @@ select is(
   '{Misty_Waterflower}',
   'filters combine'
 );
+
+-- Official or online
+select is(pg_temp.found('{"kind": "official"}'), '{Ash,Brock,Misty_Waterflower}', 'official events only');
+select is(pg_temp.found('{"kind": "online"}'), '{}', 'online events only, none here');
+reset role;
+update public.events set official = false where slug = 'search-test';
+set local role anon;
+select is(pg_temp.found('{"kind": "online"}'), '{Ash,Brock,Misty_Waterflower}', 'an online event');
+reset role;
+update public.events set official = true where slug = 'search-test';
+set local role anon;
 
 -- Changes to the data
 reset role;

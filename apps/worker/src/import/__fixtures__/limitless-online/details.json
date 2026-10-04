@@ -1,0 +1,17 @@
+{
+  "id": "6ab66fd8783097f8dcb703fc",
+  "game": "VGC",
+  "format": "M-C",
+  "name": "Tenki's Cart Weekly #120 - Reg M-C",
+  "date": "2026-10-01T15:00:00.000Z",
+  "players": 137,
+  "organizer": { "id": 1752, "name": "TenkiPK" },
+  "platform": "SWITCH",
+  "decklists": true,
+  "isPublic": true,
+  "isOnline": true,
+  "phases": [
+    { "phase": 1, "type": "SWISS", "rounds": 7, "mode": "BO3" },
+    { "phase": 2, "type": "SINGLE_BRACKET", "rounds": 1, "mode": "BO3" }
+  ]
+}

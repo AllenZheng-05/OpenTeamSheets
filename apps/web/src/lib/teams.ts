@@ -22,6 +22,8 @@ export interface Archetype {
 export interface EventSummary {
   slug: string;
   name: string;
+  /** An official Play! Pokémon event, rather than an online one. */
+  official: boolean;
   dates: string;
   regulation: string;
   playerCount: number | null;
@@ -122,6 +124,7 @@ type PlacementRecord = {
   teamlist_url: string | null;
   event_slug: string | null;
   event_name: string | null;
+  official: boolean | null;
   regulation_id: string | null;
   starts_on: string | null;
   ends_on: string | null;
@@ -132,6 +135,7 @@ type PlacementRecord = {
 const eventSummary = (row: PlacementRecord): EventSummary => ({
   slug: row.event_slug ?? "",
   name: row.event_name ?? "",
+  official: row.official ?? true,
   dates:
     row.starts_on && row.ends_on ? dateRange(row.starts_on, row.ends_on) : "",
   regulation: row.regulation_id ?? "",
