@@ -1,7 +1,7 @@
 import type { Tables } from "@ots/core/db";
 import { gameData } from "@ots/core/game-data";
 import type { SheetError, StatTable, TeamSet } from "@ots/core/teams";
-import { displaySpecies, nameOf } from "@ots/core/teams";
+import { boxSpecies, displaySpecies, nameOf } from "@ots/core/teams";
 import type { PokemonDetailsView } from "./pokemon-details";
 
 const itemSprites = new Map(
@@ -25,6 +25,8 @@ export interface SheetMark {
 export interface PokemonView {
   slot: number;
   name: string;
+  /** The Pokémon a player owns to use it (core's boxSpecies). */
+  boxSpecies: string | null;
   /** The Showdown sprite id of the form shown. */
   spriteId: string | null;
   shiny: boolean;
@@ -99,6 +101,7 @@ export function pokemonView(
   return {
     slot,
     name: shown?.name ?? "Unknown Pokémon",
+    boxSpecies: set.speciesId ? boxSpecies(set.speciesId) : null,
     spriteId: shown?.spriteId ?? null,
     shiny: set.shiny,
     types: shown

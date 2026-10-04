@@ -1,16 +1,19 @@
 "use client";
 
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useCallback, useId, useMemo, useState, useTransition } from "react";
 import type { Regulation } from "@ots/core";
 import { getPokemonDetails } from "@/app/search-actions";
 import {
+  BOX_MATCHES,
   EVENT_KINDS,
   filtersHref,
   placementLabel,
   readPlacement,
   SHEET_ERROR_FILTERS,
   TOP_CUTOFFS,
+  type BoxMatch,
   type EventKind,
   type Filters,
   type SheetErrorFilter,
@@ -116,6 +119,7 @@ export function TeamSearch({
   options,
   archetypes,
   events,
+  boxCount,
   size = "md",
 }: {
   /** The page searching: "/" for everything, "/tournament" for tournament teams. */
@@ -127,6 +131,8 @@ export function TeamSearch({
   options: SearchOption[];
   archetypes: SearchOption[];
   events: EventOption[];
+  /** How many Pokémon are in the player's box. */
+  boxCount: number;
   size?: "md" | "lg";
 }) {
   const router = useRouter();
@@ -249,6 +255,7 @@ export function TeamSearch({
     filters.event !== null,
     filters.errors !== null,
     filters.kind !== "all",
+    filters.box !== null,
   ].filter(Boolean).length;
 
   const resetPanel = () =>
@@ -260,6 +267,7 @@ export function TeamSearch({
       event: null,
       errors: null,
       kind: "all",
+      box: null,
     });
 
   const select =
@@ -344,6 +352,38 @@ export function TeamSearch({
                 ))}
                 <option value="all">All regulations</option>
               </select>
+              <label className="sr-only" htmlFor="search-box">
+                Your box
+              </label>
+              <select
+                id="search-box"
+                className={select}
+                value={filters.box ?? ""}
+                onChange={(e) =>
+                  go({
+                    ...filters,
+                    box:
+                      e.target.value === ""
+                        ? null
+                        : (Number(e.target.value) as BoxMatch),
+                  })
+                }
+              >
+                <option value="">Any team</option>
+                {BOX_MATCHES.map((m) => (
+                  <option key={m.id} value={m.id}>
+                    {m.label}
+                  </option>
+                ))}
+              </select>
+              {filters.box !== null && boxCount === 0 && (
+                <Link
+                  href="/box"
+                  className="text-sm text-neutral-600 underline underline-offset-2 hover:text-neutral-900"
+                >
+                  Set up your box
+                </Link>
+              )}
               <label className="sr-only" htmlFor="search-kind">
                 Official or online
               </label>

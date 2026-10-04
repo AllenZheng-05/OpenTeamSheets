@@ -399,6 +399,7 @@ export type Database = {
           atk: number;
           base_species_id: string | null;
           battle_only_from_id: string | null;
+          box_species_id: string | null;
           def: number;
           hp: number;
           id: string;
@@ -420,6 +421,7 @@ export type Database = {
           atk: number;
           base_species_id?: string | null;
           battle_only_from_id?: string | null;
+          box_species_id?: string | null;
           def: number;
           hp: number;
           id: string;
@@ -441,6 +443,7 @@ export type Database = {
           atk?: number;
           base_species_id?: string | null;
           battle_only_from_id?: string | null;
+          box_species_id?: string | null;
           def?: number;
           hp?: number;
           id?: string;
@@ -1128,6 +1131,14 @@ export type Database = {
       };
     };
     Functions: {
+      box_usage: {
+        Args: { p_regulation: string };
+        Returns: {
+          box_species: string;
+          placements: number;
+          total: number;
+        }[];
+      };
       fork_team: { Args: { p_team_id: string }; Returns: string };
       import_event: { Args: { payload: Json }; Returns: Json };
       is_team_editable: { Args: { p_team_id: string }; Returns: boolean };

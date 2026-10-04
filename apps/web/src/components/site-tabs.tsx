@@ -6,13 +6,14 @@ import { usePathname } from "next/navigation";
 const TABS = [
   { href: "/tournament", label: "Tournament" },
   { href: "/community", label: "Community" },
+  { href: "/box", label: "My box" },
 ];
 
 /** The header's tabs, underlining the page you're on. */
 export function SiteTabs() {
   const pathname = usePathname();
   return (
-    <nav aria-label="Teams" className="flex h-full gap-6">
+    <nav aria-label="Site" className="flex h-full gap-6">
       {TABS.map((tab) => {
         const active = pathname === tab.href;
         return (

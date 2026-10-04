@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import type { Regulation } from "@ots/core";
+import { readBox } from "@/lib/box-server";
 import { filtersHref, hasFilters, type Filters } from "@/lib/search";
 import { PAGE_SIZE, searchPlacements } from "@/lib/teams";
 import { EmptyState } from "./empty-state";
@@ -24,26 +25,42 @@ export async function SearchResults({
   /** From 1. */
   page: number;
 }) {
-  const { rows, total } = await searchPlacements(filters, page - 1);
+  const owned = filters.box !== null ? await readBox() : null;
+  const { rows, total } = await searchPlacements(
+    filters,
+    page - 1,
+    owned ? [...owned] : [],
+  );
   if (rows.length === 0 && page > 1) notFound();
 
   if (rows.length === 0) {
-    const empty = hasFilters(filters, current) ? (
-      <EmptyState>
-        No teams match these filters.{" "}
-        <Link
-          href={path}
-          className="text-neutral-900 underline underline-offset-2"
-        >
-          Clear filters
-        </Link>
-      </EmptyState>
-    ) : (
-      <EmptyState>
-        No tournament teams yet. Official results will appear here once
-        they&apos;re imported.
-      </EmptyState>
-    );
+    const empty =
+      owned && owned.size === 0 ? (
+        <EmptyState>
+          Your box is empty, so there are no teams you can build yet.{" "}
+          <Link
+            href="/box"
+            className="text-neutral-900 underline underline-offset-2"
+          >
+            Set up your box
+          </Link>
+        </EmptyState>
+      ) : hasFilters(filters, current) ? (
+        <EmptyState>
+          No teams match these filters.{" "}
+          <Link
+            href={path}
+            className="text-neutral-900 underline underline-offset-2"
+          >
+            Clear filters
+          </Link>
+        </EmptyState>
+      ) : (
+        <EmptyState>
+          No tournament teams yet. Official results will appear here once
+          they&apos;re imported.
+        </EmptyState>
+      );
     return (
       <>
         <SearchMetrics total={0} />
@@ -58,7 +75,7 @@ export async function SearchResults({
       <ol className="space-y-3">
         {rows.map((row) => (
           <li key={row.id}>
-            <TeamRow row={row} />
+            <TeamRow row={row} owned={owned} />
           </li>
         ))}
       </ol>

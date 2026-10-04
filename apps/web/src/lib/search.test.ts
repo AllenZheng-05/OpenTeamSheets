@@ -70,6 +70,7 @@ describe("readFilters and filtersHref", () => {
     stage: "top-cut",
     top: 32,
     kind: "online",
+    box: 1,
   };
 
   it("round-trips every filter through the URL", () => {
@@ -110,6 +111,7 @@ describe("readFilters and filtersHref", () => {
           stage: "finals",
           top: "-3",
           kind: "both",
+          box: "7",
           player: ["  wolfe  ", "", "x".repeat(51)],
         },
         "M-C",
@@ -173,5 +175,16 @@ describe("readPlacement", () => {
     expect(placementLabel("all", 8)).toBe("Top 8");
     expect(placementLabel("top-cut", null)).toBe("Top cut");
     expect(placementLabel("all", null)).toBe("");
+  });
+});
+
+describe("rpcFilters and the box", () => {
+  it("sends the box only when matching it", () => {
+    expect(rpcFilters(emptyFilters("M-C"), ["charizard"])).not.toHaveProperty(
+      "box",
+    );
+    expect(
+      rpcFilters({ ...emptyFilters("M-C"), box: 1 }, ["charizard"]),
+    ).toMatchObject({ box: ["charizard"], boxMissing: 1 });
   });
 });

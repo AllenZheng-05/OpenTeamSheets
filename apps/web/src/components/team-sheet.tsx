@@ -57,48 +57,59 @@ function Listed({
 export function TeamSheet({
   pokemon,
   variant,
+  owned = null,
 }: {
   pokemon: PokemonView[];
   variant: "compact" | "full";
+  /** The player's box, when searching by it: missing Pokémon are dimmed. */
+  owned?: Set<string> | null;
 }) {
   if (variant === "compact") {
     return (
       <ul className="grid min-w-0 flex-1 grid-cols-3 gap-x-3 gap-y-4 sm:grid-cols-6">
-        {pokemon.map((p) => (
-          <li key={p.slot} className="min-w-0">
-            <PokemonSprite
-              name={p.name}
-              spriteId={p.spriteId}
-              shiny={p.shiny}
-              size={56}
-            />
-            <p className="mt-1 truncate text-sm font-medium">{p.name}</p>
-            {p.item && (
-              <p className="flex items-center gap-0.5 text-xs text-neutral-500">
-                {p.itemSpriteNum !== null && (
-                  <ItemIcon spriteNum={p.itemSpriteNum} />
-                )}
-                <span className="truncate">
-                  <span className="sr-only">Item: </span>
-                  <Listed text={p.item} mark={p.itemMark} />
-                </span>
-              </p>
-            )}
-            {p.ability && (
-              <p className="truncate text-xs text-neutral-500">
-                <span className="sr-only">Ability: </span>
-                <Listed text={p.ability} mark={p.abilityMark} />
-              </p>
-            )}
-            <ul className="mt-1.5 space-y-0.5 text-xs text-neutral-700">
-              {p.moves.map((move, i) => (
-                <li key={move} className="truncate">
-                  <Listed text={move} mark={p.moveMarks[i] ?? null} />
-                </li>
-              ))}
-            </ul>
-          </li>
-        ))}
+        {pokemon.map((p) => {
+          const missing =
+            owned !== null && !!p.boxSpecies && !owned.has(p.boxSpecies);
+          return (
+            <li
+              key={p.slot}
+              className={`min-w-0 ${missing ? "opacity-40 grayscale" : ""}`}
+            >
+              {missing && <span className="sr-only">Not in your box: </span>}
+              <PokemonSprite
+                name={p.name}
+                spriteId={p.spriteId}
+                shiny={p.shiny}
+                size={56}
+              />
+              <p className="mt-1 truncate text-sm font-medium">{p.name}</p>
+              {p.item && (
+                <p className="flex items-center gap-0.5 text-xs text-neutral-500">
+                  {p.itemSpriteNum !== null && (
+                    <ItemIcon spriteNum={p.itemSpriteNum} />
+                  )}
+                  <span className="truncate">
+                    <span className="sr-only">Item: </span>
+                    <Listed text={p.item} mark={p.itemMark} />
+                  </span>
+                </p>
+              )}
+              {p.ability && (
+                <p className="truncate text-xs text-neutral-500">
+                  <span className="sr-only">Ability: </span>
+                  <Listed text={p.ability} mark={p.abilityMark} />
+                </p>
+              )}
+              <ul className="mt-1.5 space-y-0.5 text-xs text-neutral-700">
+                {p.moves.map((move, i) => (
+                  <li key={move} className="truncate">
+                    <Listed text={move} mark={p.moveMarks[i] ?? null} />
+                  </li>
+                ))}
+              </ul>
+            </li>
+          );
+        })}
       </ul>
     );
   }

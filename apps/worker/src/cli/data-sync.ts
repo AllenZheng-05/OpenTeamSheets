@@ -10,6 +10,7 @@ import {
   getRegulationDataStatus,
   regulationData,
 } from "@ots/core/game-data";
+import { boxSpecies } from "@ots/core/teams";
 import { check, connect, type Db } from "./supabase";
 
 type TableName = keyof Database["public"]["Tables"];
@@ -118,6 +119,8 @@ await upsert(
       required_item_id: s.requiredItemId,
       required_ability_id: s.requiredAbilityId,
       required_move_id: s.requiredMoveId,
+      // Which Pokémon a player owns to have this one, for box matching.
+      box_species_id: boxSpecies(s.id),
     })),
 );
 
@@ -171,7 +174,7 @@ for (const [regulation, data] of Object.entries(regulationData)) {
   );
 }
 
-// Search tags include each Pokémon's types and Mega form, which come from
-// the game data; recompute them in case those changed.
+// Search tags include each Pokémon's types, Mega form and box species,
+// which come from the game data; recompute them in case those changed.
 check(await db.rpc("refresh_search_tags"), "Refreshing search tags");
 console.log("search tags: refreshed");
