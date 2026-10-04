@@ -2,6 +2,7 @@ import type { Tables } from "@ots/core/db";
 import { gameData } from "@ots/core/game-data";
 import type { SheetError, StatTable, TeamSet } from "@ots/core/teams";
 import { displaySpecies, nameOf } from "@ots/core/teams";
+import type { PokemonDetailsView } from "./pokemon-details";
 
 const itemSprites = new Map(
   gameData.items.map((item) => [item.id, item.spriteNum]),
@@ -40,6 +41,8 @@ export interface PokemonView {
   /** Marks for the moves, in the same order. */
   moveMarks: (SheetMark | null)[];
   statPoints: StatTable | null;
+  /** Forms, base stats and descriptions, for the team page only. */
+  details?: PokemonDetailsView | null;
 }
 
 const STATS = ["hp", "atk", "def", "spa", "spd", "spe"] as const;
