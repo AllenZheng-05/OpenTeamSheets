@@ -1149,8 +1149,8 @@ export type Database = {
       is_team_visible: { Args: { p_team_id: string }; Returns: boolean };
       publish_team: { Args: { p_team_id: string }; Returns: undefined };
       refresh_search_tags: {
-        Args: Record<PropertyKey, never>;
-        Returns: undefined;
+        Args: { p_after?: string; p_limit?: number };
+        Returns: string;
       };
       search_placements: {
         Args: { filters?: Json };

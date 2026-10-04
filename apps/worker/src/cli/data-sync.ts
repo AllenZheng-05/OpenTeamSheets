@@ -176,5 +176,16 @@ for (const [regulation, data] of Object.entries(regulationData)) {
 
 // Search tags include each Pokémon's types, Mega form and box species,
 // which come from the game data; recompute them in case those changed.
-check(await db.rpc("refresh_search_tags"), "Refreshing search tags");
-console.log("search tags: refreshed");
+// In batches of teams, each well within the API's statement timeout.
+let after: string | undefined;
+let batches = 0;
+for (;;) {
+  const { data } = check(
+    await db.rpc("refresh_search_tags", { p_after: after }),
+    "Refreshing search tags",
+  );
+  if (!data) break;
+  after = data;
+  batches++;
+}
+console.log(`search tags: refreshed in ${batches} batches`);

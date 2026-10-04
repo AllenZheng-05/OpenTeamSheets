@@ -2,7 +2,7 @@
 -- `pnpm db:test`. Everything runs in a transaction that is rolled back.
 begin;
 create extension if not exists pgtap with schema extensions;
-select plan(49);
+select plan(51);
 
 -- The game data these tests need. It may already be there from
 -- `pnpm data:sync`, so existing rows are left alone.
@@ -183,6 +183,30 @@ select is(
   (select count(*) from public.tournament_placements where regulation_id = 'M-C'),
   'usage is out of every placement in the regulation'
 );
+
+-- Refreshing search tags in batches of teams, as data:sync does
+reset role;
+create function pg_temp.refresh_all(batch integer)
+returns integer language plpgsql as $$
+declare
+  after uuid;
+  batches integer := 0;
+begin
+  loop
+    after := public.refresh_search_tags(after, batch);
+    exit when after is null;
+    batches := batches + 1;
+  end loop;
+  return batches;
+end;
+$$;
+select is(
+  pg_temp.refresh_all(1),
+  (select count(distinct team_id)::integer from public.team_sets),
+  'a batch of one team at a time covers every team, then stops'
+);
+select is(pg_temp.found('{"box": ["charizard"]}'), '{Brock}', 'search still works after a refresh');
+set local role anon;
 
 -- Official or online
 select is(pg_temp.found('{"kind": "official"}'), '{Ash,Brock,Misty_Waterflower}', 'official events only');
