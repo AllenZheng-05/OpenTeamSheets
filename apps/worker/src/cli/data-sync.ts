@@ -170,3 +170,8 @@ for (const [regulation, data] of Object.entries(regulationData)) {
     ),
   );
 }
+
+// Search tags include each Pokémon's types and Mega form, which come from
+// the game data; recompute them in case those changed.
+check(await db.rpc("refresh_search_tags"), "Refreshing search tags");
+console.log("search tags: refreshed");

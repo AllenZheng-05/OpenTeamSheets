@@ -127,4 +127,11 @@
   html {
     @apply font-sans;
   }
+  /* Tailwind 4 gives buttons the default cursor; clickable things point. */
+  button:not(:disabled),
+  [role="button"]:not([aria-disabled="true"]),
+  [role="option"],
+  select:not(:disabled) {
+    cursor: pointer;
+  }
 }

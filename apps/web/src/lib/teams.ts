@@ -5,24 +5,13 @@ import {
   sheetErrors,
   type Team,
 } from "@ots/core/teams";
+import type { Json } from "@ots/core/db";
 import { dateRange } from "./format";
 import { pokemonView, setFromRow, type PokemonView } from "./pokemon";
+import { rpcFilters, type Filters } from "./search";
 import { supabase } from "./supabase";
 
 export const PAGE_SIZE = 25;
-
-/** How far a player went: all placements, day 2 and better, or top cut. */
-export type Stage = "all" | "day-2" | "top-cut";
-
-export const STAGES: { id: Stage; label: string }[] = [
-  { id: "all", label: "All teams" },
-  { id: "day-2", label: "Day 2" },
-  { id: "top-cut", label: "Top cut" },
-];
-
-export function readStage(value: string | string[] | undefined): Stage {
-  return value === "day-2" || value === "top-cut" ? value : "all";
-}
 
 export interface Archetype {
   id: string;
@@ -156,24 +145,20 @@ const stage = (row: PlacementRecord) =>
   row.made_top_cut ? "top-cut" : row.made_day_two ? "day-2" : null;
 
 /**
- * A page of tournament placements, newest event first, then by placement,
- * with the total for page numbers. Day 2 includes the top cut.
+ * A page of tournament placements matching a search, newest event first,
+ * then by placement, with the total for page numbers.
  */
-export async function browsePlacements(
-  filter: Stage,
+export async function searchPlacements(
+  filters: Filters,
   page: number,
 ): Promise<{ rows: PlacementRow[]; total: number }> {
   const from = page * PAGE_SIZE;
-  let query = supabase()
-    .from("tournament_placements")
-    .select("*", { count: "exact" });
-  if (filter === "top-cut") query = query.eq("made_top_cut", true);
-  if (filter === "day-2") query = query.eq("made_day_two", true);
-  const { data, count, error } = await query
-    .order("starts_on", { ascending: false })
-    .order("event_id")
-    .order("placement", { ascending: true, nullsFirst: false })
-    .order("player_name")
+  const { data, count, error } = await supabase()
+    .rpc(
+      "search_placements",
+      { filters: rpcFilters(filters) as unknown as Json },
+      { count: "exact" },
+    )
     .range(from, from + PAGE_SIZE - 1);
   // Asking for rows past the end is an error (PGRST103); it's an empty page.
   if (error?.code === "PGRST103") return { rows: [], total: count ?? 0 };
