@@ -1,0 +1,49 @@
+name: Sync production data
+
+# When game data or the official event list changes on main, copies the
+# game data into production and imports any official events not there yet.
+# Both steps are safe to repeat. Run it by hand from the Actions tab.
+#
+# Migrations aren't applied here: run `pnpm supabase db push` before
+# merging a pull request that adds one.
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - packages/core/data/**
+      - data/official-events.yaml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: production-data
+  cancel-in-progress: false
+
+jobs:
+  sync:
+    name: sync
+    runs-on: ubuntu-latest
+    # A new official event's first import reads about 1,000 pages, one per
+    # second.
+    timeout-minutes: 120
+    environment: production
+    env:
+      SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+      SUPABASE_SECRET_KEY: ${{ secrets.SUPABASE_SECRET_KEY }}
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: pnpm/action-setup@v6
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+
+      - run: pnpm install --frozen-lockfile
+      # Game data first, so new Pokémon, moves and items exist for the teams.
+      - run: pnpm data:sync --prod --yes
+      - run: pnpm import:limitless --prod --yes
