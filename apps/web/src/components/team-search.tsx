@@ -8,6 +8,7 @@ import { getPokemonDetails } from "@/app/search-actions";
 import {
   BOX_MATCHES,
   EVENT_KINDS,
+  TEAM_SORTS,
   filtersHref,
   placementLabel,
   readPlacement,
@@ -15,6 +16,7 @@ import {
   TOP_CUTOFFS,
   type BoxMatch,
   type EventKind,
+  type TeamSort,
   type Filters,
   type SheetErrorFilter,
   type Stage,
@@ -142,6 +144,15 @@ export function TeamSearch({
   const panelId = useId();
   const [pending, startTransition] = useTransition();
   const [panelOpen, setPanelOpen] = useState(false);
+  // Filters by result (placement, official or online, event, sheet errors)
+  // matter less now that results are teams; they're tucked away unless set.
+  const moreCount = [
+    applied.stage !== "all" || applied.top !== null,
+    applied.kind !== "all",
+    applied.event !== null,
+    applied.errors !== null,
+  ].filter(Boolean).length;
+  const [moreOpen, setMoreOpen] = useState(moreCount > 0);
   // Pokémon's moves and abilities, loaded when a query names one.
   const [details, setDetails] = useState<Record<string, PokemonDetails>>({});
   const [loading, setLoading] = useState<Set<string>>(new Set());
@@ -266,6 +277,7 @@ export function TeamSearch({
     filters.event !== null,
     filters.errors !== null,
     filters.kind !== "all",
+    filters.sort !== "used",
     filters.box !== null,
   ].filter(Boolean).length;
 
@@ -278,6 +290,7 @@ export function TeamSearch({
       event: null,
       errors: null,
       kind: "all",
+      sort: "used",
       box: null,
     });
 
@@ -334,140 +347,170 @@ export function TeamSearch({
           panelOpen && (
             <div
               id={panelId}
-              className="flex flex-wrap items-center gap-2 border-t border-neutral-200 p-3"
+              className="space-y-2 border-t border-neutral-200 p-3"
             >
-              <PlacementInput
-                stage={filters.stage}
-                top={filters.top}
-                onChange={(stage, top) => go({ ...filters, stage, top })}
-              />
-              <label className="sr-only" htmlFor="search-regulation">
-                Regulation
-              </label>
-              <select
-                id="search-regulation"
-                className={select}
-                value={filters.regulation}
-                onChange={(e) =>
-                  go({
-                    ...filters,
-                    regulation: e.target.value as Regulation | "all",
-                  })
-                }
-              >
-                {regulations.map((r) => (
-                  <option key={r} value={r}>
-                    Regulation {r}
-                    {r === current ? " (current)" : ""}
-                  </option>
-                ))}
-                <option value="all">All regulations</option>
-              </select>
-              <label className="sr-only" htmlFor="search-box">
-                Your box
-              </label>
-              <select
-                id="search-box"
-                className={select}
-                value={filters.box ?? ""}
-                onChange={(e) =>
-                  go({
-                    ...filters,
-                    box:
-                      e.target.value === ""
-                        ? null
-                        : (Number(e.target.value) as BoxMatch),
-                  })
-                }
-              >
-                <option value="">Any team</option>
-                {BOX_MATCHES.map((m) => (
-                  <option key={m.id} value={m.id}>
-                    {m.label}
-                  </option>
-                ))}
-              </select>
-              {filters.box !== null && boxCount === 0 && (
-                <Link
-                  href="/box"
-                  className="text-sm text-neutral-600 underline underline-offset-2 hover:text-neutral-900"
-                >
-                  Set up your box
-                </Link>
-              )}
-              <label className="sr-only" htmlFor="search-kind">
-                Official or online
-              </label>
-              <select
-                id="search-kind"
-                className={select}
-                value={filters.kind}
-                onChange={(e) =>
-                  go({ ...filters, kind: e.target.value as EventKind })
-                }
-              >
-                {EVENT_KINDS.map((k) => (
-                  <option key={k.id} value={k.id}>
-                    {k.label}
-                  </option>
-                ))}
-              </select>
-              <label className="sr-only" htmlFor="search-event">
-                Event
-              </label>
-              <select
-                id="search-event"
-                className={select}
-                value={filters.event ?? ""}
-                onChange={(e) =>
-                  go({ ...filters, event: e.target.value || null })
-                }
-              >
-                <option value="">All events</option>
-                {[
-                  { label: "Official", official: true },
-                  { label: "Online", official: false },
-                ].map((group) => {
-                  const list = events.filter(
-                    (e) => e.official === group.official,
-                  );
-                  return (
-                    list.length > 0 && (
-                      <optgroup key={group.label} label={group.label}>
-                        {list.map((e) => (
-                          <option key={e.slug} value={e.slug}>
-                            {e.name}
-                          </option>
-                        ))}
-                      </optgroup>
-                    )
-                  );
-                })}
-              </select>
-              <div className="ml-auto">
-                <label className="sr-only" htmlFor="search-errors">
-                  Sheet errors
+              <div className="flex flex-wrap items-center gap-2">
+                <label className="sr-only" htmlFor="search-sort">
+                  Sort
                 </label>
                 <select
-                  id="search-errors"
+                  id="search-sort"
                   className={select}
-                  value={filters.errors ?? ""}
+                  value={filters.sort}
                   onChange={(e) =>
-                    go({
-                      ...filters,
-                      errors: (e.target.value ||
-                        null) as SheetErrorFilter | null,
-                    })
+                    go({ ...filters, sort: e.target.value as TeamSort })
                   }
                 >
-                  <option value="">With or without sheet errors</option>
-                  {SHEET_ERROR_FILTERS.map((f) => (
-                    <option key={f.id} value={f.id}>
-                      {f.label}
+                  {TEAM_SORTS.map((s) => (
+                    <option key={s.id} value={s.id}>
+                      Sort: {s.label}
                     </option>
                   ))}
                 </select>
+                <label className="sr-only" htmlFor="search-regulation">
+                  Regulation
+                </label>
+                <select
+                  id="search-regulation"
+                  className={select}
+                  value={filters.regulation}
+                  onChange={(e) =>
+                    go({
+                      ...filters,
+                      regulation: e.target.value as Regulation | "all",
+                    })
+                  }
+                >
+                  {regulations.map((r) => (
+                    <option key={r} value={r}>
+                      Regulation {r}
+                      {r === current ? " (current)" : ""}
+                    </option>
+                  ))}
+                  <option value="all">All regulations</option>
+                </select>
+                <label className="sr-only" htmlFor="search-box">
+                  Your box
+                </label>
+                <select
+                  id="search-box"
+                  className={select}
+                  value={filters.box ?? ""}
+                  onChange={(e) =>
+                    go({
+                      ...filters,
+                      box:
+                        e.target.value === ""
+                          ? null
+                          : (Number(e.target.value) as BoxMatch),
+                    })
+                  }
+                >
+                  <option value="">Any team</option>
+                  {BOX_MATCHES.map((m) => (
+                    <option key={m.id} value={m.id}>
+                      {m.label}
+                    </option>
+                  ))}
+                </select>
+                {filters.box !== null && boxCount === 0 && (
+                  <Link
+                    href="/box"
+                    className="text-sm text-neutral-600 underline underline-offset-2 hover:text-neutral-900"
+                  >
+                    Set up your box
+                  </Link>
+                )}
+                <button
+                  type="button"
+                  aria-expanded={moreOpen}
+                  onClick={() => setMoreOpen((open) => !open)}
+                  className="ml-auto rounded-lg px-2 py-1.5 text-sm text-neutral-600 hover:bg-neutral-100 hover:text-neutral-900"
+                >
+                  More filters{moreCount > 0 && ` (${moreCount})`}{" "}
+                  <span aria-hidden>{moreOpen ? "▴" : "▾"}</span>
+                </button>
               </div>
+              {moreOpen && (
+                <div className="flex flex-wrap items-center gap-2">
+                  <PlacementInput
+                    stage={filters.stage}
+                    top={filters.top}
+                    onChange={(stage, top) => go({ ...filters, stage, top })}
+                  />
+                  <label className="sr-only" htmlFor="search-kind">
+                    Official or online
+                  </label>
+                  <select
+                    id="search-kind"
+                    className={select}
+                    value={filters.kind}
+                    onChange={(e) =>
+                      go({ ...filters, kind: e.target.value as EventKind })
+                    }
+                  >
+                    {EVENT_KINDS.map((k) => (
+                      <option key={k.id} value={k.id}>
+                        {k.label}
+                      </option>
+                    ))}
+                  </select>
+                  <label className="sr-only" htmlFor="search-event">
+                    Event
+                  </label>
+                  <select
+                    id="search-event"
+                    className={select}
+                    value={filters.event ?? ""}
+                    onChange={(e) =>
+                      go({ ...filters, event: e.target.value || null })
+                    }
+                  >
+                    <option value="">All events</option>
+                    {[
+                      { label: "Official", official: true },
+                      { label: "Online", official: false },
+                    ].map((group) => {
+                      const list = events.filter(
+                        (e) => e.official === group.official,
+                      );
+                      return (
+                        list.length > 0 && (
+                          <optgroup key={group.label} label={group.label}>
+                            {list.map((e) => (
+                              <option key={e.slug} value={e.slug}>
+                                {e.name}
+                              </option>
+                            ))}
+                          </optgroup>
+                        )
+                      );
+                    })}
+                  </select>
+                  <label className="sr-only" htmlFor="search-errors">
+                    Sheet errors
+                  </label>
+                  <select
+                    id="search-errors"
+                    className={select}
+                    value={filters.errors ?? ""}
+                    onChange={(e) =>
+                      go({
+                        ...filters,
+                        errors: (e.target.value ||
+                          null) as SheetErrorFilter | null,
+                      })
+                    }
+                  >
+                    <option value="">With or without sheet errors</option>
+                    {SHEET_ERROR_FILTERS.map((f) => (
+                      <option key={f.id} value={f.id}>
+                        {f.label}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              )}
             </div>
           )
         }

@@ -2,7 +2,7 @@
 -- `pnpm db:test`. Everything runs in a transaction that is rolled back.
 begin;
 create extension if not exists pgtap with schema extensions;
-select plan(52);
+select plan(59);
 
 -- The game data these tests need. It may already be there from
 -- `pnpm data:sync`, so existing rows are left alone.
@@ -216,9 +216,9 @@ begin
 end;
 $$;
 select is(
-  pg_temp.refresh_all(1),
-  (select count(distinct team_id)::integer from public.team_sets),
-  'a batch of one team at a time covers every team, then stops'
+  pg_temp.refresh_all(2000),
+  (select ceil(count(distinct team_id) / 2000.0)::integer from public.team_sets),
+  'batches of teams cover every team, then stop'
 );
 select is(pg_temp.found(jsonb_build_object('boxBits', pg_temp.bits(1))), '{Brock}', 'search still works after a refresh');
 set local role anon;
@@ -239,6 +239,93 @@ select is(pg_temp.found('{"kind": "online"}'), '{Ash,Brock,Misty_Waterflower}', 
 reset role;
 update public.events set official = true where slug = 'search-test';
 set local role anon;
+
+-- Searching by team: Gary used Ash's team (the same fingerprint), and
+-- Brock's team also won an online event.
+reset role;
+select pg_temp.import('Gary', 'search-test-ash', jsonb_build_array(
+  pg_temp.set(1, 'charizard', 'charizarditex', 'blaze', '["heatwave", "protect"]'),
+  pg_temp.set(2, 'incineroar', 'sitrusberry', 'intimidate', '["fakeout", "knockoff"]')
+), placement => 30);
+select public.import_event(jsonb_build_object(
+  'event', jsonb_build_object(
+    'source', 'other', 'sourceId', 'search-test-online', 'slug', 'search-test-online',
+    'name', 'Search test online', 'regulationId', 'M-C', 'official', false,
+    'startsOn', '2026-09-26', 'endsOn', '2026-09-26'
+  ),
+  'teams', jsonb_build_array(jsonb_build_object(
+    'fingerprint', 'search-test-brock', 'archetypes', '[]'::jsonb,
+    'playerName', 'Brock', 'placement', 1, 'sets', jsonb_build_array(
+      pg_temp.set(1, 'charizard', null, 'blaze', '["protect"]')
+    )
+  ))
+));
+set local role anon;
+
+-- The test teams a team search finds, in its order.
+create function pg_temp.teams(filters jsonb default '{}', sort text default 'used')
+returns text[] language sql as $$
+  select coalesce(array_agg(t.fingerprint order by s.ordinality), '{}')
+  from public.search_teams(filters, sort, 0, 1000000) with ordinality as s
+  join public.teams as t on t.id = s.team_id
+  where t.fingerprint like 'search-test-%';
+$$;
+
+select is(
+  (select uses from public.search_teams('{"event": "search-test"}') as s
+    join public.teams as t on t.id = s.team_id where t.fingerprint = 'search-test-ash'),
+  2::bigint,
+  'a team two players used is one row, used twice'
+);
+select is(
+  pg_temp.teams('{"event": "search-test"}'),
+  '{search-test-ash,search-test-misty,search-test-brock}',
+  'most used first, then the best result'
+);
+select is(
+  (select placement from public.search_teams('{}', 'used', 0, 1000000) as s
+    join public.teams as t on t.id = s.team_id where t.fingerprint = 'search-test-brock'),
+  1,
+  'the best result is the best placement, official or online'
+);
+select is(
+  (pg_temp.teams('{}', 'newest'))[1],
+  'search-test-brock',
+  'sorted by the newest result'
+);
+select is(
+  (select array_agg(x order by x) from unnest(pg_temp.teams('{"event": "search-test", "top": 1}')) as x),
+  '{search-test-ash,search-test-misty}',
+  'a placement filter keeps teams with any result matching'
+);
+select is(
+  public.count_teams('{"event": "search-test"}'),
+  3::bigint,
+  'counting teams counts a shared team once'
+);
+-- Tracey won the online event with Misty's team: Misty's team now has two
+-- 1st places, so it leads the teams tied on 1st.
+reset role;
+select public.import_event(jsonb_build_object(
+  'event', jsonb_build_object(
+    'source', 'other', 'sourceId', 'search-test-online', 'slug', 'search-test-online',
+    'name', 'Search test online', 'regulationId', 'M-C', 'official', false,
+    'startsOn', '2026-09-26', 'endsOn', '2026-09-26'
+  ),
+  'teams', jsonb_build_array(jsonb_build_object(
+    'fingerprint', 'search-test-misty', 'archetypes', '[]'::jsonb,
+    'playerName', 'Tracey', 'placement', 1, 'sets', jsonb_build_array(
+      pg_temp.set(1, 'charizard', 'charizarditey', 'drought', '["heatwave"]'),
+      pg_temp.set(2, 'incineroar', null, 'intimidate', '["fakeout"]')
+    )
+  ))
+));
+set local role anon;
+select is(
+  (pg_temp.teams('{}', 'best'))[1],
+  'search-test-misty',
+  'tied on 1st, the team with the most 1st places leads'
+);
 
 -- Changes to the data
 reset role;

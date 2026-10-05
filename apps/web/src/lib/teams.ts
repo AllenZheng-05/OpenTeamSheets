@@ -49,6 +49,13 @@ export interface PlacementRow {
   showdown: string;
   /** Whether the team sheet, as published, has errors. */
   hasSheetErrors: boolean;
+  /** How many results match the search (players who used the team). */
+  uses: number;
+  /** How many of those made top cut, and day 2. */
+  topCuts: number;
+  dayTwos: number;
+  /** How many of those reached the best placement shown. */
+  bestCount: number;
 }
 
 interface TeamDetails {
@@ -152,32 +159,32 @@ const stage = (row: PlacementRecord) =>
   row.made_top_cut ? "top-cut" : row.made_day_two ? "day-2" : null;
 
 /**
- * A page of tournament placements matching a search, newest event first,
- * then by placement, and whether there's a page after it. Counting every
- * match is separate (countPlacements), so the page needn't wait for it.
+ * A page of teams matching a search, one row per team with its best
+ * matching result (official before online), and whether there's a page
+ * after it. Counting every team is separate (countTeams), so the page
+ * needn't wait for it.
  */
-export async function searchPlacements(
+export async function searchTeams(
   filters: Filters,
   page: number,
 ): Promise<{ rows: PlacementRow[]; hasNext: boolean }> {
   const from = page * PAGE_SIZE;
   // One more than a page, to know whether another follows.
-  const { data, error } = await supabase()
-    .rpc("search_placements", {
-      filters: rpcFilters(filters) as unknown as Json,
-    })
-    .range(from, from + PAGE_SIZE);
-  // Asking for rows past the end can be an error (PGRST103): an empty page.
-  if (error?.code === "PGRST103") return { rows: [], hasNext: false };
+  // The function pages itself, so only this page's teams get their best
+  // result looked up.
+  const { data, error } = await supabase().rpc("search_teams", {
+    filters: rpcFilters(filters) as unknown as Json,
+    sort: filters.sort,
+    page_offset: from,
+    page_limit: PAGE_SIZE + 1,
+  });
   if (error) throw new Error(error.message);
   const hasNext = (data?.length ?? 0) > PAGE_SIZE;
   const records = (data ?? []).slice(0, PAGE_SIZE);
   const teams = await loadTeams(
     new Map(
       records.flatMap((r): [string, Regulation][] =>
-        r.regulation_id && isRegulation(r.regulation_id)
-          ? [[r.team_id!, r.regulation_id]]
-          : [],
+        isRegulation(r.regulation_id) ? [[r.team_id, r.regulation_id]] : [],
       ),
     ),
   );
@@ -185,36 +192,39 @@ export async function searchPlacements(
   return {
     // Every team has a regulation; one without would be skipped, not shown.
     rows: records
-      .filter((row) => teams.has(row.team_id!))
+      .filter((row) => teams.has(row.team_id))
       .map((row) => {
-        const details = teams.get(row.team_id!)!;
+        const details = teams.get(row.team_id)!;
+        const best = { ...row, id: row.best_id };
         return {
-          id: row.id!,
-          teamId: row.team_id!,
-          player: row.player_name ?? "",
+          id: row.team_id,
+          teamId: row.team_id,
+          player: row.player_name,
           placement: row.placement,
-          record: record(row),
-          stage: stage(row),
-          event: eventSummary(row),
+          record: record(best),
+          stage: stage(best),
+          event: eventSummary(best),
           archetypes: details.archetypes,
           pokemon: details.pokemon,
           showdown: details.showdown,
           hasSheetErrors: details.sheetErrors.length > 0,
+          uses: row.uses,
+          topCuts: row.top_cuts,
+          dayTwos: row.day_twos,
+          bestCount: row.best_count,
         };
       }),
     hasNext,
   };
 }
 
-/** How many placements match a search. */
-export async function countPlacements(filters: Filters): Promise<number> {
-  const { count, error } = await supabase().rpc(
-    "search_placements",
-    { filters: rpcFilters(filters) as unknown as Json },
-    { count: "exact", head: true },
-  );
+/** How many teams match a search. */
+export async function countTeams(filters: Filters): Promise<number> {
+  const { data, error } = await supabase().rpc("count_teams", {
+    filters: rpcFilters(filters) as unknown as Json,
+  });
   if (error) throw new Error(error.message);
-  return count ?? 0;
+  return data ?? 0;
 }
 
 export interface TeamPage extends TeamDetails {
@@ -222,7 +232,15 @@ export interface TeamPage extends TeamDetails {
   regulation: Regulation;
   placements: (Omit<
     PlacementRow,
-    "pokemon" | "archetypes" | "showdown" | "teamId" | "hasSheetErrors"
+    | "pokemon"
+    | "archetypes"
+    | "showdown"
+    | "teamId"
+    | "hasSheetErrors"
+    | "uses"
+    | "topCuts"
+    | "dayTwos"
+    | "bestCount"
   > & {
     teamlistUrl: string | null;
   })[];
@@ -254,8 +272,11 @@ export async function getTeamPage(id: string): Promise<TeamPage | null> {
       .from("tournament_placements")
       .select("*")
       .eq("team_id", id)
-      .order("starts_on", { ascending: false })
-      .order("placement"),
+      // Best first, official results before online ones.
+      .order("official", { ascending: false })
+      .order("placement", { ascending: true, nullsFirst: false })
+      .order("player_count", { ascending: false, nullsFirst: false })
+      .order("starts_on", { ascending: false }),
     supabase()
       .from("media_links")
       .select("kind, url, start_seconds, title")
@@ -309,18 +330,41 @@ const dataVersion = unstable_cache(
 
 /** The cache key for a search's filters, at the current data version. */
 export const searchKey = async (filters: Filters) =>
-  `${await dataVersion()} ${JSON.stringify(rpcFilters(filters))}`;
+  `${await dataVersion()} ${filters.sort} ${JSON.stringify(rpcFilters(filters))}`;
 
 export const cachedSearch = async (filters: Filters, page: number) =>
   unstable_cache(
-    () => searchPlacements(filters, page),
+    () => searchTeams(filters, page),
     ["search", await searchKey(filters), String(page)],
     { revalidate: 86400 },
   )();
 
-/** countPlacements(), cached, and shared by everything on one page. */
+/** countTeams(), cached, and shared by everything on one page. */
 export const cachedCount = cache((key: string, filters: Filters) =>
-  unstable_cache(() => countPlacements(filters), ["count", key], {
+  unstable_cache(() => countTeams(filters), ["count", key], {
     revalidate: 86400,
   })(),
 );
+
+/** A team's results added up, for its page. */
+export function resultTotals(placements: TeamPage["placements"]) {
+  const known = placements.filter((p) => p.record !== null);
+  const [wins, losses] = known.reduce(
+    ([w, l], p) => {
+      const [pw, pl] = p.record!.split("-").map(Number);
+      return [w + pw!, l + pl!];
+    },
+    [0, 0],
+  );
+  const official = placements.filter((p) => p.event.official).length;
+  return {
+    uses: placements.length,
+    official,
+    online: placements.length - official,
+    topCuts: placements.filter((p) => p.stage === "top-cut").length,
+    /** Day 2 or better, as the Day 2 filter counts it. */
+    dayTwos: placements.filter((p) => p.stage !== null).length,
+    /** Every known record added up, or null with none. */
+    record: known.length > 0 ? { wins, losses } : null,
+  };
+}
