@@ -1,20 +1,43 @@
+"use client";
+
 import Link from "next/link";
-import { useId } from "react";
+import { useEffect, useId, useRef, useState } from "react";
 
 /**
- * An "i" that shows how the box works while the pointer is over it (or
- * it has keyboard focus), on top of the page without moving anything.
+ * An "i" that shows how the box works, on top of the page without moving
+ * anything: while a mouse is over it, while it has keyboard focus, or after
+ * a tap or click until the next one (or a tap elsewhere, or Escape).
  */
 export function BoxHelp() {
   const panelId = useId();
+  const [open, setOpen] = useState(false);
+  const root = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!open) return;
+    const onPointerDown = (event: PointerEvent) => {
+      if (!root.current?.contains(event.target as Node)) setOpen(false);
+    };
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") setOpen(false);
+    };
+    document.addEventListener("pointerdown", onPointerDown);
+    document.addEventListener("keydown", onKeyDown);
+    return () => {
+      document.removeEventListener("pointerdown", onPointerDown);
+      document.removeEventListener("keydown", onKeyDown);
+    };
+  }, [open]);
   const term = "font-medium text-neutral-900";
   return (
-    <div className="group relative">
+    <div ref={root} className="group relative">
       <button
         type="button"
         aria-label="How the box works"
         aria-describedby={panelId}
-        className="grid size-6 cursor-help place-items-center rounded-full border border-neutral-300 text-xs font-semibold text-neutral-500 group-hover:border-neutral-900 group-hover:text-neutral-900"
+        aria-expanded={open}
+        onClick={() => setOpen((o) => !o)}
+        className="grid size-6 cursor-help place-items-center rounded-full border border-neutral-300 text-xs font-semibold text-neutral-500 group-hover:border-neutral-900 group-hover:text-neutral-900 aria-expanded:border-neutral-900 aria-expanded:text-neutral-900"
       >
         i
       </button>
@@ -23,7 +46,9 @@ export function BoxHelp() {
       <div
         id={panelId}
         role="tooltip"
-        className="invisible absolute top-full right-0 z-30 pt-2 opacity-0 transition-opacity group-hover:visible group-hover:opacity-100 group-has-focus-visible:visible group-has-focus-visible:opacity-100"
+        // Out of the layout until shown, so it can't widen the page on a
+        // phone. Hover shows it only where there's a pointer to hover with.
+        className={`absolute top-full right-0 z-30 pt-2 group-has-focus-visible:block [@media(hover:hover)]:group-hover:block ${open ? "block" : "hidden"}`}
       >
         <div className="w-[min(24rem,calc(100vw-2rem))] rounded-xl border border-neutral-200 bg-white p-4 text-sm text-neutral-700 shadow-xl">
           <p>

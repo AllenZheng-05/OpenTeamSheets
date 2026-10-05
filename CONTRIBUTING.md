@@ -74,20 +74,22 @@ of your changes if it is not obvious.
 
 Champions game data (species, moves, abilities, items, type chart, and each regulation's legal Pokémon, items and learnsets) lives in `packages/core/data`. It comes from [Pokémon Showdown](https://github.com/smogon/pokemon-showdown), whose own data and team validator resolve it.
 
-| File                     | Edited by                                           |
-| ------------------------ | --------------------------------------------------- |
-| `generated/`             | `pnpm data:pull` only. Never edit it by hand.       |
-| `showdown-sources.json`  | Hand: the Showdown commit and format per regulation |
-| `overrides.json`         | Hand: corrections where Showdown is wrong           |
-| `regulation-status.json` | Hand: `pending`, `partial` or `complete`            |
-| `sheet-readings.json`    | Hand: likely meanings of typos on official sheets   |
-| `box-order.json`         | `pnpm data:pull` appends only: box species indexes  |
+| File                     | Edited by                                                               |
+| ------------------------ | ----------------------------------------------------------------------- |
+| `generated/`             | `pnpm data:pull` only. Never edit it by hand.                           |
+| `showdown-sources.json`  | Hand: the Showdown commit and format per regulation                     |
+| `overrides.json`         | Hand: corrections where Showdown is wrong                               |
+| `regulation-status.json` | Hand: `pending`, `partial` or `complete`                                |
+| `sheet-readings.json`    | Hand: likely meanings of typos on official sheets                       |
+| `box-order.json`         | `pnpm data:pull` appends only: box species indexes                      |
+| `sprite-styles.json`     | `pnpm --filter @ots/tools sprite-styles`: Pokémon without a HOME render |
 
 - **Something wrong in the data?** Add a correction to `overrides.json`, run `pnpm data:pull`, and link a source (an in-game screenshot or an official announcement) in the pull request. Consider reporting it to Showdown too.
 - **Updating from Showdown:** bump the commit in `showdown-sources.json` and run `pnpm data:pull`. The first run builds Showdown (a few minutes; it's cached in `~/.cache/openteamsheets`). Review the diff in `generated/` like any other change.
 - **The team validator** (`packages/core/src/teams/validate.ts`) follows Showdown's Champions rules. Its tests run every team in `src/teams/__fixtures__/validator` and expect the same verdict as Showdown's own validator, saved in `showdown-verdicts.json` by `pnpm data:pull`. To cover a new rule, add a team there and re-run `pnpm data:pull`.
 - **A new regulation:** a regulation's rules usually only become known once it goes live. Add it to `showdown-sources.json` once Showdown supports it, and keep it `partial` in `regulation-status.json` until the data has been checked.
 - **Box indexes** (`box-order.json`) are permanent: box masks in the database and in shared search links depend on them, so entries are never reordered or removed. `pnpm data:pull` appends new box species; masks hold 1,024, and the pull fails loudly before that runs out (widening is a migration to a wider `bit` type plus `BOX_BITS`).
+- **Sprites:** the site links Pokémon HOME renders from Showdown, except for the Pokémon listed in `sprite-styles.json`, which Showdown only has in other styles. After a pull that adds Pokémon, run `pnpm --filter @ots/tools sprite-styles` (it checks each sprite once, politely) and commit the result.
 - **Loading it locally:** `pnpm data:sync` copies the data into your local database. It needs `apps/worker/.env`; see `.env.example`.
 
 ## Tournament data

@@ -47,7 +47,8 @@ export const fold = (text: string) =>
 
 export function parseQuery(text: string): ParsedQuery {
   let rest = text.trimStart();
-  const not = rest.match(/^(?:not\s+|-\s*)/i);
+  // "not" alone counts, so suggestions can follow it straight away.
+  const not = rest.match(/^(?:not(?:\s+|$)|-\s*)/i);
   if (not) rest = rest.slice(not[0].length);
   const withParts = rest.match(/^(.*?)\s+with(?:\s+(.*))?$/i);
   if (!withParts)
@@ -244,12 +245,8 @@ export function suggest(
   const prefix = mode === "not" ? "not " : "";
 
   if (query.details === null) {
-    if (!query.subject) return [];
-    const matches = matchOptions(
-      options.map((o) => ({ ...o, group: GROUPS[o.kind] })),
-      query.subject,
-    );
-    const toSuggestion = (o: (typeof matches)[number]): Suggestion => {
+    const grouped = options.map((o) => ({ ...o, group: GROUPS[o.kind] }));
+    const toSuggestion = (o: (typeof grouped)[number]): Suggestion => {
       const condition = conditionFor(o.kind, o.id);
       return condition
         ? conditionSuggestion(mode, condition, o.group, name)
@@ -261,6 +258,12 @@ export function suggest(
             choice: { mode, archetype: o.id },
           };
     };
+    // "not" with nothing after it yet: what can be excluded, in the usual
+    // order, as a start.
+    if (!query.subject) {
+      return query.exclude ? grouped.slice(0, 30).map(toSuggestion) : [];
+    }
+    const matches = matchOptions(grouped, query.subject);
     const player: Suggestion = {
       key: `${mode}:player:${query.subject}`,
       name:

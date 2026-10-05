@@ -13,7 +13,10 @@ const TABS = [
 export function SiteTabs() {
   const pathname = usePathname();
   return (
-    <nav aria-label="Site" className="flex h-full gap-6">
+    <nav
+      aria-label="Site"
+      className="flex h-11 w-full gap-6 overflow-x-auto sm:h-full sm:w-auto"
+    >
       {TABS.map((tab) => {
         const active = pathname === tab.href;
         return (
@@ -21,7 +24,7 @@ export function SiteTabs() {
             key={tab.href}
             href={tab.href}
             aria-current={active ? "page" : undefined}
-            className={`flex items-center border-b-2 text-sm font-medium ${
+            className={`flex shrink-0 items-center border-b-2 text-sm font-medium whitespace-nowrap ${
               active
                 ? "border-neutral-900 text-neutral-900"
                 : "border-transparent text-neutral-500 hover:text-neutral-900"

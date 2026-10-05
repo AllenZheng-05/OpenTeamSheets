@@ -67,12 +67,12 @@ export function TeamRow({
             </p>
           </div>
           <div className="relative z-10 shrink-0 lg:hidden">
-            <CopyTeamButton paste={row.showdown} />
+            <CopyTeamButton teamId={row.teamId} />
           </div>
         </div>
         <TeamSheet pokemon={row.pokemon} variant="compact" owned={owned} />
         <div className="relative z-10 hidden lg:block lg:shrink-0">
-          <CopyTeamButton paste={row.showdown} />
+          <CopyTeamButton teamId={row.teamId} />
         </div>
       </div>
     </article>

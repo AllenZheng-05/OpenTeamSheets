@@ -3,7 +3,6 @@ import { cookies } from "next/headers";
 import { getCurrentRegulation, REGULATIONS } from "@ots/core";
 import { boxTiles, getSpecies } from "@ots/core/teams";
 import { BoxEditor } from "@/components/box-editor";
-import { BoxHelp } from "@/components/box-help";
 import { BOX_GROUP_COOKIE, BOX_SORT_COOKIE, readBoxSort } from "@/lib/box";
 import { readBox } from "@/lib/box-server";
 import { supabase } from "@/lib/supabase";
@@ -38,10 +37,6 @@ export default async function BoxPage() {
 
   return (
     <div className="space-y-5">
-      <header className="flex items-center justify-between gap-2">
-        <h1 className="text-xl font-semibold tracking-tight">My box</h1>
-        <BoxHelp />
-      </header>
       <BoxEditor
         tiles={tiles}
         initial={[...owned]}
