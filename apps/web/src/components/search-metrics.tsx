@@ -10,7 +10,7 @@ export function SearchMetrics({ total }: { total: number | null }) {
     <dl className="grid grid-cols-2 gap-3 sm:grid-cols-4">
       <div className="rounded-xl border border-neutral-200 px-4 py-3">
         <dt className="text-xs font-medium uppercase tracking-wide text-neutral-500">
-          Results
+          Teams
         </dt>
         <dd className="mt-1 text-2xl font-semibold tabular-nums">
           {total === null ? (

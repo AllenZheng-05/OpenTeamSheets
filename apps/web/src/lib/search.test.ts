@@ -72,6 +72,7 @@ describe("readFilters and filtersHref", () => {
     kind: "online",
     box: 1,
     have: "gA",
+    sort: "best",
   };
 
   it("round-trips every filter through the URL", () => {
@@ -114,6 +115,7 @@ describe("readFilters and filtersHref", () => {
           kind: "both",
           box: "7",
           have: "not a box!",
+          sort: "oldest",
           player: ["  wolfe  ", "", "x".repeat(51)],
         },
         "M-C",

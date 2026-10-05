@@ -1157,6 +1157,7 @@ export type Database = {
           total: number;
         }[];
       };
+      count_teams: { Args: { filters?: Json }; Returns: number };
       fork_team: { Args: { p_team_id: string }; Returns: string };
       import_event: { Args: { payload: Json }; Returns: Json };
       is_team_editable: { Args: { p_team_id: string }; Returns: boolean };
@@ -1199,6 +1200,40 @@ export type Database = {
           isOneToOne: false;
           isSetofReturn: true;
         };
+      };
+      search_teams: {
+        Args: {
+          filters?: Json;
+          page_limit?: number;
+          page_offset?: number;
+          sort?: string;
+        };
+        Returns: {
+          best_count: number;
+          best_id: string;
+          day_twos: number;
+          ends_on: string;
+          event_id: string;
+          event_name: string;
+          event_slug: string;
+          latest_on: string;
+          losses: number;
+          made_day_two: boolean;
+          made_top_cut: boolean;
+          official: boolean;
+          placement: number;
+          player_count: number;
+          player_name: string;
+          regulation_id: string;
+          standings_url: string;
+          starts_on: string;
+          team_id: string;
+          teamlist_url: string;
+          top_cut_size: number;
+          top_cuts: number;
+          uses: number;
+          wins: number;
+        }[];
       };
     };
     Enums: {

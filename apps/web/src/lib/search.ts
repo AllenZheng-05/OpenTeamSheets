@@ -70,6 +70,15 @@ export const BOX_MATCHES: { id: BoxMatch; label: string }[] = [
   { id: 2, label: "Missing at most 2" },
 ];
 
+/** How team results are ordered. */
+export type TeamSort = "used" | "newest" | "best";
+
+export const TEAM_SORTS: { id: TeamSort; label: string }[] = [
+  { id: "used", label: "Most used" },
+  { id: "newest", label: "Newest" },
+  { id: "best", label: "Best results" },
+];
+
 export type SheetErrorFilter = "any" | "unexplained" | "none";
 
 export const SHEET_ERROR_FILTERS: { id: SheetErrorFilter; label: string }[] = [
@@ -105,6 +114,8 @@ export interface Filters {
    * filled in from the player's box.
    */
   have: string | null;
+  /** How results are ordered; most used first by default. */
+  sort: TeamSort;
 }
 
 export const emptyFilters = (regulation: Regulation): Filters => ({
@@ -122,6 +133,7 @@ export const emptyFilters = (regulation: Regulation): Filters => ({
   kind: "all",
   box: null,
   have: null,
+  sort: "used",
 });
 
 const ID = /^[a-z0-9-]+$/;
@@ -229,6 +241,8 @@ export function readFilters(params: Params, current: Regulation): Filters {
   if (box === "0" || box === "1" || box === "2") {
     filters.box = Number(box) as BoxMatch;
   }
+  const sort = params.sort;
+  if (sort === "newest" || sort === "best") filters.sort = sort;
   const have = params.have;
   if (typeof have === "string" && decodeBoxBits(have) !== null) {
     filters.have = have;
@@ -258,6 +272,7 @@ export function filtersHref(
   if (filters.stage !== "all") params.set("stage", filters.stage);
   if (filters.top) params.set("top", String(filters.top));
   if (filters.kind !== "all") params.set("kind", filters.kind);
+  if (filters.sort !== "used") params.set("sort", filters.sort);
   if (filters.box !== null) {
     params.set("box", String(filters.box));
     if (filters.have !== null) params.set("have", filters.have);
