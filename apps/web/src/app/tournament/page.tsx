@@ -1,6 +1,10 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { getCurrentRegulation } from "@ots/core";
+import {
+  SearchPendingProvider,
+  SearchResultsFade,
+} from "@/components/search-pending";
 import { readPage, SearchResults } from "@/components/search-results";
 import { TeamSearch } from "@/components/team-search";
 import { fillBoxInUrl } from "@/lib/box-server";
@@ -9,7 +13,7 @@ import { searchBarProps } from "@/lib/search-options";
 
 export const metadata: Metadata = { title: "Tournament teams" };
 
-/** Every team played at official tournaments, searchable, newest first. */
+/** Every team played at official tournaments. */
 export default async function TournamentTeams({
   searchParams,
 }: PageProps<"/tournament">) {
@@ -21,30 +25,24 @@ export default async function TournamentTeams({
   await fillBoxInUrl("/tournament", filters, current, page);
 
   return (
-    <div className="space-y-5">
-      <header className="space-y-1">
-        <h1 className="text-xl font-semibold tracking-tight">
-          Tournament teams
-        </h1>
-        <p className="text-sm text-neutral-500">
-          Teams from official tournaments and large online ones (64+ players),
-          newest first.
-        </p>
-      </header>
+    <SearchPendingProvider>
+      <div className="space-y-5">
+        <TeamSearch
+          path="/tournament"
+          filters={filters}
+          current={current}
+          {...await searchBarProps(filters)}
+        />
 
-      <TeamSearch
-        path="/tournament"
-        filters={filters}
-        current={current}
-        {...await searchBarProps()}
-      />
-
-      <SearchResults
-        path="/tournament"
-        filters={filters}
-        current={current}
-        page={page}
-      />
-    </div>
+        <SearchResultsFade>
+          <SearchResults
+            path="/tournament"
+            filters={filters}
+            current={current}
+            page={page}
+          />
+        </SearchResultsFade>
+      </div>
+    </SearchPendingProvider>
   );
 }

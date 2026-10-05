@@ -68,6 +68,23 @@ describe("parseQuery", () => {
 });
 
 describe("suggest", () => {
+  it("lists what can be excluded after “not”, in the usual order", () => {
+    for (const text of ["not", "not ", "Not  "]) {
+      const listed = names(text);
+      expect(listed.length).toBeGreaterThan(0);
+      expect(listed.every((n) => n.startsWith("Not "))).toBe(true);
+      // The same order as every other list: Pokémon first, by name.
+      expect(listed[0]).toBe(
+        `Not ${options.find((o) => o.kind === "pokemon")!.name}`,
+      );
+    }
+  });
+
+  it("suggests nothing for an empty box", () => {
+    expect(names("")).toEqual([]);
+    expect(names("   ")).toEqual([]);
+  });
+
   it("suggests everything matching, then a player", () => {
     expect(names("char")).toEqual([
       "Charizard",

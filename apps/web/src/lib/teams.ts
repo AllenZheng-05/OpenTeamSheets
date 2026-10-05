@@ -45,8 +45,6 @@ export interface PlacementRow {
   event: EventSummary;
   archetypes: Archetype[];
   pokemon: PokemonView[];
-  /** The team as a Showdown paste, for Copy team. */
-  showdown: string;
   /** Whether the team sheet, as published, has errors. */
   hasSheetErrors: boolean;
   /** How many results match the search (players who used the team). */
@@ -206,7 +204,6 @@ export async function searchTeams(
           event: eventSummary(best),
           archetypes: details.archetypes,
           pokemon: details.pokemon,
-          showdown: details.showdown,
           hasSheetErrors: details.sheetErrors.length > 0,
           uses: row.uses,
           topCuts: row.top_cuts,
@@ -234,7 +231,6 @@ export interface TeamPage extends TeamDetails {
     PlacementRow,
     | "pokemon"
     | "archetypes"
-    | "showdown"
     | "teamId"
     | "hasSheetErrors"
     | "uses"
@@ -253,6 +249,23 @@ export interface TeamPage extends TeamDetails {
 }
 
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+
+/**
+ * A public team as a Showdown paste, for Copy team on a search result, or
+ * null if there's none. Rows fetch it on click rather than carrying it.
+ */
+export async function teamShowdown(id: string): Promise<string | null> {
+  if (!UUID.test(id)) return null;
+  const { data: team, error } = await supabase()
+    .from("teams")
+    .select("regulation_id")
+    .eq("id", id)
+    .maybeSingle();
+  if (error) throw new Error(error.message);
+  if (!team || !isRegulation(team.regulation_id)) return null;
+  const details = await loadTeams(new Map([[id, team.regulation_id]]));
+  return details.get(id)?.showdown ?? null;
+}
 
 /** A public team with everything its page shows, or null if there's none. */
 export async function getTeamPage(id: string): Promise<TeamPage | null> {

@@ -2,28 +2,32 @@
 
 import Image from "next/image";
 import { useState } from "react";
+import { spriteStyle } from "@ots/core/game-data";
 
 const SPRITES = "https://play.pokemonshowdown.com/sprites";
 
-// Pokémon HOME renders first. Some newer forms (most Champions Megas)
-// don't have one yet, so it falls back to the same Pokémon in Showdown's
-// other styles, never to a different form: 3D "dex" sprites, then pixel
-// sprites, then animated ones. A shiny with no shiny art anywhere shows
-// its regular sprite.
-const STYLES = [
-  { folder: "home-centered", extension: "png" },
-  { folder: "dex", extension: "png" },
-  { folder: "gen5", extension: "png" },
-  { folder: "ani", extension: "gif" },
-];
+// Pokémon HOME renders, except for the newest forms (most Champions Megas)
+// that don't have one yet: for those, core's spriteStyle() names the style
+// Showdown does have (3D "dex", pixel or animated), so the right image is
+// linked straight away. A shiny with no shiny art shows its regular sprite.
+// If a link still fails (a Pokémon added since the styles were checked),
+// it falls back through the styles in turn, never to a different form.
+const STYLES = ["home-centered", "dex", "gen5", "ani"];
+
+const url = (folder: string, spriteId: string, shiny: boolean) =>
+  `${SPRITES}/${folder}${shiny ? "-shiny" : ""}/${spriteId}.${folder === "ani" ? "gif" : "png"}`;
 
 function sources(spriteId: string, shiny: boolean): string[] {
-  const urls = (suffix: string) =>
-    STYLES.map(
-      ({ folder, extension }) =>
-        `${SPRITES}/${folder}${suffix}/${spriteId}.${extension}`,
-    );
-  return shiny ? [...urls("-shiny"), ...urls("")] : urls("");
+  const best = spriteStyle(spriteId);
+  const first =
+    shiny && best.shiny
+      ? url(best.shiny, spriteId, true)
+      : url(best.normal, spriteId, false);
+  const fallbacks = (asShiny: boolean) =>
+    STYLES.map((folder) => url(folder, spriteId, asShiny));
+  return [
+    ...new Set([first, ...(shiny ? fallbacks(true) : []), ...fallbacks(false)]),
+  ];
 }
 
 export function PokemonSprite({
@@ -47,7 +51,7 @@ export function PokemonSprite({
         role="img"
         aria-label={name}
         className="rounded-full bg-neutral-100"
-        style={{ width: size, height: size }}
+        style={{ width: `${size / 16}rem`, height: `${size / 16}rem` }}
       />
     );
   }
@@ -61,7 +65,7 @@ export function PokemonSprite({
       loading="lazy"
       onError={() => setAttempt((n) => n + 1)}
       className="object-contain"
-      style={{ width: size, height: size }}
+      style={{ width: `${size / 16}rem`, height: `${size / 16}rem` }}
     />
   );
 }

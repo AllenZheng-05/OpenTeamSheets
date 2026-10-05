@@ -33,12 +33,21 @@ export const metadata: Metadata = {
   },
 };
 
+const THEME_SCRIPT = `try{var t=localStorage.getItem("theme");if(t==="light"||t==="dark")document.documentElement.dataset.theme=t}catch(e){}`;
+
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
       lang="en"
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
+      // The script below sets data-theme before React loads.
+      suppressHydrationWarning
     >
+      <head>
+        {/* A light or dark theme chosen with the header's toggle, applied
+            before the page paints so it never flashes the other one. */}
+        <script dangerouslySetInnerHTML={{ __html: THEME_SCRIPT }} />
+      </head>
       <body className="flex min-h-full flex-col bg-white text-neutral-900">
         <SiteHeader />
         <main className="mx-auto w-full max-w-6xl flex-1 px-4 py-6">

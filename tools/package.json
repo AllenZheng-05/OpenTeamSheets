@@ -5,6 +5,7 @@
   "type": "module",
   "scripts": {
     "data:pull": "tsx src/data-pull.ts && tsx src/box-order.ts",
+    "sprite-styles": "tsx src/sprite-styles.ts",
     "typecheck": "tsc --noEmit",
     "test": "vitest run"
   },

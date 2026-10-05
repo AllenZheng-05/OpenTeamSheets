@@ -1,11 +1,13 @@
+import { unstable_cache } from "next/cache";
 import { REGULATIONS, type Regulation } from "@ots/core";
 import { gameData, regulationData } from "@ots/core/game-data";
-import { encodeBoxBits, getSpecies } from "@ots/core/teams";
+import { encodeBoxBits, getSpecies, nameOf } from "@ots/core/teams";
 import { readBox } from "./box-server";
+import type { Filters } from "./search";
 import { supabase } from "./supabase";
 
-// What the search bar can suggest. Built on the server from core's game
-// data and passed to the bar, so suggesting needs no requests.
+// What the search bar can suggest: built on the server from core's game
+// data and the database, and loaded by the bar once from a cached route.
 
 export type OptionKind =
   "pokemon" | "move" | "ability" | "item" | "type" | "archetype";
@@ -92,54 +94,88 @@ export function pokemonDetails(pokemonId: string): {
   return { moves: [...moves].sort(), abilities: [...abilities].sort() };
 }
 
-/** Archetypes and imported events, from the database. */
-export async function databaseOptions(): Promise<{
-  archetypes: SearchOption[];
-  events: EventOption[];
-}> {
-  const [archetypes, events] = await Promise.all([
-    supabase().from("archetypes").select("id, name").order("name"),
-    supabase()
-      .from("events")
-      .select("slug, name, official")
-      .order("starts_on", { ascending: false }),
-  ]);
-  if (archetypes.error) throw new Error(archetypes.error.message);
-  if (events.error) throw new Error(events.error.message);
-  return {
-    archetypes: archetypes.data.map((a) => ({
-      kind: "archetype",
-      id: a.id,
-      name: a.name,
-    })),
-    events: events.data,
-  };
-}
+/** Archetypes and imported events, from the database, cached for an hour. */
+const databaseOptions = unstable_cache(
+  async (): Promise<{ archetypes: SearchOption[]; events: EventOption[] }> => {
+    const [archetypes, events] = await Promise.all([
+      supabase().from("archetypes").select("id, name").order("name"),
+      supabase()
+        .from("events")
+        .select("slug, name, official")
+        .order("starts_on", { ascending: false }),
+    ]);
+    if (archetypes.error) throw new Error(archetypes.error.message);
+    if (events.error) throw new Error(events.error.message);
+    return {
+      archetypes: archetypes.data.map((a) => ({
+        kind: "archetype" as const,
+        id: a.id,
+        name: a.name,
+      })),
+      events: events.data,
+    };
+  },
+  ["search-database-options"],
+  { revalidate: 3600 },
+);
 
 let cachedGameDataOptions: SearchOption[] | undefined;
 
-/** Everything the search bar needs to suggest, for the page to pass in. */
-export async function searchBarProps(): Promise<{
+/** What the search bar suggests and lists, served by /api/search-options. */
+export interface SearchOptionsData {
+  /** Pokémon, moves, abilities, items and types. */
   options: SearchOption[];
-  archetypes: SearchOption[];
   events: EventOption[];
+}
+
+export async function searchOptionsData(): Promise<SearchOptionsData> {
+  cachedGameDataOptions ??= gameDataOptions();
+  const { events } = await databaseOptions();
+  return { options: cachedGameDataOptions, events };
+}
+
+/**
+ * The names of what a search already names (its pills), keyed
+ * "kind:id", so they show before the full list has loaded.
+ */
+function filterNames(filters: Filters): Record<string, string> {
+  const names: Record<string, string> = {};
+  for (const c of [...filters.has, ...filters.not]) {
+    if (c.pokemon) names[`pokemon:${c.pokemon}`] = nameOf("species", c.pokemon);
+    for (const m of c.moves ?? []) names[`move:${m}`] = nameOf("move", m);
+    if (c.ability) names[`ability:${c.ability}`] = nameOf("ability", c.ability);
+    if (c.item) names[`item:${c.item}`] = nameOf("item", c.item);
+    if (c.type) {
+      names[`type:${c.type}`] =
+        gameData.types.find((t) => t.id === c.type)?.name ?? c.type;
+    }
+  }
+  return names;
+}
+
+/**
+ * What the search bar needs from the server. The long list of suggestions
+ * isn't here: the bar loads it from /api/search-options, which browsers
+ * cache across pages.
+ */
+export async function searchBarProps(filters: Filters): Promise<{
+  archetypes: SearchOption[];
+  names: Record<string, string>;
   regulations: Regulation[];
   /** How many Pokémon are in the player's box, from their cookie. */
   boxCount: number;
   /** The player's box as URL text (encodeBoxBits), for box searches. */
   boxCode: string;
 }> {
-  cachedGameDataOptions ??= gameDataOptions();
-  const [{ archetypes, events }, box] = await Promise.all([
+  const [{ archetypes }, box] = await Promise.all([
     databaseOptions(),
     readBox(),
   ]);
   return {
     boxCount: box.size,
     boxCode: encodeBoxBits(box),
-    options: cachedGameDataOptions,
     archetypes,
-    events,
+    names: filterNames(filters),
     // Newest first.
     regulations: REGULATIONS.map((r) => r.id)
       .filter((id) => regulationData[id])

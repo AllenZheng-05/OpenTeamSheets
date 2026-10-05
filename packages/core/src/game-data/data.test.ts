@@ -1,6 +1,11 @@
 import { describe, expect, it } from "vitest";
 import { REGULATIONS } from "../regulation";
-import { gameData, getRegulationDataStatus, regulationData } from "./data";
+import {
+  gameData,
+  getRegulationDataStatus,
+  regulationData,
+  spriteStyle,
+} from "./data";
 
 const { types, typeChart, natures, species, moves, abilities, items } =
   gameData;
@@ -139,5 +144,20 @@ describe("getRegulationDataStatus", () => {
         regulationData[id] === undefined,
       );
     }
+  });
+});
+
+describe("spriteStyle", () => {
+  it("uses Pokémon HOME renders by default", () => {
+    expect(spriteStyle("incineroar")).toEqual({
+      normal: "home-centered",
+      shiny: "home-centered",
+    });
+  });
+
+  it("names the style a newer form does have", () => {
+    const style = spriteStyle("raichu-megax");
+    expect(style.normal).not.toBe("home-centered");
+    expect(style.shiny).toBeNull();
   });
 });

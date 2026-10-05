@@ -1,6 +1,13 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import {
+  useEffect,
+  useId,
+  useLayoutEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import { fold } from "@/lib/search-query";
 import {
   BOX_SORTS,
@@ -13,6 +20,7 @@ import {
   type BoxTileView,
 } from "@/lib/box";
 import { TypePill } from "./pills";
+import { BoxHelp } from "@/components/box-help";
 import { PokemonSprite } from "./pokemon-sprite";
 
 /** How long a touch must rest on a tile before dragging selects. */
@@ -231,6 +239,39 @@ export function BoxEditor({
   }
 
   const [focused, setFocused] = useState(0);
+
+  // One tooltip for every tile, placed over whichever is hovered or has
+  // keyboard focus, kept inside the screen.
+  const tipId = useId();
+  const tipRef = useRef<HTMLDivElement>(null);
+  const [tip, setTip] = useState<{
+    tile: BoxTileView;
+    left: number;
+    top: number;
+  } | null>(null);
+  const showTip = (tile: BoxTileView, element: HTMLElement) => {
+    const rect = element.getBoundingClientRect();
+    setTip({ tile, left: rect.left + rect.width / 2, top: rect.top });
+  };
+  useLayoutEffect(() => {
+    const element = tipRef.current;
+    if (!tip || !element) return;
+    const margin = 8;
+    const width = element.offsetWidth;
+    const left = Math.min(
+      Math.max(tip.left - width / 2, margin),
+      document.documentElement.clientWidth - width - margin,
+    );
+    element.style.left = `${left}px`;
+    element.style.top = `${tip.top - element.offsetHeight - 4}px`;
+  }, [tip]);
+  // The tooltip is fixed to the screen, so scrolling would leave it behind.
+  useEffect(() => {
+    if (!tip) return;
+    const hide = () => setTip(null);
+    window.addEventListener("scroll", hide, { passive: true });
+    return () => window.removeEventListener("scroll", hide);
+  }, [tip]);
   const tabStop = Math.min(focused, Math.max(ordered.length - 1, 0));
 
   return (
@@ -298,6 +339,7 @@ export function BoxEditor({
           <span className="font-semibold text-neutral-900">{owned.size}</span>{" "}
           of {tiles.length} owned
         </p>
+        <BoxHelp />
       </div>
 
       <div
@@ -332,14 +374,31 @@ export function BoxEditor({
                   const index = offset + groupIndex;
                   const has = owned.has(tile.id);
                   return (
-                    <li key={tile.id} className="group relative">
+                    <li key={tile.id}>
                       <button
                         type="button"
                         data-tile={tile.id}
-                        aria-describedby={`box-tip-${tile.id}`}
+                        aria-describedby={
+                          tip?.tile.id === tile.id ? tipId : undefined
+                        }
+                        // The shared tooltip: on mouse hover, or keyboard
+                        // focus. Taps select instead.
+                        onPointerEnter={(e) => {
+                          if (e.pointerType === "mouse")
+                            showTip(tile, e.currentTarget);
+                        }}
+                        onPointerLeave={(e) => {
+                          if (e.pointerType === "mouse") setTip(null);
+                        }}
+                        onBlur={() => setTip(null)}
                         aria-pressed={has}
                         tabIndex={index === tabStop ? 0 : -1}
-                        onFocus={() => setFocused(index)}
+                        onFocus={(e) => {
+                          setFocused(index);
+                          if (e.currentTarget.matches(":focus-visible")) {
+                            showTip(tile, e.currentTarget);
+                          }
+                        }}
                         onPointerDown={(e) => onPointerDown(e, tile.id)}
                         // Pointers toggle on press; this is Space and Enter.
                         onClick={(e) => {
@@ -364,23 +423,6 @@ export function BoxEditor({
                           {tile.name}
                         </span>
                       </button>
-                      <span
-                        role="tooltip"
-                        id={`box-tip-${tile.id}`}
-                        className="pointer-events-none invisible absolute bottom-full left-1/2 z-30 mb-1 w-max max-w-48 -translate-x-1/2 rounded-lg bg-neutral-900 px-2.5 py-1.5 text-left text-xs text-white opacity-0 shadow-lg transition-opacity group-hover:visible group-hover:opacity-100 group-has-focus-visible:visible group-has-focus-visible:opacity-100"
-                      >
-                        <span className="block font-semibold">{tile.name}</span>
-                        <span className="mt-1 flex gap-1">
-                          {tile.types.map((type) => (
-                            <TypePill key={type} type={type} />
-                          ))}
-                        </span>
-                        <span className="mt-1 block text-neutral-300">
-                          {tile.usage > 0
-                            ? `On ${formatUsage(tile.usage)} of Reg ${regulation} tournament teams`
-                            : `Not used on Reg ${regulation} tournament teams yet`}
-                        </span>
-                      </span>
                     </li>
                   );
                 })}
@@ -389,6 +431,26 @@ export function BoxEditor({
           );
         })}
       </div>
+      {tip && (
+        <div
+          ref={tipRef}
+          id={tipId}
+          role="tooltip"
+          className="pointer-events-none fixed z-30 w-max max-w-48 rounded-lg bg-neutral-900 px-2.5 py-1.5 text-left text-xs text-white shadow-lg"
+        >
+          <span className="block font-semibold">{tip.tile.name}</span>
+          <span className="mt-1 flex gap-1">
+            {tip.tile.types.map((type) => (
+              <TypePill key={type} type={type} />
+            ))}
+          </span>
+          <span className="mt-1 block text-neutral-300">
+            {tip.tile.usage > 0
+              ? `On ${formatUsage(tip.tile.usage)} of Reg ${regulation} tournament teams`
+              : `Not used on Reg ${regulation} tournament teams yet`}
+          </span>
+        </div>
+      )}
       {shown.length === 0 && (
         <p className="text-sm text-neutral-500">No Pokémon match “{query}”.</p>
       )}

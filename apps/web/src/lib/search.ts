@@ -65,7 +65,7 @@ export const EVENT_KINDS: { id: EventKind; label: string }[] = [
 export type BoxMatch = 0 | 1 | 2;
 
 export const BOX_MATCHES: { id: BoxMatch; label: string }[] = [
-  { id: 0, label: "Only teams I can build" },
+  { id: 0, label: "Only Pokémon in my box" },
   { id: 1, label: "Missing at most 1" },
   { id: 2, label: "Missing at most 2" },
 ];
