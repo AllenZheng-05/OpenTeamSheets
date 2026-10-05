@@ -4,8 +4,7 @@ import { getCurrentRegulation, REGULATIONS } from "@ots/core";
 import { boxTiles, getSpecies } from "@ots/core/teams";
 import { BoxEditor } from "@/components/box-editor";
 import { BOX_GROUP_COOKIE, BOX_SORT_COOKIE, readBoxSort } from "@/lib/box";
-import { readBox } from "@/lib/box-server";
-import { supabase } from "@/lib/supabase";
+import { boxUsage, readBox } from "@/lib/box-server";
 
 export const metadata: Metadata = { title: "My box" };
 
@@ -13,14 +12,7 @@ export const metadata: Metadata = { title: "My box" };
 export default async function BoxPage() {
   const regulation = getCurrentRegulation();
   const jar = await cookies();
-  const [owned, usage] = await Promise.all([
-    readBox(),
-    supabase().rpc("box_usage", { p_regulation: regulation }),
-  ]);
-  if (usage.error) throw new Error(usage.error.message);
-  const used = new Map(
-    (usage.data ?? []).map((u) => [u.box_species, u.placements / u.total]),
-  );
+  const [owned, usage] = await Promise.all([readBox(), boxUsage(regulation)]);
   const tiles = boxTiles().map(({ id, name, spriteId, regulations }) => {
     const species = getSpecies(id)!;
     return {
@@ -30,7 +22,7 @@ export default async function BoxPage() {
       types: [species.type1, species.type2].filter(
         (t): t is string => t !== null,
       ),
-      usage: used.get(id) ?? 0,
+      usage: usage[id] ?? 0,
       added: REGULATIONS.find((r) => regulations.includes(r.id))!.id,
     };
   });
