@@ -178,16 +178,31 @@ for (const [regulation, data] of Object.entries(regulationData)) {
 
 // Search tags include each Pokémon's types, Mega form and box species,
 // which come from the game data; recompute them in case those changed.
-// In batches of teams, each well within the API's statement timeout.
+// In batches of teams, each within the API's statement timeout. How long a
+// batch takes depends on production's load, so a batch that times out is
+// retried at half the size, down to MIN_BATCH; later batches stay small.
+const MIN_BATCH = 50;
+let batchSize = 1000;
 let after: string | undefined;
 let batches = 0;
 for (;;) {
-  const { data } = check(
-    await db.rpc("refresh_search_tags", { p_after: after }),
-    "Refreshing search tags",
-  );
+  const { data, error } = await db.rpc("refresh_search_tags", {
+    p_after: after,
+    p_limit: batchSize,
+  });
+  // 57014: canceled for taking longer than the statement timeout.
+  if (error?.code === "57014" && batchSize > MIN_BATCH) {
+    batchSize = Math.max(MIN_BATCH, Math.floor(batchSize / 2));
+    console.log(
+      `search tags: a batch timed out; now ${batchSize} teams at a time`,
+    );
+    continue;
+  }
+  if (error) throw new Error(`Refreshing search tags: ${error.message}`);
   if (!data) break;
   after = data;
   batches++;
 }
-console.log(`search tags: refreshed in ${batches} batches`);
+console.log(
+  `search tags: refreshed in ${batches} batches of up to ${batchSize}`,
+);
