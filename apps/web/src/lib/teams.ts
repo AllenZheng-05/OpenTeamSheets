@@ -328,7 +328,7 @@ export async function getTeamPage(id: string): Promise<TeamPage | null> {
 // changed, so an import starts fresh results within a minute.
 
 /** When search data last changed, checked at most once a minute. */
-const dataVersion = unstable_cache(
+export const dataVersion = unstable_cache(
   async () => {
     const { data, error } = await supabase()
       .from("search_data_version")
