@@ -2,7 +2,7 @@
 -- `pnpm db:test`. Everything runs in a transaction that is rolled back.
 begin;
 create extension if not exists pgtap with schema extensions;
-select plan(59);
+select plan(67);
 
 -- The game data these tests need. It may already be there from
 -- `pnpm data:sync`, so existing rows are left alone.
@@ -260,6 +260,14 @@ select public.import_event(jsonb_build_object(
     )
   ))
 ));
+-- Searches without placement filters read stored totals, which the
+-- imports recount at the end.
+create function pg_temp.refresh()
+returns void language sql as $$
+  select public.refresh_team_summaries('M-C');
+  select public.refresh_team_summaries('*');
+$$;
+select pg_temp.refresh();
 set local role anon;
 
 -- The test teams a team search finds, in its order.
@@ -320,11 +328,51 @@ select public.import_event(jsonb_build_object(
     )
   ))
 ));
+select pg_temp.refresh();
 set local role anon;
 select is(
   (pg_temp.teams('{}', 'best'))[1],
   'search-test-misty',
   'tied on 1st, the team with the most 1st places leads'
+);
+
+reset role;
+-- Stored totals give the same teams, in the same order, as adding up
+-- placements. (Of results tied for best, either may be shown.)
+create function pg_temp.same_as_placements(filters jsonb, sort text)
+returns boolean language sql as $$
+  select (
+    select array_agg(row(s.team_id, s.uses, s.top_cuts, s.day_twos, s.best_count, s.latest_on, s.placement, s.player_count, s.starts_on)::text order by s.ordinality)
+    from public.search_teams(filters, sort, 0, 1000000) with ordinality as s
+  ) is not distinct from (
+    select array_agg(row(s.team_id, s.uses, s.top_cuts, s.day_twos, s.best_count, s.latest_on, s.placement, s.player_count, s.starts_on)::text order by s.ordinality)
+    from private.search_teams_from_placements(filters, sort, 0, 1000000) with ordinality as s
+  ) and public.count_teams(filters) = private.count_teams_from_placements(filters);
+$$;
+select ok(pg_temp.same_as_placements('{}', 'used'), 'stored totals: no filters, most used');
+select ok(pg_temp.same_as_placements('{"regulation": "M-C"}', 'best'), 'stored totals: a regulation, best');
+select ok(pg_temp.same_as_placements('{"regulation": "M-C", "has": [{"pokemon": "incineroar"}]}', 'newest'), 'stored totals: a Pokémon, newest');
+select ok(pg_temp.same_as_placements('{"notArchetypes": ["sun"], "errors": "none"}', 'used'), 'stored totals: team filters');
+set local role anon;
+select throws_ok(
+  $$ select public.refresh_team_summaries('M-C') $$,
+  '42501', null,
+  'visitors cannot recount team totals'
+);
+reset role;
+
+-- Box usage, stored.
+select public.refresh_box_usage('M-C');
+set local role anon;
+select is(
+  (select placements from public.box_usage_stats where regulation_id = 'M-C' and box_species = 'incineroar'),
+  (select placements from public.box_usage('M-C') where box_species = 'incineroar'),
+  'stored box usage matches counting it'
+);
+select throws_ok(
+  $$ select public.refresh_box_usage('M-C') $$,
+  '42501', null,
+  'visitors cannot recount box usage'
 );
 
 -- Changes to the data
@@ -339,6 +387,11 @@ set local role anon;
 select is(pg_temp.found('{"has": [{"moves": ["knockoff"]}]}'), '{Brock}', 'editing a set updates its tags');
 select is(pg_temp.found('{"errors": "unexplained"}'), '{}', 'importing again replaces sheet errors');
 select is(pg_temp.found(), '{Brock,Misty_Waterflower}', 'private teams never appear');
+select is(
+  (select array_agg(x order by x) from unnest(pg_temp.teams()) as x),
+  '{search-test-brock,search-test-misty}',
+  'private teams never appear in stored totals, even before a recount'
+);
 
 select * from finish();
 rollback;

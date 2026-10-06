@@ -1,18 +1,17 @@
 import type { Metadata } from "next";
-import { cookies } from "next/headers";
-import { getCurrentRegulation, REGULATIONS } from "@ots/core";
+import { REGULATIONS } from "@ots/core";
 import { boxTiles, getSpecies } from "@ots/core/teams";
-import { BoxEditor } from "@/components/box-editor";
-import { BOX_GROUP_COOKIE, BOX_SORT_COOKIE, readBoxSort } from "@/lib/box";
-import { boxUsage, readBox } from "@/lib/box-server";
+import { BoxEditorLoader } from "@/components/box-editor-loader";
 
 export const metadata: Metadata = { title: "My box" };
 
+// The same page for everyone, built once per deploy and served from the
+// CDN: the browser reads the player's box from their cookies, works out the
+// current regulation from its clock and loads that regulation's usage from
+// /api/box-usage. Nothing here depends on the date.
+
 /** The Pokémon a player owns, for finding teams they can build. */
-export default async function BoxPage() {
-  const regulation = getCurrentRegulation();
-  const jar = await cookies();
-  const [owned, usage] = await Promise.all([readBox(), boxUsage(regulation)]);
+export default function BoxPage() {
   const tiles = boxTiles().map(({ id, name, spriteId, regulations }) => {
     const species = getSpecies(id)!;
     return {
@@ -22,20 +21,16 @@ export default async function BoxPage() {
       types: [species.type1, species.type2].filter(
         (t): t is string => t !== null,
       ),
-      usage: usage[id] ?? 0,
+      usage: 0,
       added: REGULATIONS.find((r) => regulations.includes(r.id))!.id,
     };
   });
 
   return (
     <div className="space-y-5">
-      <BoxEditor
+      <BoxEditorLoader
         tiles={tiles}
-        initial={[...owned]}
-        initialSort={readBoxSort(jar.get(BOX_SORT_COOKIE)?.value)}
-        initialGrouped={jar.get(BOX_GROUP_COOKIE)?.value === "1"}
         regulations={REGULATIONS.map((r) => r.id)}
-        regulation={regulation}
       />
     </div>
   );

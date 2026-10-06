@@ -8,9 +8,16 @@ import {
   useRef,
   useState,
 } from "react";
+import { getCurrentRegulation } from "@ots/core";
 import { fold } from "@/lib/search-query";
 import {
+  BOX_COOKIE,
+  BOX_GROUP_COOKIE,
+  BOX_SORT_COOKIE,
   BOX_SORTS,
+  browserCookie,
+  decodeBox,
+  readBoxSort,
   saveBox,
   saveBoxGroup,
   saveBoxSort,
@@ -22,6 +29,7 @@ import {
 import { TypePill } from "./pills";
 import { BoxHelp } from "@/components/box-help";
 import { PokemonSprite } from "./pokemon-sprite";
+import { BoxGridSkeleton } from "./box-skeleton";
 
 /** How long a touch must rest on a tile before dragging selects. */
 const LONG_PRESS_MS = 300;
@@ -37,24 +45,45 @@ const SCROLL_SLOP_PX = 8;
  * current tile's state to the next. Changes are saved straight away.
  */
 export function BoxEditor({
-  tiles,
-  initial,
-  initialSort,
-  initialGrouped,
-  regulation,
+  tiles: baseTiles,
   regulations,
 }: {
+  /** Every box Pokémon; usage is loaded here. */
   tiles: BoxTileView[];
-  initial: string[];
-  initialSort: BoxSort;
-  initialGrouped: boolean;
   /** Every regulation, oldest first, for grouping by when one was added. */
   regulations: string[];
-  /** The regulation usage is from. */
-  regulation: string;
 }) {
-  const [sort, setSort] = useState(initialSort);
-  const [grouped, setGrouped] = useState(initialGrouped);
+  // The regulation usage is from: the current one by this browser's clock,
+  // so the page itself never needs rebuilding when a regulation starts.
+  const [regulation] = useState(() => getCurrentRegulation());
+  // Rendered in the browser only (BoxEditorLoader), so it starts from the
+  // player's cookies directly.
+  const [sort, setSort] = useState(() =>
+    readBoxSort(browserCookie(BOX_SORT_COOKIE)),
+  );
+  const [grouped, setGrouped] = useState(
+    () => browserCookie(BOX_GROUP_COOKIE) === "1",
+  );
+  // Usage, from a cached route the daily import keeps current.
+  const [usage, setUsage] = useState<Record<string, number> | null>(null);
+  useEffect(() => {
+    let current = true;
+    void fetch(`/api/box-usage?regulation=${encodeURIComponent(regulation)}`)
+      .then((response) => (response.ok ? response.json() : {}))
+      .then((data: Record<string, number>) => {
+        if (current) setUsage(data);
+      })
+      .catch(() => {
+        if (current) setUsage({});
+      });
+    return () => {
+      current = false;
+    };
+  }, [regulation]);
+  const tiles = useMemo(
+    () => baseTiles.map((t) => ({ ...t, usage: usage?.[t.id] ?? 0 })),
+    [baseTiles, usage],
+  );
   const changeGrouped = (next: boolean) => {
     setGrouped(next);
     saveBoxGroup(next);
@@ -63,7 +92,12 @@ export function BoxEditor({
     setSort(next);
     saveBoxSort(next);
   };
-  const [owned, setOwned] = useState(() => new Set(initial));
+  const [owned, setOwned] = useState(() =>
+    decodeBox(
+      browserCookie(BOX_COOKIE),
+      baseTiles.map((t) => t.id),
+    ),
+  );
   const [query, setQuery] = useState("");
   const ids = useMemo(() => tiles.map((t) => t.id), [tiles]);
   const gridRef = useRef<HTMLDivElement>(null);
@@ -347,89 +381,94 @@ export function BoxEditor({
         onPointerMove={onPointerMove}
         className="space-y-5 select-none"
       >
-        {groups.map((group, g) => {
-          const offset = groups
-            .slice(0, g)
-            .reduce((sum, earlier) => sum + earlier.tiles.length, 0);
-          const heading =
-            group.regulation && `Added in Reg ${group.regulation}`;
-          return (
-            <section
-              key={group.regulation ?? "all"}
-              aria-label={heading ?? undefined}
-            >
-              {heading && (
-                <h2 className="mb-2 text-sm font-semibold text-neutral-900">
-                  {heading}{" "}
-                  <span className="font-normal text-neutral-500">
-                    ({group.tiles.length})
-                  </span>
-                </h2>
-              )}
-              <ul
-                aria-label={heading ?? "Your box"}
-                className="grid grid-cols-[repeat(auto-fill,minmax(5.5rem,1fr))] gap-1.5"
+        {/* Sorted by usage, the order waits for usage to load. */}
+        {sort === "usage" && usage === null ? (
+          <BoxGridSkeleton />
+        ) : (
+          groups.map((group, g) => {
+            const offset = groups
+              .slice(0, g)
+              .reduce((sum, earlier) => sum + earlier.tiles.length, 0);
+            const heading =
+              group.regulation && `Added in Reg ${group.regulation}`;
+            return (
+              <section
+                key={group.regulation ?? "all"}
+                aria-label={heading ?? undefined}
               >
-                {group.tiles.map((tile, groupIndex) => {
-                  const index = offset + groupIndex;
-                  const has = owned.has(tile.id);
-                  return (
-                    <li key={tile.id}>
-                      <button
-                        type="button"
-                        data-tile={tile.id}
-                        aria-describedby={
-                          tip?.tile.id === tile.id ? tipId : undefined
-                        }
-                        // The shared tooltip: on mouse hover, or keyboard
-                        // focus. Taps select instead.
-                        onPointerEnter={(e) => {
-                          if (e.pointerType === "mouse")
-                            showTip(tile, e.currentTarget);
-                        }}
-                        onPointerLeave={(e) => {
-                          if (e.pointerType === "mouse") setTip(null);
-                        }}
-                        onBlur={() => setTip(null)}
-                        aria-pressed={has}
-                        tabIndex={index === tabStop ? 0 : -1}
-                        onFocus={(e) => {
-                          setFocused(index);
-                          if (e.currentTarget.matches(":focus-visible")) {
-                            showTip(tile, e.currentTarget);
+                {heading && (
+                  <h2 className="mb-2 text-sm font-semibold text-neutral-900">
+                    {heading}{" "}
+                    <span className="font-normal text-neutral-500">
+                      ({group.tiles.length})
+                    </span>
+                  </h2>
+                )}
+                <ul
+                  aria-label={heading ?? "Your box"}
+                  className="grid grid-cols-[repeat(auto-fill,minmax(5.5rem,1fr))] gap-1.5"
+                >
+                  {group.tiles.map((tile, groupIndex) => {
+                    const index = offset + groupIndex;
+                    const has = owned.has(tile.id);
+                    return (
+                      <li key={tile.id}>
+                        <button
+                          type="button"
+                          data-tile={tile.id}
+                          aria-describedby={
+                            tip?.tile.id === tile.id ? tipId : undefined
                           }
-                        }}
-                        onPointerDown={(e) => onPointerDown(e, tile.id)}
-                        // Pointers toggle on press; this is Space and Enter.
-                        onClick={(e) => {
-                          if (e.detail === 0) set(tile.id, !has);
-                        }}
-                        onKeyDown={(e) => onKeyDown(e, index)}
-                        className={`flex w-full flex-col items-center rounded-lg border px-1 pt-1 pb-1.5 text-center transition-colors [&_img]:pointer-events-none ${
-                          has
-                            ? "border-emerald-300 bg-emerald-50"
-                            : "border-neutral-200 bg-white opacity-50 grayscale hover:opacity-80"
-                        }`}
-                      >
-                        <span aria-hidden>
-                          <PokemonSprite
-                            name={tile.name}
-                            spriteId={tile.spriteId}
-                            shiny={false}
-                            size={56}
-                          />
-                        </span>
-                        <span className="w-full truncate text-xs">
-                          {tile.name}
-                        </span>
-                      </button>
-                    </li>
-                  );
-                })}
-              </ul>
-            </section>
-          );
-        })}
+                          // The shared tooltip: on mouse hover, or keyboard
+                          // focus. Taps select instead.
+                          onPointerEnter={(e) => {
+                            if (e.pointerType === "mouse")
+                              showTip(tile, e.currentTarget);
+                          }}
+                          onPointerLeave={(e) => {
+                            if (e.pointerType === "mouse") setTip(null);
+                          }}
+                          onBlur={() => setTip(null)}
+                          aria-pressed={has}
+                          tabIndex={index === tabStop ? 0 : -1}
+                          onFocus={(e) => {
+                            setFocused(index);
+                            if (e.currentTarget.matches(":focus-visible")) {
+                              showTip(tile, e.currentTarget);
+                            }
+                          }}
+                          onPointerDown={(e) => onPointerDown(e, tile.id)}
+                          // Pointers toggle on press; this is Space and Enter.
+                          onClick={(e) => {
+                            if (e.detail === 0) set(tile.id, !has);
+                          }}
+                          onKeyDown={(e) => onKeyDown(e, index)}
+                          className={`flex w-full flex-col items-center rounded-lg border px-1 pt-1 pb-1.5 text-center transition-colors [&_img]:pointer-events-none ${
+                            has
+                              ? "border-emerald-300 bg-emerald-50"
+                              : "border-neutral-200 bg-white opacity-50 grayscale hover:opacity-80"
+                          }`}
+                        >
+                          <span aria-hidden>
+                            <PokemonSprite
+                              name={tile.name}
+                              spriteId={tile.spriteId}
+                              shiny={false}
+                              size={56}
+                            />
+                          </span>
+                          <span className="w-full truncate text-xs">
+                            {tile.name}
+                          </span>
+                        </button>
+                      </li>
+                    );
+                  })}
+                </ul>
+              </section>
+            );
+          })
+        )}
       </div>
       {tip && (
         <div

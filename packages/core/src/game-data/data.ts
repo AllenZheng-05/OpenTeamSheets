@@ -60,26 +60,37 @@ export function getRegulationDataStatus(regulation: Regulation): DataStatus {
   );
 }
 
-/** A Showdown sprite style: a folder of its sprites. */
-export type SpriteStyle = "home-centered" | "dex" | "gen5" | "ani";
+/** Showdown's sprite styles, each a folder of its sprites. */
+export const SPRITE_STYLES = ["home-centered", "dex", "gen5", "ani"] as const;
+export type SpriteStyle = (typeof SPRITE_STYLES)[number];
 
 /**
- * The best Showdown sprite style for a Pokémon, and for its shiny (null if
- * it has no shiny art anywhere). Most have Pokémon HOME renders; the rest
- * are listed in data/sprite-styles.json by `pnpm --filter @ots/tools
- * sprite-styles`.
+ * Styles to try, best first. Small sprites (rows, the box) prefer the 3D
+ * "dex" renders, a third the download of Pokémon HOME's and sharp enough
+ * at that size; large ones (team pages) prefer HOME. Pixel and animated
+ * sprites are the fallbacks.
  */
-export function spriteStyle(spriteId: string): {
-  normal: SpriteStyle;
-  shiny: SpriteStyle | null;
-} {
-  const known = (
-    spriteStyles as Record<
-      string,
-      { normal: SpriteStyle | null; shiny: SpriteStyle | null }
-    >
-  )[spriteId];
-  return known
-    ? { normal: known.normal ?? "home-centered", shiny: known.shiny }
-    : { normal: "home-centered", shiny: "home-centered" };
+const PREFERENCE: Record<"small" | "large", SpriteStyle[]> = {
+  small: ["dex", "home-centered", "gen5", "ani"],
+  large: ["home-centered", "dex", "gen5", "ani"],
+};
+
+/**
+ * The best Showdown sprite style for a Pokémon at a size, and for its shiny
+ * (null if it has no shiny art anywhere), from the styles each Pokémon is
+ * missing in data/sprite-styles.json (`pnpm --filter @ots/tools
+ * sprite-styles`).
+ */
+export function spriteStyle(
+  spriteId: string,
+  size: "small" | "large",
+): { normal: SpriteStyle; shiny: SpriteStyle | null } {
+  const missing = new Set(
+    (spriteStyles as Record<string, string[]>)[spriteId] ?? [],
+  );
+  const order = PREFERENCE[size];
+  return {
+    normal: order.find((style) => !missing.has(style)) ?? order[0]!,
+    shiny: order.find((style) => !missing.has(`${style}-shiny`)) ?? null,
+  };
 }

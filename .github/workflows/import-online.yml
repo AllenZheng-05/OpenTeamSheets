@@ -39,3 +39,5 @@ jobs:
         env:
           SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
           SUPABASE_SECRET_KEY: ${{ secrets.SUPABASE_SECRET_KEY }}
+      # Load the busiest pages, so the first visitor gets cached results.
+      - run: pnpm --filter @ots/tools warm-cache

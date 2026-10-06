@@ -11,7 +11,7 @@ import {
   regulationData,
 } from "@ots/core/game-data";
 import { boxIndex, boxSpecies } from "@ots/core/teams";
-import { check, connect, type Db } from "./supabase";
+import { check, connect, refreshStoredTotals, type Db } from "./supabase";
 
 type TableName = keyof Database["public"]["Tables"];
 
@@ -206,3 +206,6 @@ for (;;) {
 console.log(
   `search tags: refreshed in ${batches} batches of up to ${batchSize}`,
 );
+
+// Box species may have changed, which changes usage.
+await refreshStoredTotals(db);

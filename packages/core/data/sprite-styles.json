@@ -1,162 +1,183 @@
 {
-  "absol-megaz": {
-    "normal": "gen5",
-    "shiny": "gen5"
-  },
-  "barbaracle-mega": {
-    "normal": "ani",
-    "shiny": null
-  },
-  "baxcalibur-mega": {
-    "normal": "gen5",
-    "shiny": "gen5"
-  },
-  "chandelure-mega": {
-    "normal": "dex",
-    "shiny": "dex"
-  },
-  "chesnaught-mega": {
-    "normal": "dex",
-    "shiny": "dex"
-  },
-  "chimecho-mega": {
-    "normal": "dex",
-    "shiny": "dex"
-  },
-  "clefable-mega": {
-    "normal": "dex",
-    "shiny": "dex"
-  },
-  "crabominable-mega": {
-    "normal": "dex",
-    "shiny": "dex"
-  },
-  "delphox-mega": {
-    "normal": "dex",
-    "shiny": "dex"
-  },
-  "dragalge-mega": {
-    "normal": "ani",
-    "shiny": null
-  },
-  "dragonite-mega": {
-    "normal": "dex",
-    "shiny": "dex"
-  },
-  "drampa-mega": {
-    "normal": "dex",
-    "shiny": "dex"
-  },
-  "eelektross-mega": {
-    "normal": "ani",
-    "shiny": null
-  },
-  "emboar-mega": {
-    "normal": "dex",
-    "shiny": "dex"
-  },
-  "excadrill-mega": {
-    "normal": "dex",
-    "shiny": "dex"
-  },
-  "falinks-mega": {
-    "normal": "ani",
-    "shiny": null
-  },
-  "feraligatr-mega": {
-    "normal": "dex",
-    "shiny": "dex"
-  },
-  "floette-mega": {
-    "normal": "dex",
-    "shiny": "dex"
-  },
-  "froslass-mega": {
-    "normal": "dex",
-    "shiny": "dex"
-  },
-  "garchomp-megaz": {
-    "normal": "gen5",
-    "shiny": "gen5"
-  },
-  "glimmora-mega": {
-    "normal": "dex",
-    "shiny": "dex"
-  },
-  "golisopod-mega": {
-    "normal": "gen5",
-    "shiny": "gen5"
-  },
-  "golurk-mega": {
-    "normal": "dex",
-    "shiny": "dex"
-  },
-  "greninja-mega": {
-    "normal": "dex",
-    "shiny": "dex"
-  },
-  "hawlucha-mega": {
-    "normal": "dex",
-    "shiny": "dex"
-  },
-  "lucario-megaz": {
-    "normal": "gen5",
-    "shiny": "gen5"
-  },
-  "malamar-mega": {
-    "normal": "ani",
-    "shiny": null
-  },
-  "meganium-mega": {
-    "normal": "dex",
-    "shiny": "dex"
-  },
-  "meowstic-fmega": {
-    "normal": "dex",
-    "shiny": "dex"
-  },
-  "meowstic-mmega": {
-    "normal": "dex",
-    "shiny": "dex"
-  },
-  "pyroar-mega": {
-    "normal": "ani",
-    "shiny": null
-  },
-  "raichu-megax": {
-    "normal": "ani",
-    "shiny": null
-  },
-  "raichu-megay": {
-    "normal": "ani",
-    "shiny": null
-  },
-  "scolipede-mega": {
-    "normal": "ani",
-    "shiny": null
-  },
-  "scovillain-mega": {
-    "normal": "dex",
-    "shiny": "dex"
-  },
-  "scrafty-mega": {
-    "normal": "ani",
-    "shiny": null
-  },
-  "skarmory-mega": {
-    "normal": "dex",
-    "shiny": "dex"
-  },
-  "staraptor-mega": {
-    "normal": "ani",
-    "shiny": null
-  },
-  "starmie-mega": {
-    "normal": "dex",
-    "shiny": "dex"
-  },
-  "victreebel-mega": {
-    "normal": "dex",
-    "shiny": "dex"
-  }
+  "absol-megaz": [
+    "home-centered",
+    "home-centered-shiny",
+    "dex",
+    "dex-shiny",
+    "ani",
+    "ani-shiny"
+  ],
+  "barbaracle-mega": [
+    "home-centered",
+    "home-centered-shiny",
+    "dex",
+    "dex-shiny",
+    "gen5",
+    "gen5-shiny",
+    "ani-shiny"
+  ],
+  "baxcalibur-mega": [
+    "home-centered",
+    "home-centered-shiny",
+    "dex",
+    "dex-shiny",
+    "ani",
+    "ani-shiny"
+  ],
+  "chandelure-mega": ["home-centered", "home-centered-shiny", "ani-shiny"],
+  "chesnaught-mega": ["home-centered", "home-centered-shiny", "ani-shiny"],
+  "chimecho-mega": ["home-centered", "home-centered-shiny", "ani-shiny"],
+  "clefable-mega": ["home-centered", "home-centered-shiny"],
+  "crabominable-mega": ["home-centered", "home-centered-shiny", "ani-shiny"],
+  "cramorant-gorging": ["dex", "dex-shiny"],
+  "cramorant-gulping": ["dex", "dex-shiny"],
+  "delphox-mega": ["home-centered", "home-centered-shiny", "ani-shiny"],
+  "dragalge-mega": [
+    "home-centered",
+    "home-centered-shiny",
+    "dex",
+    "dex-shiny",
+    "gen5",
+    "gen5-shiny",
+    "ani-shiny"
+  ],
+  "dragonite-mega": ["home-centered", "home-centered-shiny"],
+  "drampa-mega": ["home-centered", "home-centered-shiny", "ani-shiny"],
+  "eelektross-mega": [
+    "home-centered",
+    "home-centered-shiny",
+    "dex",
+    "dex-shiny",
+    "gen5",
+    "gen5-shiny",
+    "ani-shiny"
+  ],
+  "emboar-mega": ["home-centered", "home-centered-shiny"],
+  "excadrill-mega": ["home-centered", "home-centered-shiny", "ani-shiny"],
+  "falinks": ["dex", "dex-shiny"],
+  "falinks-mega": [
+    "home-centered",
+    "home-centered-shiny",
+    "dex",
+    "dex-shiny",
+    "gen5",
+    "gen5-shiny",
+    "ani-shiny"
+  ],
+  "feraligatr-mega": ["home-centered", "home-centered-shiny"],
+  "floette-mega": ["home-centered", "home-centered-shiny", "ani-shiny"],
+  "froslass-mega": ["home-centered", "home-centered-shiny"],
+  "garchomp-megaz": [
+    "home-centered",
+    "home-centered-shiny",
+    "dex",
+    "dex-shiny",
+    "ani",
+    "ani-shiny"
+  ],
+  "glimmora-mega": ["home-centered", "home-centered-shiny", "ani-shiny"],
+  "golisopod-mega": [
+    "home-centered",
+    "home-centered-shiny",
+    "dex",
+    "dex-shiny",
+    "ani",
+    "ani-shiny"
+  ],
+  "golurk-mega": ["home-centered", "home-centered-shiny", "ani-shiny"],
+  "grapploct": ["dex", "dex-shiny"],
+  "greninja-mega": ["home-centered", "home-centered-shiny", "ani-shiny"],
+  "grimmsnarl": ["dex", "dex-shiny"],
+  "hawlucha-mega": ["home-centered", "home-centered-shiny", "ani-shiny"],
+  "lucario-megaz": [
+    "home-centered",
+    "home-centered-shiny",
+    "dex",
+    "dex-shiny",
+    "ani",
+    "ani-shiny"
+  ],
+  "malamar-mega": [
+    "home-centered",
+    "home-centered-shiny",
+    "dex",
+    "dex-shiny",
+    "gen5",
+    "gen5-shiny",
+    "ani-shiny"
+  ],
+  "meganium-mega": ["home-centered", "home-centered-shiny"],
+  "meowstic-fmega": ["home-centered", "home-centered-shiny", "ani-shiny"],
+  "meowstic-mmega": ["home-centered", "home-centered-shiny", "ani-shiny"],
+  "ogerpon": ["ani", "ani-shiny"],
+  "ogerpon-cornerstone": ["ani", "ani-shiny"],
+  "ogerpon-cornerstonetera": ["ani", "ani-shiny"],
+  "ogerpon-hearthflame": ["ani", "ani-shiny"],
+  "ogerpon-hearthflametera": ["ani", "ani-shiny"],
+  "ogerpon-tealtera": ["ani", "ani-shiny"],
+  "ogerpon-wellspring": ["ani", "ani-shiny"],
+  "ogerpon-wellspringtera": ["ani", "ani-shiny"],
+  "overqwil": ["dex", "dex-shiny"],
+  "perrserker": ["dex", "dex-shiny"],
+  "pincurchin": ["dex", "dex-shiny"],
+  "polteageist-antique": ["dex", "dex-shiny"],
+  "pyroar-mega": [
+    "home-centered",
+    "home-centered-shiny",
+    "dex",
+    "dex-shiny",
+    "gen5",
+    "gen5-shiny",
+    "ani-shiny"
+  ],
+  "raichu-megax": [
+    "home-centered",
+    "home-centered-shiny",
+    "dex",
+    "dex-shiny",
+    "gen5",
+    "gen5-shiny",
+    "ani-shiny"
+  ],
+  "raichu-megay": [
+    "home-centered",
+    "home-centered-shiny",
+    "dex",
+    "dex-shiny",
+    "gen5",
+    "gen5-shiny",
+    "ani-shiny"
+  ],
+  "scolipede-mega": [
+    "home-centered",
+    "home-centered-shiny",
+    "dex",
+    "dex-shiny",
+    "gen5",
+    "gen5-shiny",
+    "ani-shiny"
+  ],
+  "scovillain-mega": ["home-centered", "home-centered-shiny", "ani-shiny"],
+  "scrafty-mega": [
+    "home-centered",
+    "home-centered-shiny",
+    "dex",
+    "dex-shiny",
+    "gen5",
+    "gen5-shiny",
+    "ani-shiny"
+  ],
+  "sirfetchd": ["dex", "dex-shiny"],
+  "skarmory-mega": ["home-centered", "home-centered-shiny"],
+  "staraptor-mega": [
+    "home-centered",
+    "home-centered-shiny",
+    "dex",
+    "dex-shiny",
+    "gen5",
+    "gen5-shiny",
+    "ani-shiny"
+  ],
+  "starmie-mega": ["home-centered", "home-centered-shiny"],
+  "victreebel-mega": ["home-centered", "home-centered-shiny"]
 }
