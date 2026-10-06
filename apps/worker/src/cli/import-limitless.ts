@@ -34,10 +34,9 @@ import {
   type OfficialEvent,
 } from "../import/limitless";
 import { createPoliteFetcher } from "../import/polite-fetch";
+import { IMPORT_BATCH_TEAMS, OFFICIAL_REQUEST_MS } from "@ots/core/config";
+import { refreshSite } from "./site";
 import { check, connect, refreshStoredTotals } from "./supabase";
-
-// import_event() runs in one transaction per call; batches keep each request small.
-const BATCH_SIZE = 250;
 
 const args = process.argv.slice(2);
 const dryRun = args.includes("--dry-run");
@@ -80,7 +79,7 @@ if (db && only.length === 0 && !args.includes("--all")) {
     `${before - events.length} events already imported; ${events.length} to import`,
   );
 }
-const fetcher = createPoliteFetcher();
+const fetcher = createPoliteFetcher({ delayMs: OFFICIAL_REQUEST_MS });
 
 for (const config of events) {
   console.log(`\n${config.name} (${config.standings})`);
@@ -141,12 +140,12 @@ for (const config of events) {
   if (!db) continue;
   let created = 0;
   let merged = 0;
-  for (let i = 0; i < prepared.teams.length; i += BATCH_SIZE) {
+  for (let i = 0; i < prepared.teams.length; i += IMPORT_BATCH_TEAMS) {
     const { data } = check(
       await db.rpc("import_event", {
         payload: {
           event: prepared.event,
-          teams: prepared.teams.slice(i, i + BATCH_SIZE),
+          teams: prepared.teams.slice(i, i + IMPORT_BATCH_TEAMS),
         } as unknown as Json,
       }),
       `Importing ${config.name}`,
@@ -158,9 +157,12 @@ for (const config of events) {
   console.log(`  imported: ${created} new teams, ${merged} already known`);
 }
 
-// Usage for the box page counts every placement, so it's recounted here,
-// once, rather than on visits.
-if (db) await refreshStoredTotals(db);
+// Box usage and team totals count every placement, so they're recounted
+// here, once, rather than on visits; then the site drops its old results.
+if (db) {
+  await refreshStoredTotals(db);
+  await refreshSite(args);
+}
 
 if (args.includes("--report")) {
   if (!reportPath || reportPath.startsWith("--")) {

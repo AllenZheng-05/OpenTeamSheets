@@ -7,7 +7,7 @@
  *          [--report flagged.md]
  *
  *   --format       only these regulations; default: all of them
- *   --min-players  the smallest tournament to import (default 64)
+ *   --min-players  the smallest tournament to import (default 64, ONLINE_MIN_PLAYERS)
  *   --since        only tournaments on or after this date
  *   --all          scan and import every tournament again, not just new ones
  *                  (from the cache), such as after editing sheet readings
@@ -41,13 +41,16 @@ import {
   type OnlineTournament,
 } from "../import/limitless-online";
 import { createPoliteFetcher } from "../import/polite-fetch";
+import {
+  IMPORT_BATCH_TEAMS,
+  ONLINE_MIN_PLAYERS,
+  ONLINE_REQUEST_MS,
+  ONLINE_SETTLE_DAYS,
+} from "@ots/core/config";
+import { refreshSite } from "./site";
 import { check, connect, refreshStoredTotals } from "./supabase";
 
-// import_event() runs in one transaction per call; batches keep each request small.
-const BATCH_SIZE = 250;
 const PAGE_SIZE = 100;
-// A tournament this recent may still be running; its results aren't final.
-const SETTLE_DAYS = 2;
 
 const args = process.argv.slice(2);
 const option = (name: string) => {
@@ -57,7 +60,7 @@ const option = (name: string) => {
 const dryRun = args.includes("--dry-run");
 const refresh = args.includes("--refresh");
 const all = args.includes("--all");
-const minPlayers = Number(option("--min-players") ?? 64);
+const minPlayers = Number(option("--min-players") ?? ONLINE_MIN_PLAYERS);
 const since = option("--since");
 const reportPath = option("--report");
 const formats = args.flatMap((arg, i) =>
@@ -87,7 +90,7 @@ const fetcher = createPoliteFetcher({
     "openteamsheets",
     "limitless-api",
   ),
-  delayMs: 6500,
+  delayMs: ONLINE_REQUEST_MS,
 });
 const getJson = async <T>(url: string, fresh: boolean): Promise<T> =>
   JSON.parse(await fetcher.get(url, { refresh: fresh })) as T;
@@ -119,7 +122,9 @@ if (from && !since)
   );
 
 // Every tournament worth importing, newest first.
-const settled = new Date(Date.now() - SETTLE_DAYS * 86_400_000).toISOString();
+const settled = new Date(
+  Date.now() - ONLINE_SETTLE_DAYS * 86_400_000,
+).toISOString();
 const tournaments: OnlineTournament[] = [];
 for (const regulation of regulations) {
   for (let page = 1; ; page++) {
@@ -186,12 +191,12 @@ for (const tournament of tournaments) {
     totals.teams += prepared.teams.length;
 
     if (!db) continue;
-    for (let i = 0; i < prepared.teams.length; i += BATCH_SIZE) {
+    for (let i = 0; i < prepared.teams.length; i += IMPORT_BATCH_TEAMS) {
       const { data } = check(
         await db.rpc("import_event", {
           payload: {
             event: prepared.event,
-            teams: prepared.teams.slice(i, i + BATCH_SIZE),
+            teams: prepared.teams.slice(i, i + IMPORT_BATCH_TEAMS),
           } as unknown as Json,
         }),
         `Importing ${label}`,
@@ -207,9 +212,12 @@ for (const tournament of tournaments) {
   }
 }
 
-// Usage for the box page counts every placement, so it's recounted here,
-// once, rather than on visits.
-if (db) await refreshStoredTotals(db);
+// Box usage and team totals count every placement, so they're recounted
+// here, once, rather than on visits; then the site drops its old results.
+if (db) {
+  await refreshStoredTotals(db);
+  await refreshSite(args);
+}
 
 if (reportPath) {
   writeFileSync(reportPath, ["# Team sheets to check\n", ...report].join("\n"));

@@ -6,10 +6,11 @@ import { CopyTeamButton } from "@/components/copy-team-button";
 import { ArchetypePill, OnlineBadge, StageBadge } from "@/components/pills";
 import { TeamSheet } from "@/components/team-sheet";
 import { count, placement } from "@/lib/format";
-import { getTeamPage, resultTotals, type TeamPage } from "@/lib/teams";
+import { cachedTeamPage, resultTotals, type TeamPage } from "@/lib/teams";
 
-// The page and its metadata both need the team; this loads it once per request.
-const loadTeam = cache(getTeamPage);
+// The page and its metadata both need the team; this loads it once per
+// request, from a cache that lasts until the next import.
+const loadTeam = cache(cachedTeamPage);
 
 export async function generateMetadata({
   params,

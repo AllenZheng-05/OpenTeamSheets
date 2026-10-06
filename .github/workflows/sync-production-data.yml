@@ -33,6 +33,10 @@ jobs:
     env:
       SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
       SUPABASE_SECRET_KEY: ${{ secrets.SUPABASE_SECRET_KEY }}
+      # Each step below tells the site its data changed when it's done.
+      REVALIDATE_SECRET: ${{ secrets.REVALIDATE_SECRET }}
+      # The site's exact address, without redirects (a GitHub variable).
+      SITE_URL: ${{ vars.SITE_URL }}
     steps:
       - uses: actions/checkout@v7
 

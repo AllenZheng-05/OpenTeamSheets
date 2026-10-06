@@ -8,6 +8,7 @@
     ".": "./src/index.ts",
     "./game-data": "./src/game-data/index.ts",
     "./teams": "./src/teams/index.ts",
+    "./config": "./src/config.ts",
     "./db": "./src/db/types.ts"
   },
   "scripts": {

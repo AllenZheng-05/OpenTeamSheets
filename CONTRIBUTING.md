@@ -112,9 +112,11 @@ GitHub Actions keeps production's data current; maintainers don't run imports by
 
 - **Online tournaments** are imported every day (`.github/workflows/import-online.yml`).
 - **Game data and official events** are synced when `packages/core/data` or `data/official-events.yaml` changes on `main` (`.github/workflows/sync-production-data.yml`). So adding an official event is a one-line pull request.
-- **Stored totals:** box usage and each team's totals (for the default search) are counted once by each import and `data:sync`, not on every visit. After a run, both workflows load the busiest pages (`pnpm --filter @ots/tools warm-cache`) so the first visitor gets cached results.
+- **Stored totals:** box usage and each team's totals (for the default search) are counted once by each import and `data:sync`, not on every visit.
+- **The import is the only signal.** The site never checks for new data: it caches searches, team pages and the search bar's options until an import finishes and calls `POST /api/revalidate`, which drops them and rebuilds `/box`. Then both workflows load the busiest pages (`pnpm --filter @ots/tools warm-cache`) so the first visitor gets cached results. A local import tells your local site only if `SITE_URL` and `REVALIDATE_SECRET` are set in `apps/worker/.env`; otherwise restart `pnpm dev` to see new data.
+- **Tuning:** the schedule, cache lifetimes, batch sizes and request delays are in `packages/core/src/config.ts`, each with what it costs. The project runs on Vercel's and Supabase's free plans, so check a change there against their usage pages.
 - **Migrations are not applied automatically.** A maintainer runs `pnpm supabase db push` before merging a pull request that adds one, since merging deploys the site.
-- Both workflows can also be run by hand from the Actions tab. They use the `production` environment's secrets, `SUPABASE_URL` and `SUPABASE_SECRET_KEY`, which only `main` can use.
+- Both workflows can also be run by hand from the Actions tab. They use the `production` environment's secrets (`SUPABASE_URL`, `SUPABASE_SECRET_KEY`, `REVALIDATE_SECRET`) and its `SITE_URL` variable, which only `main` can use. `REVALIDATE_SECRET` must match the one in Vercel's environment variables, and `SITE_URL` must be the site's exact address, without redirects.
 
 ## License
 

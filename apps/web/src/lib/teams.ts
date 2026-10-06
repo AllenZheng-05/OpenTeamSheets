@@ -2,6 +2,11 @@ import { unstable_cache } from "next/cache";
 import { cache } from "react";
 import { isRegulation, type Regulation } from "@ots/core";
 import {
+  SEARCH_PAGE_SIZE,
+  TOURNAMENT_DATA_MAX_AGE,
+  TOURNAMENT_DATA_TAG,
+} from "@ots/core/config";
+import {
   describeSheetError,
   exportShowdown,
   sheetErrors,
@@ -14,7 +19,7 @@ import { setDetails } from "./pokemon-details";
 import { rpcFilters, type Filters } from "./search";
 import { supabase } from "./supabase";
 
-export const PAGE_SIZE = 25;
+export const PAGE_SIZE = SEARCH_PAGE_SIZE;
 
 export interface Archetype {
   id: string;
@@ -323,11 +328,22 @@ export async function getTeamPage(id: string): Promise<TeamPage | null> {
   };
 }
 
-// Searches and counts are cached across visitors by their filters (every
-// filter, the box included, is in the URL) and by when search data last
-// changed, so an import starts fresh results within a minute.
+// Searches, counts and team pages are cached across visitors (every search
+// filter, the box included, is in the URL) until the next import: it calls
+// /api/revalidate, which drops everything tagged TOURNAMENT_DATA_TAG. The
+// site never checks for new data itself.
 
-/** When search data last changed, checked at most once a minute. */
+/** Cached tournament data: kept until an import says it changed. */
+const untilImport = {
+  tags: [TOURNAMENT_DATA_TAG],
+  revalidate: TOURNAMENT_DATA_MAX_AGE,
+};
+
+/**
+ * When search data last changed, read once per import. It's part of every
+ * search's cache key and of the search bar's options URL, so the CDN
+ * fetches new options after an import.
+ */
 export const dataVersion = unstable_cache(
   async () => {
     const { data, error } = await supabase()
@@ -338,7 +354,7 @@ export const dataVersion = unstable_cache(
     return data.changed_at;
   },
   ["search-data-version"],
-  { revalidate: 60 },
+  untilImport,
 );
 
 /** The cache key for a search's filters, at the current data version. */
@@ -349,15 +365,17 @@ export const cachedSearch = async (filters: Filters, page: number) =>
   unstable_cache(
     () => searchTeams(filters, page),
     ["search", await searchKey(filters), String(page)],
-    { revalidate: 86400 },
+    untilImport,
   )();
 
 /** countTeams(), cached, and shared by everything on one page. */
 export const cachedCount = cache((key: string, filters: Filters) =>
-  unstable_cache(() => countTeams(filters), ["count", key], {
-    revalidate: 86400,
-  })(),
+  unstable_cache(() => countTeams(filters), ["count", key], untilImport)(),
 );
+
+/** getTeamPage(), cached: a team's results change only with an import. */
+export const cachedTeamPage = (id: string) =>
+  unstable_cache(() => getTeamPage(id), ["team-page", id], untilImport)();
 
 /** A team's results added up, for its page. */
 export function resultTotals(placements: TeamPage["placements"]) {
