@@ -130,3 +130,12 @@ export function groupByAdded(
     }))
     .filter((group) => group.tiles.length > 0);
 }
+
+/** A cookie's value in the browser, or undefined. */
+export function browserCookie(name: string): string | undefined {
+  const prefix = `${name}=`;
+  return document.cookie
+    .split("; ")
+    .find((cookie) => cookie.startsWith(prefix))
+    ?.slice(prefix.length);
+}

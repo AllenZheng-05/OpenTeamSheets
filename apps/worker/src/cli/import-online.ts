@@ -41,7 +41,7 @@ import {
   type OnlineTournament,
 } from "../import/limitless-online";
 import { createPoliteFetcher } from "../import/polite-fetch";
-import { check, connect } from "./supabase";
+import { check, connect, refreshStoredTotals } from "./supabase";
 
 // import_event() runs in one transaction per call; batches keep each request small.
 const BATCH_SIZE = 250;
@@ -206,6 +206,10 @@ for (const tournament of tournaments) {
     console.error(`\n${label}\n  failed: ${(error as Error).message}`);
   }
 }
+
+// Usage for the box page counts every placement, so it's recounted here,
+// once, rather than on visits.
+if (db) await refreshStoredTotals(db);
 
 if (reportPath) {
   writeFileSync(reportPath, ["# Team sheets to check\n", ...report].join("\n"));

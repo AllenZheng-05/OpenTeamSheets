@@ -47,3 +47,5 @@ jobs:
       # Game data first, so new Pokémon, moves and items exist for the teams.
       - run: pnpm data:sync --prod --yes
       - run: pnpm import:limitless --prod --yes
+      # Load the busiest pages, so the first visitor gets cached results.
+      - run: pnpm --filter @ots/tools warm-cache

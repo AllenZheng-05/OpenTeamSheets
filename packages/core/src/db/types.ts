@@ -70,6 +70,35 @@ export type Database = {
         };
         Relationships: [];
       };
+      box_usage_stats: {
+        Row: {
+          box_species: string;
+          placements: number;
+          regulation_id: string;
+          total: number;
+        };
+        Insert: {
+          box_species: string;
+          placements: number;
+          regulation_id: string;
+          total: number;
+        };
+        Update: {
+          box_species?: string;
+          placements?: number;
+          regulation_id?: string;
+          total?: number;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "box_usage_stats_regulation_id_fkey";
+            columns: ["regulation_id"];
+            isOneToOne: false;
+            referencedRelation: "regulations";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
       events: {
         Row: {
           created_at: string;
@@ -1167,10 +1196,12 @@ export type Database = {
       };
       is_team_visible: { Args: { p_team_id: string }; Returns: boolean };
       publish_team: { Args: { p_team_id: string }; Returns: undefined };
+      refresh_box_usage: { Args: { p_regulation: string }; Returns: undefined };
       refresh_search_tags: {
         Args: { p_after?: string; p_limit?: number };
         Returns: string;
       };
+      refresh_team_summaries: { Args: { p_scope: string }; Returns: undefined };
       search_placements: {
         Args: { filters?: Json };
         Returns: {

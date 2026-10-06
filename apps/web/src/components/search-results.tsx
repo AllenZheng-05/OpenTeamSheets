@@ -126,3 +126,24 @@ async function Counted({
 }) {
   return children(await counting);
 }
+
+/**
+ * Where results will be, while the first ones load. A search after that
+ * keeps the old results on screen, faded (SearchResultsFade), instead.
+ */
+export function SearchResultsSkeleton() {
+  return (
+    <div className="space-y-5" aria-busy="true">
+      <span className="sr-only">Loading teams…</span>
+      <div className="h-5 w-56 animate-pulse rounded bg-neutral-100" />
+      <ol className="space-y-3">
+        {Array.from({ length: 4 }, (_, i) => (
+          <li
+            key={i}
+            className="h-40 animate-pulse rounded-xl border border-neutral-200 bg-neutral-50"
+          />
+        ))}
+      </ol>
+    </div>
+  );
+}

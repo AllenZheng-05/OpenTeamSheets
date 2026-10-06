@@ -148,15 +148,19 @@ describe("getRegulationDataStatus", () => {
 });
 
 describe("spriteStyle", () => {
-  it("uses Pokémon HOME renders by default", () => {
-    expect(spriteStyle("incineroar")).toEqual({
+  it("prefers 3D renders when small and HOME renders when large", () => {
+    expect(spriteStyle("incineroar", "small")).toEqual({
+      normal: "dex",
+      shiny: "dex",
+    });
+    expect(spriteStyle("incineroar", "large")).toEqual({
       normal: "home-centered",
       shiny: "home-centered",
     });
   });
 
-  it("names the style a newer form does have", () => {
-    const style = spriteStyle("raichu-megax");
+  it("falls back to a style a newer form does have", () => {
+    const style = spriteStyle("raichu-megax", "large");
     expect(style.normal).not.toBe("home-centered");
     expect(style.shiny).toBeNull();
   });

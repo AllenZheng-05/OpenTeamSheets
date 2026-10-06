@@ -1,6 +1,7 @@
 import path from "node:path";
 import { createInterface } from "node:readline/promises";
 import { createClient, type SupabaseClient } from "@supabase/supabase-js";
+import { REGULATIONS } from "@ots/core";
 import type { Database } from "@ots/core/db";
 
 export type Db = SupabaseClient<Database>;
@@ -57,4 +58,34 @@ export function check<T extends { error: { message: string } | null }>(
 ): T {
   if (result.error) throw new Error(`${action}: ${result.error.message}`);
   return result;
+}
+
+/**
+ * Recounts the totals searches read instead of adding up every placement:
+ * box usage (box_usage_stats) and team totals (team_summaries), for every
+ * regulation that has started and then team totals across them all. One
+ * call per regulation, to stay within the API's statement timeout. Run
+ * after anything that changes placements, teams or box species.
+ */
+export async function refreshStoredTotals(db: Db): Promise<void> {
+  const started = REGULATIONS.filter(
+    (r) => Date.parse(r.startsAt) <= Date.now(),
+  );
+  for (const regulation of started) {
+    check(
+      await db.rpc("refresh_box_usage", { p_regulation: regulation.id }),
+      `Refreshing box usage for ${regulation.id}`,
+    );
+    check(
+      await db.rpc("refresh_team_summaries", { p_scope: regulation.id }),
+      `Refreshing team totals for ${regulation.id}`,
+    );
+  }
+  check(
+    await db.rpc("refresh_team_summaries", { p_scope: "*" }),
+    "Refreshing team totals for every regulation",
+  );
+  console.log(
+    `stored totals: refreshed for ${started.map((r) => r.id).join(", ")}`,
+  );
 }

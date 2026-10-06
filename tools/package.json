@@ -6,6 +6,7 @@
   "scripts": {
     "data:pull": "tsx src/data-pull.ts && tsx src/box-order.ts",
     "sprite-styles": "tsx src/sprite-styles.ts",
+    "warm-cache": "tsx src/warm-cache.ts",
     "typecheck": "tsc --noEmit",
     "test": "vitest run"
   },

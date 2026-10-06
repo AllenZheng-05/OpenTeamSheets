@@ -1,11 +1,16 @@
 import type { Metadata } from "next";
+import { Suspense } from "react";
 import { notFound } from "next/navigation";
 import { getCurrentRegulation } from "@ots/core";
 import {
   SearchPendingProvider,
   SearchResultsFade,
 } from "@/components/search-pending";
-import { readPage, SearchResults } from "@/components/search-results";
+import {
+  readPage,
+  SearchResults,
+  SearchResultsSkeleton,
+} from "@/components/search-results";
 import { TeamSearch } from "@/components/team-search";
 import { fillBoxInUrl } from "@/lib/box-server";
 import { readFilters } from "@/lib/search";
@@ -35,12 +40,15 @@ export default async function TournamentTeams({
         />
 
         <SearchResultsFade>
-          <SearchResults
-            path="/tournament"
-            filters={filters}
-            current={current}
-            page={page}
-          />
+          {/* The page shows at once; its first results stream in. */}
+          <Suspense fallback={<SearchResultsSkeleton />}>
+            <SearchResults
+              path="/tournament"
+              filters={filters}
+              current={current}
+              page={page}
+            />
+          </Suspense>
         </SearchResultsFade>
       </div>
     </SearchPendingProvider>

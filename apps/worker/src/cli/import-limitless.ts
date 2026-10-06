@@ -34,7 +34,7 @@ import {
   type OfficialEvent,
 } from "../import/limitless";
 import { createPoliteFetcher } from "../import/polite-fetch";
-import { check, connect } from "./supabase";
+import { check, connect, refreshStoredTotals } from "./supabase";
 
 // import_event() runs in one transaction per call; batches keep each request small.
 const BATCH_SIZE = 250;
@@ -157,6 +157,10 @@ for (const config of events) {
   }
   console.log(`  imported: ${created} new teams, ${merged} already known`);
 }
+
+// Usage for the box page counts every placement, so it's recounted here,
+// once, rather than on visits.
+if (db) await refreshStoredTotals(db);
 
 if (args.includes("--report")) {
   if (!reportPath || reportPath.startsWith("--")) {
