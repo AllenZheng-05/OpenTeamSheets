@@ -1,10 +1,12 @@
 import { unstable_cache } from "next/cache";
 import { REGULATIONS, type Regulation } from "@ots/core";
+import { TOURNAMENT_DATA_MAX_AGE, TOURNAMENT_DATA_TAG } from "@ots/core/config";
 import { gameData, regulationData } from "@ots/core/game-data";
 import { encodeBoxBits, getSpecies, nameOf } from "@ots/core/teams";
 import { readBox } from "./box-server";
 import type { Filters } from "./search";
 import { supabase } from "./supabase";
+import { dataVersion } from "./teams";
 
 // What the search bar can suggest: built on the server from core's game
 // data and the database, and loaded by the bar once from a cached route.
@@ -94,7 +96,7 @@ export function pokemonDetails(pokemonId: string): {
   return { moves: [...moves].sort(), abilities: [...abilities].sort() };
 }
 
-/** Archetypes and imported events, from the database, cached for an hour. */
+/** Archetypes and imported events, from the database, cached until an import. */
 const databaseOptions = unstable_cache(
   async (): Promise<{ archetypes: SearchOption[]; events: EventOption[] }> => {
     const [archetypes, events] = await Promise.all([
@@ -116,7 +118,7 @@ const databaseOptions = unstable_cache(
     };
   },
   ["search-database-options"],
-  { revalidate: 3600 },
+  { tags: [TOURNAMENT_DATA_TAG], revalidate: TOURNAMENT_DATA_MAX_AGE },
 );
 
 let cachedGameDataOptions: SearchOption[] | undefined;
@@ -155,8 +157,8 @@ function filterNames(filters: Filters): Record<string, string> {
 
 /**
  * What the search bar needs from the server. The long list of suggestions
- * isn't here: the bar loads it from /api/search-options, which browsers
- * cache across pages.
+ * isn't here: the bar loads it from /api/search-options?v=<optionsVersion>,
+ * which browsers and the CDN keep until an import changes the version.
  */
 export async function searchBarProps(filters: Filters): Promise<{
   archetypes: SearchOption[];
@@ -166,12 +168,16 @@ export async function searchBarProps(filters: Filters): Promise<{
   boxCount: number;
   /** The player's box as URL text (encodeBoxBits), for box searches. */
   boxCode: string;
+  /** Which import the options are from, for the options URL. */
+  optionsVersion: string;
 }> {
-  const [{ archetypes }, box] = await Promise.all([
+  const [{ archetypes }, box, optionsVersion] = await Promise.all([
     databaseOptions(),
     readBox(),
+    dataVersion(),
   ]);
   return {
+    optionsVersion,
     boxCount: box.size,
     boxCode: encodeBoxBits(box),
     archetypes,

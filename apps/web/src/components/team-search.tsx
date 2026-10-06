@@ -47,9 +47,13 @@ import { listFor, pillsOf, same, valueOf, type Pill } from "@/lib/search-pills";
 
 let searchOptions: Promise<SearchOptionsData> | undefined;
 
-/** The search bar's suggestions, fetched once per visit (and HTTP-cached). */
-function loadSearchOptions(): Promise<SearchOptionsData> {
-  searchOptions ??= fetch("/api/search-options").then((response) => {
+/**
+ * The search bar's suggestions, fetched once per visit. The URL names the
+ * import they're from, so browsers and the CDN keep them until the next.
+ */
+function loadSearchOptions(version: string): Promise<SearchOptionsData> {
+  const url = `/api/search-options?v=${encodeURIComponent(version)}`;
+  searchOptions ??= fetch(url).then((response) => {
     if (!response.ok) {
       searchOptions = undefined;
       throw new Error(`Search options: ${response.status}`);
@@ -81,6 +85,7 @@ export function TeamSearch({
   names: serverNames,
   boxCount,
   boxCode,
+  optionsVersion,
   size = "md",
 }: {
   /** The page searching: "/" for everything, "/tournament" for tournament teams. */
@@ -96,6 +101,8 @@ export function TeamSearch({
   boxCount: number;
   /** The player's box as URL text, put in the URL of box searches. */
   boxCode: string;
+  /** Which import the suggestions are from (searchBarProps). */
+  optionsVersion: string;
   size?: "md" | "lg";
 }) {
   const router = useRouter();
@@ -124,13 +131,13 @@ export function TeamSearch({
   const [loaded, setLoaded] = useState<SearchOptionsData | null>(null);
   useEffect(() => {
     let current = true;
-    void loadSearchOptions().then((data) => {
+    void loadSearchOptions(optionsVersion).then((data) => {
       if (current) setLoaded(data);
     });
     return () => {
       current = false;
     };
-  }, []);
+  }, [optionsVersion]);
   const events = loaded?.events ?? [];
 
   const all = useMemo(

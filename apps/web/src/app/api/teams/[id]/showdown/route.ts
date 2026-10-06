@@ -1,8 +1,9 @@
+import { TEAM_PASTE_MAX_AGE } from "@ots/core/config";
 import { teamShowdown } from "@/lib/teams";
 
 /**
  * A team as a Showdown paste, for Copy team on search results. A team's
- * sets never change once imported, so it's cached for a day.
+ * sets never change once imported, so browsers and the CDN keep it.
  */
 export async function GET(
   _request: Request,
@@ -13,7 +14,7 @@ export async function GET(
   return new Response(paste, {
     headers: {
       "Content-Type": "text/plain; charset=utf-8",
-      "Cache-Control": "public, max-age=86400, s-maxage=86400",
+      "Cache-Control": `public, max-age=${TEAM_PASTE_MAX_AGE}, immutable`,
     },
   });
 }

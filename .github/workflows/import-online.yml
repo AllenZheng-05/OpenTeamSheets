@@ -6,7 +6,9 @@ name: Import online tournaments
 
 on:
   schedule:
-    - cron: "0 9 * * *" # 09:00 UTC daily
+    # 09:00 UTC daily: IMPORT_CRON in packages/core/src/config.ts, which a
+    # test keeps this in step with.
+    - cron: "0 9 * * *"
   workflow_dispatch:
 
 permissions:
@@ -24,6 +26,9 @@ jobs:
     timeout-minutes: 90
     # Production secrets live in this environment, available only to main.
     environment: production
+    env:
+      # The site's exact address, without redirects (a GitHub variable).
+      SITE_URL: ${{ vars.SITE_URL }}
     steps:
       - uses: actions/checkout@v7
 
@@ -35,9 +40,12 @@ jobs:
           cache: pnpm
 
       - run: pnpm install --frozen-lockfile
+      # Imports, recounts the stored totals, then tells the site its data
+      # changed (SITE_URL, REVALIDATE_SECRET).
       - run: pnpm import:online --prod --yes
         env:
           SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
           SUPABASE_SECRET_KEY: ${{ secrets.SUPABASE_SECRET_KEY }}
+          REVALIDATE_SECRET: ${{ secrets.REVALIDATE_SECRET }}
       # Load the busiest pages, so the first visitor gets cached results.
       - run: pnpm --filter @ots/tools warm-cache
