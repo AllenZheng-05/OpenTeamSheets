@@ -64,7 +64,7 @@ export function check<T extends { error: { message: string } | null }>(
  * Recounts the totals searches read instead of adding up every placement:
  * box usage (box_usage_stats) and team totals (team_summaries), for every
  * regulation that has started and then team totals across them all. One
- * call per regulation, to stay within the API's statement timeout. Run
+ * call per regulation, to keep each statement short. Run
  * after anything that changes placements, teams or box species.
  */
 export async function refreshStoredTotals(db: Db): Promise<void> {
@@ -72,13 +72,14 @@ export async function refreshStoredTotals(db: Db): Promise<void> {
     (r) => Date.parse(r.startsAt) <= Date.now(),
   );
   for (const regulation of started) {
-    check(
-      await db.rpc("refresh_box_usage", { p_regulation: regulation.id }),
-      `Refreshing box usage for ${regulation.id}`,
-    );
+    // Team totals first: box usage is counted from them.
     check(
       await db.rpc("refresh_team_summaries", { p_scope: regulation.id }),
       `Refreshing team totals for ${regulation.id}`,
+    );
+    check(
+      await db.rpc("refresh_box_usage", { p_regulation: regulation.id }),
+      `Refreshing box usage for ${regulation.id}`,
     );
   }
   check(
