@@ -31,6 +31,12 @@ export const ONLINE_MIN_PLAYERS = 64;
 /** Tournaments that ended in the last this many days wait for final results. */
 export const ONLINE_SETTLE_DAYS = 2;
 
+/**
+ * Official events found on Limitless (import:limitless --discover) wait
+ * this many days after they end, for their teamlists to be published.
+ */
+export const OFFICIAL_SETTLE_DAYS = 2;
+
 /** Between requests to Limitless's API: it allows 50 every five minutes. */
 export const ONLINE_REQUEST_MS = 6500;
 
