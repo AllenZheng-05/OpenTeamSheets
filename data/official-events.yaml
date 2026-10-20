@@ -1,7 +1,10 @@
 # Official Play! Pokémon events, imported from Limitless VGC with
 # `pnpm import:limitless`. Masters division only.
 #
-#   id:         the event on limitlessvgc.com (https://limitlessvgc.com/tournaments/{id})
+# New events don't need listing: the daily import finds them on the
+# standings site (`--discover`). List one here to import it by hand.
+#
+#   id:         optional: the event on limitlessvgc.com (https://limitlessvgc.com/tournaments/{id})
 #   standings:  its standings site id (https://standings.limitlessvgc.com/{standings}/standings),
 #               linked as "Standings" from the event's page
 #   name:       the event's name on limitlessvgc.com

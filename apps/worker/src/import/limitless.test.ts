@@ -2,8 +2,11 @@ import { readFileSync } from "node:fs";
 import path from "node:path";
 import { describe, expect, it } from "vitest";
 import {
+  discoverEvents,
+  listedEventName,
   prepareOfficialEvent,
   readDates,
+  readEventList,
   readOfficialEvents,
   readStandingsPage,
   readTeamlistPage,
@@ -245,6 +248,21 @@ describe("prepareOfficialEvent", () => {
 });
 
 describe("readOfficialEvents", () => {
+  it("doesn't need an event's limitlessvgc.com id", () => {
+    expect(
+      readOfficialEvents(
+        [
+          "events:",
+          '  - standings: "0042"',
+          "    name: Regional Nice",
+          "    regulation: M-C",
+        ].join("\n"),
+      ),
+    ).toEqual([
+      { standings: "0042", name: "Regional Nice", regulation: "M-C" },
+    ]);
+  });
+
   it("reads the committed event list", () => {
     const events = readOfficialEvents(
       readFileSync(
@@ -276,5 +294,82 @@ describe("readOfficialEvents", () => {
         "event 1: `regulation` must be a regulation such as M-C",
       ].join("\n"),
     );
+  });
+});
+
+describe("readEventList", () => {
+  const list = readEventList(fixture("event-list.html"));
+
+  it("reads every event on the standings site, oldest first", () => {
+    expect(list.length).toBeGreaterThanOrEqual(42);
+    expect(list.map((e) => e.id)).toEqual(
+      [...list.map((e) => e.id)].sort((a, b) => a - b),
+    );
+    expect(list.find((e) => e.id === 42)).toMatchObject({
+      type: "regional",
+      city: "Nice",
+      date: "October 17–18, 2026",
+      completed: 1,
+    });
+  });
+
+  it("throws when the page has no event list", () => {
+    expect(() => readEventList("<html></html>")).toThrow(/event list/);
+  });
+});
+
+describe("listedEventName", () => {
+  const event = {
+    id: 1,
+    country: "US",
+    date: "June 12–14, 2026",
+    completed: 1,
+  };
+
+  it("names events as the event list does", () => {
+    expect(listedEventName({ ...event, type: "regional", city: "Nice" })).toBe(
+      "Regional Nice",
+    );
+    expect(listedEventName({ ...event, type: "special", city: "Turin" })).toBe(
+      "Special Event Turin",
+    );
+    expect(
+      listedEventName({ ...event, type: "international", city: "New Orleans" }),
+    ).toBe("NAIC 2026, New Orleans");
+    expect(
+      listedEventName({ ...event, type: "worlds", city: "San Francisco" }),
+    ).toBe("World Championships 2026");
+  });
+});
+
+describe("discoverEvents", () => {
+  const list = readEventList(fixture("event-list.html"));
+  const oct20 = new Date("2026-10-20T09:00:00Z");
+
+  it("finds finished events after the newest known one, in their regulation", () => {
+    expect(discoverEvents(list, 39, oct20, 2)).toEqual([
+      { standings: "0040", name: "Regional Recife", regulation: "M-C" },
+      { standings: "0041", name: "Regional Louisville", regulation: "M-C" },
+      { standings: "0042", name: "Regional Nice", regulation: "M-C" },
+    ]);
+  });
+
+  it("leaves out events from before the newest known one", () => {
+    // Campinas, Melbourne and Lima (30–32) were played before Champions.
+    const found = discoverEvents(list, 33, oct20, 2).map((e) => e.standings);
+    expect(found).not.toContain("0030");
+    expect(found[0]).toBe("0034");
+  });
+
+  it("waits for an event to settle after it ends", () => {
+    // Nice ended October 18: two days later it's in, one day later it isn't.
+    const oct19 = new Date("2026-10-19T09:00:00Z");
+    expect(discoverEvents(list, 41, oct19, 2)).toEqual([]);
+    expect(discoverEvents(list, 41, oct20, 2)).toHaveLength(1);
+  });
+
+  it("leaves out events still running", () => {
+    const running = list.map((e) => (e.id === 42 ? { ...e, completed: 0 } : e));
+    expect(discoverEvents(running, 41, oct20, 2)).toEqual([]);
   });
 });

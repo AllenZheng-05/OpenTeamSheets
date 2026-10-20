@@ -1,8 +1,12 @@
-name: Import online tournaments
+name: Import tournaments
 
-# Every day, imports new online tournaments from Limitless's API into
-# production. Each run resumes from the newest online event already
-# imported, so it makes a few requests. Run it by hand from the Actions tab.
+# Every day, imports new tournaments into production:
+# - online tournaments from Limitless's API, resuming from the newest one
+#   already imported, so it makes a few requests;
+# - official events from Limitless VGC's standings site: any newer than
+#   every event listed or imported, once finished and settled. A new
+#   Regional reads about 1,000 teamlist pages, one a second.
+# Run it by hand from the Actions tab.
 
 on:
   schedule:
@@ -20,13 +24,18 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
-  online:
-    name: online
+  import:
+    name: import
     runs-on: ubuntu-latest
-    timeout-minutes: 90
+    # Room for a weekend with two large official events.
+    timeout-minutes: 180
     # Production secrets live in this environment, available only to main.
     environment: production
     env:
+      SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+      SUPABASE_SECRET_KEY: ${{ secrets.SUPABASE_SECRET_KEY }}
+      # Each import tells the site its data changed when it's done.
+      REVALIDATE_SECRET: ${{ secrets.REVALIDATE_SECRET }}
       # The site's exact address, without redirects (a GitHub variable).
       SITE_URL: ${{ vars.SITE_URL }}
     steps:
@@ -40,12 +49,11 @@ jobs:
           cache: pnpm
 
       - run: pnpm install --frozen-lockfile
-      # Imports, recounts the stored totals, then tells the site its data
-      # changed (SITE_URL, REVALIDATE_SECRET).
+      # Each import recounts the stored totals, then tells the site.
       - run: pnpm import:online --prod --yes
-        env:
-          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
-          SUPABASE_SECRET_KEY: ${{ secrets.SUPABASE_SECRET_KEY }}
-          REVALIDATE_SECRET: ${{ secrets.REVALIDATE_SECRET }}
+      # Runs even if the online import failed: the sources are separate.
+      - if: success() || failure()
+        run: pnpm import:limitless --discover --prod --yes
       # Load the busiest pages, so the first visitor gets cached results.
-      - run: pnpm --filter @ots/tools warm-cache
+      - if: success() || failure()
+        run: pnpm --filter @ots/tools warm-cache

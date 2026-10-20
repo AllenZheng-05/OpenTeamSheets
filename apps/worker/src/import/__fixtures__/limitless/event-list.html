@@ -1,0 +1,1286 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" href="./favicon.ico" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <link href="./_app/immutable/assets/0.CELg2EiW.css" rel="stylesheet" />
+    <!--[-->
+    <meta
+      name="description"
+      content="In-depth Pokémon VGC tournament data. Standings, pairings, usage stats and more!"
+    />
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:site" content="@LimitlessVGC" />
+    <meta property="og:title" content="Limitless VGC Standings" />
+    <meta
+      property="og:description"
+      content="In-depth Pokémon VGC tournament data. Standings, pairings, usage stats and more!"
+    />
+    <meta
+      property="og:image"
+      content="https://standings.limitlessvgc.com/preview.png"
+    />
+    <meta property="og:site_name" content="Limitless VGC Standings" />
+    <link rel="manifest" href="/app.webmanifest" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="" />
+    <link
+      rel="preload"
+      as="style"
+      href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400..700&amp;family=Open+Sans+Condensed:wght@700&amp;display=swap"
+    />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400..700&amp;family=Open+Sans+Condensed:wght@700&amp;display=swap"
+    />
+    <link rel="stylesheet" href="/fontawesome/css/all.min.css?v=5.11.2" />
+    <!--[-->
+    <script
+      async
+      src="https://www.googletagmanager.com/gtag/js?id=G-5ZRMZRM06N"
+    ></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      gtag("js", new Date());
+
+      gtag("config", "G-5ZRMZRM06N");
+    </script>
+    <!--]-->
+    <!--]-->
+    <title>Limitless VGC Standings</title>
+  </head>
+  <body data-sveltekit-preload-data="tap">
+    <div style="display: contents">
+      <!--[--><!--[--><!----><!---->
+      <!--[!--><!--]-->
+      <div class="light" data-root="">
+        <div class="flex flex-col min-h-screen">
+          <!--[!--><!--]--><!---->
+          <header
+            class="flex gap-2 p-2 sm:py-2.5 dark:border-b-2 border-[#4d4d4d] justify-between items-center bg-[#080808] bg-header"
+          >
+            <div class="container flex justify-between">
+              <div class="flex gap-2 sm:gap-3 items-center">
+                <a href="https://limitlessvgc.com"
+                  ><img
+                    class="w-[80px] sm:w-[100px] self-center cursor-pointer"
+                    src="https://limitless3.nyc3.cdn.digitaloceanspaces.com/limitless/logo.png"
+                    alt="Limitless Logo"
+                /></a>
+                <nav>
+                  <ul class="flex">
+                    <li
+                      class="block text-white text-lg font-bold hover:bg-[rgba(94,94,94,0.3)]"
+                    >
+                      <a
+                        class="px-3 py-2 sm:px-3.5 sm:py-2.5 flex items-center"
+                        href="/"
+                        ><span>Standings</span></a
+                      >
+                    </li>
+                    <!---->
+                  </ul>
+                </nav>
+              </div>
+              <div class="flex gap-1.5 items-center text-white leading-4.5">
+                <a
+                  href="/follows"
+                  aria-label="favorites"
+                  class="p-2 border-1 border-[#555] rounded-lg"
+                  ><i class="fas fa-star"></i
+                ></a>
+                <button
+                  aria-label="darkmode toggle"
+                  class="p-2 border-1 border-[#555] rounded-lg"
+                >
+                  <i class="fas fa-moon text-center"></i>
+                </button>
+              </div>
+              <!---->
+            </div>
+          </header>
+          <!---->
+          <!--[!--><!--]--><!---->
+          <main class="flex-1 min-h-0">
+            <!--[!--><!----><!--[!--><!--]-->
+            <div class="container content">
+              <div
+                class="p-4 mb-4 text-blue-800 rounded-lg bg-blue-50 dark:bg-gray-800 dark:text-blue-400"
+              >
+                <p>
+                  On this page you can find detailed standings and usage stats
+                  for tournaments that have the necessary information available
+                  through
+                  <a href="https://rk9.gg/" class="underline">rk9.gg</a> or
+                  <a href="https://playlatam.net/" class="underline"
+                    >playlatam.net</a
+                  >. Please keep in mind that standings are calculated outside
+                  of the official tournament software and might contain errors.
+                </p>
+              </div>
+              <div class="mb-3">
+                <div class="relative">
+                  <input
+                    class="p-2 rounded-md border-solid border-2 border-[var(--lc-border)] text-[1rem] w-full"
+                    type="text"
+                    placeholder="Search tournament"
+                    value=""
+                  />
+                  <button
+                    class="absolute right-4 top-1/2 transform -translate-y-1/2 hidden"
+                    aria-label="Clear search"
+                  >
+                    <i class="fas fa-times"></i>
+                  </button>
+                </div>
+                <!---->
+              </div>
+              <div>
+                <!--[-->
+                <h2 class="text-center text-lg font-bold mb-2">2027 season</h2>
+                <ul class="grid gap-3 lg:grid-cols-2 mb-3">
+                  <!--[-->
+                  <li>
+                    <a
+                      href="/0042/standings"
+                      class="flex gap-4 items-center bg-[var(--lc-bg-two)] hover:bg-[var(--lc-el-two)] py-2 px-3 rounded-lg border-1 border-[var(--lc-border)]"
+                      ><img
+                        class="h-[71px] w-auto"
+                        src="https://limitless3.nyc3.cdn.digitaloceanspaces.com/web/tournaments/regional.png"
+                        alt="regional logo"
+                      />
+                      <div class="flex flex-col gap-1">
+                        <div class="font-bold text-xl">
+                          Regional Championship Nice
+                        </div>
+                        <div class="flex gap-2 items-center">
+                          <!--[--><img
+                            class="h-[24px] w-auto"
+                            src="https://r2.limitlesstcg.net/flags/FR.png"
+                            title="FR"
+                            alt="FR"
+                          /><!--]-->
+                          October 17–18, 2026
+                          <!--[!--><!--]-->
+                        </div>
+                      </div></a
+                    >
+                  </li>
+                  <li>
+                    <a
+                      href="/0041/standings"
+                      class="flex gap-4 items-center bg-[var(--lc-bg-two)] hover:bg-[var(--lc-el-two)] py-2 px-3 rounded-lg border-1 border-[var(--lc-border)]"
+                      ><img
+                        class="h-[71px] w-auto"
+                        src="https://limitless3.nyc3.cdn.digitaloceanspaces.com/web/tournaments/regional.png"
+                        alt="regional logo"
+                      />
+                      <div class="flex flex-col gap-1">
+                        <div class="font-bold text-xl">
+                          Regional Championship Louisville
+                        </div>
+                        <div class="flex gap-2 items-center">
+                          <!--[--><img
+                            class="h-[24px] w-auto"
+                            src="https://r2.limitlesstcg.net/flags/US.png"
+                            title="US"
+                            alt="US"
+                          /><!--]-->
+                          October 9–11, 2026
+                          <!--[!--><!--]-->
+                        </div>
+                      </div></a
+                    >
+                  </li>
+                  <li>
+                    <a
+                      href="/0040/standings"
+                      class="flex gap-4 items-center bg-[var(--lc-bg-two)] hover:bg-[var(--lc-el-two)] py-2 px-3 rounded-lg border-1 border-[var(--lc-border)]"
+                      ><img
+                        class="h-[71px] w-auto"
+                        src="https://limitless3.nyc3.cdn.digitaloceanspaces.com/web/tournaments/regional.png"
+                        alt="regional logo"
+                      />
+                      <div class="flex flex-col gap-1">
+                        <div class="font-bold text-xl">
+                          Regional Championship Recife
+                        </div>
+                        <div class="flex gap-2 items-center">
+                          <!--[--><img
+                            class="h-[24px] w-auto"
+                            src="https://r2.limitlesstcg.net/flags/BR.png"
+                            title="BR"
+                            alt="BR"
+                          /><!--]-->
+                          October 3–4, 2026
+                          <!--[!--><!--]-->
+                        </div>
+                      </div></a
+                    >
+                  </li>
+                  <li>
+                    <a
+                      href="/0039/standings"
+                      class="flex gap-4 items-center bg-[var(--lc-bg-two)] hover:bg-[var(--lc-el-two)] py-2 px-3 rounded-lg border-1 border-[var(--lc-border)]"
+                      ><img
+                        class="h-[71px] w-auto"
+                        src="https://limitless3.nyc3.cdn.digitaloceanspaces.com/web/tournaments/regional.png"
+                        alt="regional logo"
+                      />
+                      <div class="flex flex-col gap-1">
+                        <div class="font-bold text-xl">
+                          Regional Championship Frankfurt
+                        </div>
+                        <div class="flex gap-2 items-center">
+                          <!--[--><img
+                            class="h-[24px] w-auto"
+                            src="https://r2.limitlesstcg.net/flags/DE.png"
+                            title="DE"
+                            alt="DE"
+                          /><!--]-->
+                          September 26–27, 2026
+                          <!--[!--><!--]-->
+                        </div>
+                      </div></a
+                    >
+                  </li>
+                  <li>
+                    <a
+                      href="/0038/standings"
+                      class="flex gap-4 items-center bg-[var(--lc-bg-two)] hover:bg-[var(--lc-el-two)] py-2 px-3 rounded-lg border-1 border-[var(--lc-border)]"
+                      ><img
+                        class="h-[71px] w-auto"
+                        src="https://limitless3.nyc3.cdn.digitaloceanspaces.com/web/tournaments/regional.png"
+                        alt="regional logo"
+                      />
+                      <div class="flex flex-col gap-1">
+                        <div class="font-bold text-xl">
+                          Regional Championship Brisbane
+                        </div>
+                        <div class="flex gap-2 items-center">
+                          <!--[--><img
+                            class="h-[24px] w-auto"
+                            src="https://r2.limitlesstcg.net/flags/AU.png"
+                            title="AU"
+                            alt="AU"
+                          /><!--]-->
+                          September 26–27, 2026
+                          <!--[!--><!--]-->
+                        </div>
+                      </div></a
+                    >
+                  </li>
+                  <li>
+                    <a
+                      href="/0037/standings"
+                      class="flex gap-4 items-center bg-[var(--lc-bg-two)] hover:bg-[var(--lc-el-two)] py-2 px-3 rounded-lg border-1 border-[var(--lc-border)]"
+                      ><img
+                        class="h-[71px] w-auto"
+                        src="https://limitless3.nyc3.cdn.digitaloceanspaces.com/web/tournaments/regional.png"
+                        alt="regional logo"
+                      />
+                      <div class="flex flex-col gap-1">
+                        <div class="font-bold text-xl">
+                          Regional Championship Baltimore
+                        </div>
+                        <div class="flex gap-2 items-center">
+                          <!--[--><img
+                            class="h-[24px] w-auto"
+                            src="https://r2.limitlesstcg.net/flags/US.png"
+                            title="US"
+                            alt="US"
+                          /><!--]-->
+                          September 18–20, 2026
+                          <!--[!--><!--]-->
+                        </div>
+                      </div></a
+                    >
+                  </li>
+                  <!--]-->
+                </ul>
+                <h2 class="text-center text-lg font-bold mb-2">2026 season</h2>
+                <ul class="grid gap-3 lg:grid-cols-2 mb-3">
+                  <!--[-->
+                  <li>
+                    <a
+                      href="/0036/standings"
+                      class="flex gap-4 items-center bg-[var(--lc-bg-two)] hover:bg-[var(--lc-el-two)] py-2 px-3 rounded-lg border-1 border-[var(--lc-border)]"
+                      ><img
+                        class="h-[71px] w-auto"
+                        src="https://limitless3.nyc3.cdn.digitaloceanspaces.com/web/tournaments/worlds.png"
+                        alt="worlds logo"
+                      />
+                      <div class="flex flex-col gap-1">
+                        <div class="font-bold text-xl">
+                          World Championship San Francisco
+                        </div>
+                        <div class="flex gap-2 items-center">
+                          <!--[--><img
+                            class="h-[24px] w-auto"
+                            src="https://r2.limitlesstcg.net/flags/US.png"
+                            title="US"
+                            alt="US"
+                          /><!--]-->
+                          August 28–30, 2026
+                          <!--[!--><!--]-->
+                        </div>
+                      </div></a
+                    >
+                  </li>
+                  <li>
+                    <a
+                      href="/0035/standings"
+                      class="flex gap-4 items-center bg-[var(--lc-bg-two)] hover:bg-[var(--lc-el-two)] py-2 px-3 rounded-lg border-1 border-[var(--lc-border)]"
+                      ><img
+                        class="h-[71px] w-auto"
+                        src="https://limitless3.nyc3.cdn.digitaloceanspaces.com/web/tournaments/international.png"
+                        alt="international logo"
+                      />
+                      <div class="flex flex-col gap-1">
+                        <div class="font-bold text-xl">
+                          International Championship New Orleans
+                        </div>
+                        <div class="flex gap-2 items-center">
+                          <!--[--><img
+                            class="h-[24px] w-auto"
+                            src="https://r2.limitlesstcg.net/flags/US.png"
+                            title="US"
+                            alt="US"
+                          /><!--]-->
+                          June 12–14, 2026
+                          <!--[!--><!--]-->
+                        </div>
+                      </div></a
+                    >
+                  </li>
+                  <li>
+                    <a
+                      href="/0034/standings"
+                      class="flex gap-4 items-center bg-[var(--lc-bg-two)] hover:bg-[var(--lc-el-two)] py-2 px-3 rounded-lg border-1 border-[var(--lc-border)]"
+                      ><img
+                        class="h-[71px] w-auto"
+                        src="https://limitless3.nyc3.cdn.digitaloceanspaces.com/web/tournaments/special.png"
+                        alt="special logo"
+                      />
+                      <div class="flex flex-col gap-1">
+                        <div class="font-bold text-xl">Special Event Turin</div>
+                        <div class="flex gap-2 items-center">
+                          <!--[--><img
+                            class="h-[24px] w-auto"
+                            src="https://r2.limitlesstcg.net/flags/IT.png"
+                            title="IT"
+                            alt="IT"
+                          /><!--]-->
+                          June 6–7, 2026
+                          <!--[!--><!--]-->
+                        </div>
+                      </div></a
+                    >
+                  </li>
+                  <li>
+                    <a
+                      href="/0033/standings"
+                      class="flex gap-4 items-center bg-[var(--lc-bg-two)] hover:bg-[var(--lc-el-two)] py-2 px-3 rounded-lg border-1 border-[var(--lc-border)]"
+                      ><img
+                        class="h-[71px] w-auto"
+                        src="https://limitless3.nyc3.cdn.digitaloceanspaces.com/web/tournaments/regional.png"
+                        alt="regional logo"
+                      />
+                      <div class="flex flex-col gap-1">
+                        <div class="font-bold text-xl">
+                          Regional Championship Indianapolis
+                        </div>
+                        <div class="flex gap-2 items-center">
+                          <!--[--><img
+                            class="h-[24px] w-auto"
+                            src="https://r2.limitlesstcg.net/flags/US.png"
+                            title="US"
+                            alt="US"
+                          /><!--]-->
+                          May 29–31, 2026
+                          <!--[!--><!--]-->
+                        </div>
+                      </div></a
+                    >
+                  </li>
+                  <li>
+                    <a
+                      href="/0032/standings"
+                      class="flex gap-4 items-center bg-[var(--lc-bg-two)] hover:bg-[var(--lc-el-two)] py-2 px-3 rounded-lg border-1 border-[var(--lc-border)]"
+                      ><img
+                        class="h-[71px] w-auto"
+                        src="https://limitless3.nyc3.cdn.digitaloceanspaces.com/web/tournaments/special.png"
+                        alt="special logo"
+                      />
+                      <div class="flex flex-col gap-1">
+                        <div class="font-bold text-xl">Special Event Lima</div>
+                        <div class="flex gap-2 items-center">
+                          <!--[--><img
+                            class="h-[24px] w-auto"
+                            src="https://r2.limitlesstcg.net/flags/PE.png"
+                            title="PE"
+                            alt="PE"
+                          /><!--]-->
+                          May 23–24, 2026
+                          <!--[!--><!--]-->
+                        </div>
+                      </div></a
+                    >
+                  </li>
+                  <li>
+                    <a
+                      href="/0031/standings"
+                      class="flex gap-4 items-center bg-[var(--lc-bg-two)] hover:bg-[var(--lc-el-two)] py-2 px-3 rounded-lg border-1 border-[var(--lc-border)]"
+                      ><img
+                        class="h-[71px] w-auto"
+                        src="https://limitless3.nyc3.cdn.digitaloceanspaces.com/web/tournaments/regional.png"
+                        alt="regional logo"
+                      />
+                      <div class="flex flex-col gap-1">
+                        <div class="font-bold text-xl">
+                          Regional Championship Melbourne
+                        </div>
+                        <div class="flex gap-2 items-center">
+                          <!--[--><img
+                            class="h-[24px] w-auto"
+                            src="https://r2.limitlesstcg.net/flags/AU.png"
+                            title="AU"
+                            alt="AU"
+                          /><!--]-->
+                          May 23–24, 2026
+                          <!--[!--><!--]-->
+                        </div>
+                      </div></a
+                    >
+                  </li>
+                  <li>
+                    <a
+                      href="/0030/standings"
+                      class="flex gap-4 items-center bg-[var(--lc-bg-two)] hover:bg-[var(--lc-el-two)] py-2 px-3 rounded-lg border-1 border-[var(--lc-border)]"
+                      ><img
+                        class="h-[71px] w-auto"
+                        src="https://limitless3.nyc3.cdn.digitaloceanspaces.com/web/tournaments/regional.png"
+                        alt="regional logo"
+                      />
+                      <div class="flex flex-col gap-1">
+                        <div class="font-bold text-xl">
+                          Regional Championship Campinas
+                        </div>
+                        <div class="flex gap-2 items-center">
+                          <!--[--><img
+                            class="h-[24px] w-auto"
+                            src="https://r2.limitlesstcg.net/flags/BR.png"
+                            title="BR"
+                            alt="BR"
+                          /><!--]-->
+                          May 16–17, 2026
+                          <!--[!--><!--]-->
+                        </div>
+                      </div></a
+                    >
+                  </li>
+                  <li>
+                    <a
+                      href="/0029/standings"
+                      class="flex gap-4 items-center bg-[var(--lc-bg-two)] hover:bg-[var(--lc-el-two)] py-2 px-3 rounded-lg border-1 border-[var(--lc-border)]"
+                      ><img
+                        class="h-[71px] w-auto"
+                        src="https://limitless3.nyc3.cdn.digitaloceanspaces.com/web/tournaments/regional.png"
+                        alt="regional logo"
+                      />
+                      <div class="flex flex-col gap-1">
+                        <div class="font-bold text-xl">
+                          Regional Championship Utrecht
+                        </div>
+                        <div class="flex gap-2 items-center">
+                          <!--[--><img
+                            class="h-[24px] w-auto"
+                            src="https://r2.limitlesstcg.net/flags/NL.png"
+                            title="NL"
+                            alt="NL"
+                          /><!--]-->
+                          May 16–17, 2026
+                          <!--[!--><!--]-->
+                        </div>
+                      </div></a
+                    >
+                  </li>
+                  <li>
+                    <a
+                      href="/0028/standings"
+                      class="flex gap-4 items-center bg-[var(--lc-bg-two)] hover:bg-[var(--lc-el-two)] py-2 px-3 rounded-lg border-1 border-[var(--lc-border)]"
+                      ><img
+                        class="h-[71px] w-auto"
+                        src="https://limitless3.nyc3.cdn.digitaloceanspaces.com/web/tournaments/regional.png"
+                        alt="regional logo"
+                      />
+                      <div class="flex flex-col gap-1">
+                        <div class="font-bold text-xl">
+                          Regional Championship Los Angeles
+                        </div>
+                        <div class="flex gap-2 items-center">
+                          <!--[--><img
+                            class="h-[24px] w-auto"
+                            src="https://r2.limitlesstcg.net/flags/US.png"
+                            title="US"
+                            alt="US"
+                          /><!--]-->
+                          May 8–10, 2026
+                          <!--[!--><!--]-->
+                        </div>
+                      </div></a
+                    >
+                  </li>
+                  <li>
+                    <a
+                      href="/0027/standings"
+                      class="flex gap-4 items-center bg-[var(--lc-bg-two)] hover:bg-[var(--lc-el-two)] py-2 px-3 rounded-lg border-1 border-[var(--lc-border)]"
+                      ><img
+                        class="h-[71px] w-auto"
+                        src="https://limitless3.nyc3.cdn.digitaloceanspaces.com/web/tournaments/regional.png"
+                        alt="regional logo"
+                      />
+                      <div class="flex flex-col gap-1">
+                        <div class="font-bold text-xl">
+                          Regional Championship Prague
+                        </div>
+                        <div class="flex gap-2 items-center">
+                          <!--[--><img
+                            class="h-[24px] w-auto"
+                            src="https://r2.limitlesstcg.net/flags/CZ.png"
+                            title="CZ"
+                            alt="CZ"
+                          /><!--]-->
+                          April 25–26, 2026
+                          <!--[!--><!--]-->
+                        </div>
+                      </div></a
+                    >
+                  </li>
+                  <li>
+                    <a
+                      href="/0026/standings"
+                      class="flex gap-4 items-center bg-[var(--lc-bg-two)] hover:bg-[var(--lc-el-two)] py-2 px-3 rounded-lg border-1 border-[var(--lc-border)]"
+                      ><img
+                        class="h-[71px] w-auto"
+                        src="https://limitless3.nyc3.cdn.digitaloceanspaces.com/web/tournaments/regional.png"
+                        alt="regional logo"
+                      />
+                      <div class="flex flex-col gap-1">
+                        <div class="font-bold text-xl">
+                          Regional Championship Querétaro
+                        </div>
+                        <div class="flex gap-2 items-center">
+                          <!--[--><img
+                            class="h-[24px] w-auto"
+                            src="https://r2.limitlesstcg.net/flags/MX.png"
+                            title="MX"
+                            alt="MX"
+                          /><!--]-->
+                          April 4–5, 2026
+                          <!--[!--><!--]-->
+                        </div>
+                      </div></a
+                    >
+                  </li>
+                  <li>
+                    <a
+                      href="/0025/standings"
+                      class="flex gap-4 items-center bg-[var(--lc-bg-two)] hover:bg-[var(--lc-el-two)] py-2 px-3 rounded-lg border-1 border-[var(--lc-border)]"
+                      ><img
+                        class="h-[71px] w-auto"
+                        src="https://limitless3.nyc3.cdn.digitaloceanspaces.com/web/tournaments/regional.png"
+                        alt="regional logo"
+                      />
+                      <div class="flex flex-col gap-1">
+                        <div class="font-bold text-xl">
+                          Regional Championship Orlando
+                        </div>
+                        <div class="flex gap-2 items-center">
+                          <!--[--><img
+                            class="h-[24px] w-auto"
+                            src="https://r2.limitlesstcg.net/flags/US.png"
+                            title="US"
+                            alt="US"
+                          /><!--]-->
+                          April 3–5, 2026
+                          <!--[!--><!--]-->
+                        </div>
+                      </div></a
+                    >
+                  </li>
+                  <li>
+                    <a
+                      href="/0024/standings"
+                      class="flex gap-4 items-center bg-[var(--lc-bg-two)] hover:bg-[var(--lc-el-two)] py-2 px-3 rounded-lg border-1 border-[var(--lc-border)]"
+                      ><img
+                        class="h-[71px] w-auto"
+                        src="https://limitless3.nyc3.cdn.digitaloceanspaces.com/web/tournaments/special.png"
+                        alt="special logo"
+                      />
+                      <div class="flex flex-col gap-1">
+                        <div class="font-bold text-xl">
+                          Special Event Seville
+                        </div>
+                        <div class="flex gap-2 items-center">
+                          <!--[--><img
+                            class="h-[24px] w-auto"
+                            src="https://r2.limitlesstcg.net/flags/ES.png"
+                            title="ES"
+                            alt="ES"
+                          /><!--]-->
+                          March 28–29, 2026
+                          <!--[!--><!--]-->
+                        </div>
+                      </div></a
+                    >
+                  </li>
+                  <li>
+                    <a
+                      href="/0023/standings"
+                      class="flex gap-4 items-center bg-[var(--lc-bg-two)] hover:bg-[var(--lc-el-two)] py-2 px-3 rounded-lg border-1 border-[var(--lc-border)]"
+                      ><img
+                        class="h-[71px] w-auto"
+                        src="https://limitless3.nyc3.cdn.digitaloceanspaces.com/web/tournaments/regional.png"
+                        alt="regional logo"
+                      />
+                      <div class="flex flex-col gap-1">
+                        <div class="font-bold text-xl">
+                          Regional Championship Houston
+                        </div>
+                        <div class="flex gap-2 items-center">
+                          <!--[--><img
+                            class="h-[24px] w-auto"
+                            src="https://r2.limitlesstcg.net/flags/US.png"
+                            title="US"
+                            alt="US"
+                          /><!--]-->
+                          March 20–22, 2026
+                          <!--[!--><!--]-->
+                        </div>
+                      </div></a
+                    >
+                  </li>
+                  <li>
+                    <a
+                      href="/0022/standings"
+                      class="flex gap-4 items-center bg-[var(--lc-bg-two)] hover:bg-[var(--lc-el-two)] py-2 px-3 rounded-lg border-1 border-[var(--lc-border)]"
+                      ><img
+                        class="h-[71px] w-auto"
+                        src="https://limitless3.nyc3.cdn.digitaloceanspaces.com/web/tournaments/regional.png"
+                        alt="regional logo"
+                      />
+                      <div class="flex flex-col gap-1">
+                        <div class="font-bold text-xl">
+                          Regional Championship Curitiba
+                        </div>
+                        <div class="flex gap-2 items-center">
+                          <!--[--><img
+                            class="h-[24px] w-auto"
+                            src="https://r2.limitlesstcg.net/flags/BR.png"
+                            title="BR"
+                            alt="BR"
+                          /><!--]-->
+                          March 14–15, 2026
+                          <!--[!--><!--]-->
+                        </div>
+                      </div></a
+                    >
+                  </li>
+                  <li>
+                    <a
+                      href="/0021/standings"
+                      class="flex gap-4 items-center bg-[var(--lc-bg-two)] hover:bg-[var(--lc-el-two)] py-2 px-3 rounded-lg border-1 border-[var(--lc-border)]"
+                      ><img
+                        class="h-[71px] w-auto"
+                        src="https://limitless3.nyc3.cdn.digitaloceanspaces.com/web/tournaments/special.png"
+                        alt="special logo"
+                      />
+                      <div class="flex flex-col gap-1">
+                        <div class="font-bold text-xl">
+                          Special Event San Juan
+                        </div>
+                        <div class="flex gap-2 items-center">
+                          <!--[--><img
+                            class="h-[24px] w-auto"
+                            src="https://r2.limitlesstcg.net/flags/PR.png"
+                            title="PR"
+                            alt="PR"
+                          /><!--]-->
+                          March 7–8, 2026
+                          <!--[!--><!--]-->
+                        </div>
+                      </div></a
+                    >
+                  </li>
+                  <li>
+                    <a
+                      href="/0020/standings"
+                      class="flex gap-4 items-center bg-[var(--lc-bg-two)] hover:bg-[var(--lc-el-two)] py-2 px-3 rounded-lg border-1 border-[var(--lc-border)]"
+                      ><img
+                        class="h-[71px] w-auto"
+                        src="https://limitless3.nyc3.cdn.digitaloceanspaces.com/web/tournaments/regional.png"
+                        alt="regional logo"
+                      />
+                      <div class="flex flex-col gap-1">
+                        <div class="font-bold text-xl">
+                          Regional Championship Seattle
+                        </div>
+                        <div class="flex gap-2 items-center">
+                          <!--[--><img
+                            class="h-[24px] w-auto"
+                            src="https://r2.limitlesstcg.net/flags/US.png"
+                            title="US"
+                            alt="US"
+                          /><!--]-->
+                          February 27–March 1, 2026
+                          <!--[!--><!--]-->
+                        </div>
+                      </div></a
+                    >
+                  </li>
+                  <li>
+                    <a
+                      href="/0019/standings"
+                      class="flex gap-4 items-center bg-[var(--lc-bg-two)] hover:bg-[var(--lc-el-two)] py-2 px-3 rounded-lg border-1 border-[var(--lc-border)]"
+                      ><img
+                        class="h-[71px] w-auto"
+                        src="https://limitless3.nyc3.cdn.digitaloceanspaces.com/web/tournaments/international.png"
+                        alt="international logo"
+                      />
+                      <div class="flex flex-col gap-1">
+                        <div class="font-bold text-xl">
+                          International Championship London
+                        </div>
+                        <div class="flex gap-2 items-center">
+                          <!--[--><img
+                            class="h-[24px] w-auto"
+                            src="https://r2.limitlesstcg.net/flags/GB.png"
+                            title="GB"
+                            alt="GB"
+                          /><!--]-->
+                          February 13–15, 2026
+                          <!--[!--><!--]-->
+                        </div>
+                      </div></a
+                    >
+                  </li>
+                  <li>
+                    <a
+                      href="/0018/standings"
+                      class="flex gap-4 items-center bg-[var(--lc-bg-two)] hover:bg-[var(--lc-el-two)] py-2 px-3 rounded-lg border-1 border-[var(--lc-border)]"
+                      ><img
+                        class="h-[71px] w-auto"
+                        src="https://limitless3.nyc3.cdn.digitaloceanspaces.com/web/tournaments/regional.png"
+                        alt="regional logo"
+                      />
+                      <div class="flex flex-col gap-1">
+                        <div class="font-bold text-xl">
+                          Regional Championship Santiago
+                        </div>
+                        <div class="flex gap-2 items-center">
+                          <!--[--><img
+                            class="h-[24px] w-auto"
+                            src="https://r2.limitlesstcg.net/flags/CL.png"
+                            title="CL"
+                            alt="CL"
+                          /><!--]-->
+                          February 7–8, 2026
+                          <!--[!--><!--]-->
+                        </div>
+                      </div></a
+                    >
+                  </li>
+                  <li>
+                    <a
+                      href="/0017/standings"
+                      class="flex gap-4 items-center bg-[var(--lc-bg-two)] hover:bg-[var(--lc-el-two)] py-2 px-3 rounded-lg border-1 border-[var(--lc-border)]"
+                      ><img
+                        class="h-[71px] w-auto"
+                        src="https://limitless3.nyc3.cdn.digitaloceanspaces.com/web/tournaments/regional.png"
+                        alt="regional logo"
+                      />
+                      <div class="flex flex-col gap-1">
+                        <div class="font-bold text-xl">
+                          Regional Championship Sydney
+                        </div>
+                        <div class="flex gap-2 items-center">
+                          <!--[--><img
+                            class="h-[24px] w-auto"
+                            src="https://r2.limitlesstcg.net/flags/AU.png"
+                            title="AU"
+                            alt="AU"
+                          /><!--]-->
+                          February 7–8, 2026
+                          <!--[!--><!--]-->
+                        </div>
+                      </div></a
+                    >
+                  </li>
+                  <li>
+                    <a
+                      href="/0014/standings"
+                      class="flex gap-4 items-center bg-[var(--lc-bg-two)] hover:bg-[var(--lc-el-two)] py-2 px-3 rounded-lg border-1 border-[var(--lc-border)]"
+                      ><img
+                        class="h-[71px] w-auto"
+                        src="https://limitless3.nyc3.cdn.digitaloceanspaces.com/web/tournaments/regional.png"
+                        alt="regional logo"
+                      />
+                      <div class="flex flex-col gap-1">
+                        <div class="font-bold text-xl">
+                          Regional Championship Mérida
+                        </div>
+                        <div class="flex gap-2 items-center">
+                          <!--[--><img
+                            class="h-[24px] w-auto"
+                            src="https://r2.limitlesstcg.net/flags/MX.png"
+                            title="MX"
+                            alt="MX"
+                          /><!--]-->
+                          January 24–25, 2026
+                          <!--[!--><!--]-->
+                        </div>
+                      </div></a
+                    >
+                  </li>
+                  <li>
+                    <a
+                      href="/0013/standings"
+                      class="flex gap-4 items-center bg-[var(--lc-bg-two)] hover:bg-[var(--lc-el-two)] py-2 px-3 rounded-lg border-1 border-[var(--lc-border)]"
+                      ><img
+                        class="h-[71px] w-auto"
+                        src="https://limitless3.nyc3.cdn.digitaloceanspaces.com/web/tournaments/regional.png"
+                        alt="regional logo"
+                      />
+                      <div class="flex flex-col gap-1">
+                        <div class="font-bold text-xl">
+                          Regional Championship Birmingham
+                        </div>
+                        <div class="flex gap-2 items-center">
+                          <!--[--><img
+                            class="h-[24px] w-auto"
+                            src="https://r2.limitlesstcg.net/flags/GB.png"
+                            title="GB"
+                            alt="GB"
+                          /><!--]-->
+                          January 24–25, 2026
+                          <!--[!--><!--]-->
+                        </div>
+                      </div></a
+                    >
+                  </li>
+                  <li>
+                    <a
+                      href="/0012/standings"
+                      class="flex gap-4 items-center bg-[var(--lc-bg-two)] hover:bg-[var(--lc-el-two)] py-2 px-3 rounded-lg border-1 border-[var(--lc-border)]"
+                      ><img
+                        class="h-[71px] w-auto"
+                        src="https://limitless3.nyc3.cdn.digitaloceanspaces.com/web/tournaments/regional.png"
+                        alt="regional logo"
+                      />
+                      <div class="flex flex-col gap-1">
+                        <div class="font-bold text-xl">
+                          Regional Championship Toronto
+                        </div>
+                        <div class="flex gap-2 items-center">
+                          <!--[--><img
+                            class="h-[24px] w-auto"
+                            src="https://r2.limitlesstcg.net/flags/CA.png"
+                            title="CA"
+                            alt="CA"
+                          /><!--]-->
+                          January 16–18, 2026
+                          <!--[!--><!--]-->
+                        </div>
+                      </div></a
+                    >
+                  </li>
+                  <li>
+                    <a
+                      href="/0011/standings"
+                      class="flex gap-4 items-center bg-[var(--lc-bg-two)] hover:bg-[var(--lc-el-two)] py-2 px-3 rounded-lg border-1 border-[var(--lc-border)]"
+                      ><img
+                        class="h-[71px] w-auto"
+                        src="https://limitless3.nyc3.cdn.digitaloceanspaces.com/web/tournaments/regional.png"
+                        alt="regional logo"
+                      />
+                      <div class="flex flex-col gap-1">
+                        <div class="font-bold text-xl">
+                          Regional Championship Stuttgart
+                        </div>
+                        <div class="flex gap-2 items-center">
+                          <!--[--><img
+                            class="h-[24px] w-auto"
+                            src="https://r2.limitlesstcg.net/flags/DE.png"
+                            title="DE"
+                            alt="DE"
+                          /><!--]-->
+                          November 29–30, 2025
+                          <!--[!--><!--]-->
+                        </div>
+                      </div></a
+                    >
+                  </li>
+                  <li>
+                    <a
+                      href="/0010/standings"
+                      class="flex gap-4 items-center bg-[var(--lc-bg-two)] hover:bg-[var(--lc-el-two)] py-2 px-3 rounded-lg border-1 border-[var(--lc-border)]"
+                      ><img
+                        class="h-[71px] w-auto"
+                        src="https://limitless3.nyc3.cdn.digitaloceanspaces.com/web/tournaments/international.png"
+                        alt="international logo"
+                      />
+                      <div class="flex flex-col gap-1">
+                        <div class="font-bold text-xl">
+                          International Championship São Paulo
+                        </div>
+                        <div class="flex gap-2 items-center">
+                          <!--[--><img
+                            class="h-[24px] w-auto"
+                            src="https://r2.limitlesstcg.net/flags/BR.png"
+                            title="BR"
+                            alt="BR"
+                          /><!--]-->
+                          November 21–23, 2025
+                          <!--[!--><!--]-->
+                        </div>
+                      </div></a
+                    >
+                  </li>
+                  <li>
+                    <a
+                      href="/0009/standings"
+                      class="flex gap-4 items-center bg-[var(--lc-bg-two)] hover:bg-[var(--lc-el-two)] py-2 px-3 rounded-lg border-1 border-[var(--lc-border)]"
+                      ><img
+                        class="h-[71px] w-auto"
+                        src="https://limitless3.nyc3.cdn.digitaloceanspaces.com/web/tournaments/regional.png"
+                        alt="regional logo"
+                      />
+                      <div class="flex flex-col gap-1">
+                        <div class="font-bold text-xl">
+                          Regional Championship Las Vegas
+                        </div>
+                        <div class="flex gap-2 items-center">
+                          <!--[--><img
+                            class="h-[24px] w-auto"
+                            src="https://r2.limitlesstcg.net/flags/US.png"
+                            title="US"
+                            alt="US"
+                          /><!--]-->
+                          November 14–16, 2025
+                          <!--[!--><!--]-->
+                        </div>
+                      </div></a
+                    >
+                  </li>
+                  <li>
+                    <a
+                      href="/0008/standings"
+                      class="flex gap-4 items-center bg-[var(--lc-bg-two)] hover:bg-[var(--lc-el-two)] py-2 px-3 rounded-lg border-1 border-[var(--lc-border)]"
+                      ><img
+                        class="h-[71px] w-auto"
+                        src="https://limitless3.nyc3.cdn.digitaloceanspaces.com/web/tournaments/regional.png"
+                        alt="regional logo"
+                      />
+                      <div class="flex flex-col gap-1">
+                        <div class="font-bold text-xl">
+                          Regional Championship Gdańsk
+                        </div>
+                        <div class="flex gap-2 items-center">
+                          <!--[--><img
+                            class="h-[24px] w-auto"
+                            src="https://r2.limitlesstcg.net/flags/PL.png"
+                            title="PL"
+                            alt="PL"
+                          /><!--]-->
+                          November 1–2, 2025
+                          <!--[!--><!--]-->
+                        </div>
+                      </div></a
+                    >
+                  </li>
+                  <li>
+                    <a
+                      href="/0007/standings"
+                      class="flex gap-4 items-center bg-[var(--lc-bg-two)] hover:bg-[var(--lc-el-two)] py-2 px-3 rounded-lg border-1 border-[var(--lc-border)]"
+                      ><img
+                        class="h-[71px] w-auto"
+                        src="https://limitless3.nyc3.cdn.digitaloceanspaces.com/web/tournaments/regional.png"
+                        alt="regional logo"
+                      />
+                      <div class="flex flex-col gap-1">
+                        <div class="font-bold text-xl">
+                          Regional Championship Brisbane
+                        </div>
+                        <div class="flex gap-2 items-center">
+                          <!--[--><img
+                            class="h-[24px] w-auto"
+                            src="https://r2.limitlesstcg.net/flags/AU.png"
+                            title="AU"
+                            alt="AU"
+                          /><!--]-->
+                          November 1–2, 2025
+                          <!--[!--><!--]-->
+                        </div>
+                      </div></a
+                    >
+                  </li>
+                  <li>
+                    <a
+                      href="/0006/standings"
+                      class="flex gap-4 items-center bg-[var(--lc-bg-two)] hover:bg-[var(--lc-el-two)] py-2 px-3 rounded-lg border-1 border-[var(--lc-border)]"
+                      ><img
+                        class="h-[71px] w-auto"
+                        src="https://limitless3.nyc3.cdn.digitaloceanspaces.com/web/tournaments/regional.png"
+                        alt="regional logo"
+                      />
+                      <div class="flex flex-col gap-1">
+                        <div class="font-bold text-xl">
+                          Regional Championship Lille
+                        </div>
+                        <div class="flex gap-2 items-center">
+                          <!--[--><img
+                            class="h-[24px] w-auto"
+                            src="https://r2.limitlesstcg.net/flags/FR.png"
+                            title="FR"
+                            alt="FR"
+                          /><!--]-->
+                          October 25–26, 2025
+                          <!--[!--><!--]-->
+                        </div>
+                      </div></a
+                    >
+                  </li>
+                  <li>
+                    <a
+                      href="/0005/standings"
+                      class="flex gap-4 items-center bg-[var(--lc-bg-two)] hover:bg-[var(--lc-el-two)] py-2 px-3 rounded-lg border-1 border-[var(--lc-border)]"
+                      ><img
+                        class="h-[71px] w-auto"
+                        src="https://limitless3.nyc3.cdn.digitaloceanspaces.com/web/tournaments/regional.png"
+                        alt="regional logo"
+                      />
+                      <div class="flex flex-col gap-1">
+                        <div class="font-bold text-xl">
+                          Regional Championship Milwaukee
+                        </div>
+                        <div class="flex gap-2 items-center">
+                          <!--[--><img
+                            class="h-[24px] w-auto"
+                            src="https://r2.limitlesstcg.net/flags/US.png"
+                            title="US"
+                            alt="US"
+                          /><!--]-->
+                          October 10–12, 2025
+                          <!--[!--><!--]-->
+                        </div>
+                      </div></a
+                    >
+                  </li>
+                  <li>
+                    <a
+                      href="/0004/standings"
+                      class="flex gap-4 items-center bg-[var(--lc-bg-two)] hover:bg-[var(--lc-el-two)] py-2 px-3 rounded-lg border-1 border-[var(--lc-border)]"
+                      ><img
+                        class="h-[71px] w-auto"
+                        src="https://limitless3.nyc3.cdn.digitaloceanspaces.com/web/tournaments/regional.png"
+                        alt="regional logo"
+                      />
+                      <div class="flex flex-col gap-1">
+                        <div class="font-bold text-xl">
+                          Regional Championship Belo Horizonte
+                        </div>
+                        <div class="flex gap-2 items-center">
+                          <!--[--><img
+                            class="h-[24px] w-auto"
+                            src="https://r2.limitlesstcg.net/flags/BR.png"
+                            title="BR"
+                            alt="BR"
+                          /><!--]-->
+                          October 11–12, 2025
+                          <!--[!--><!--]-->
+                        </div>
+                      </div></a
+                    >
+                  </li>
+                  <li>
+                    <a
+                      href="/0003/standings"
+                      class="flex gap-4 items-center bg-[var(--lc-bg-two)] hover:bg-[var(--lc-el-two)] py-2 px-3 rounded-lg border-1 border-[var(--lc-border)]"
+                      ><img
+                        class="h-[71px] w-auto"
+                        src="https://limitless3.nyc3.cdn.digitaloceanspaces.com/web/tournaments/regional.png"
+                        alt="regional logo"
+                      />
+                      <div class="flex flex-col gap-1">
+                        <div class="font-bold text-xl">
+                          Regional Championship Pittsburgh
+                        </div>
+                        <div class="flex gap-2 items-center">
+                          <!--[--><img
+                            class="h-[24px] w-auto"
+                            src="https://r2.limitlesstcg.net/flags/US.png"
+                            title="US"
+                            alt="US"
+                          /><!--]-->
+                          September 19–21, 2025
+                          <!--[!--><!--]-->
+                        </div>
+                      </div></a
+                    >
+                  </li>
+                  <li>
+                    <a
+                      href="/0002/standings"
+                      class="flex gap-4 items-center bg-[var(--lc-bg-two)] hover:bg-[var(--lc-el-two)] py-2 px-3 rounded-lg border-1 border-[var(--lc-border)]"
+                      ><img
+                        class="h-[71px] w-auto"
+                        src="https://limitless3.nyc3.cdn.digitaloceanspaces.com/web/tournaments/regional.png"
+                        alt="regional logo"
+                      />
+                      <div class="flex flex-col gap-1">
+                        <div class="font-bold text-xl">
+                          Regional Championship Monterrey
+                        </div>
+                        <div class="flex gap-2 items-center">
+                          <!--[--><img
+                            class="h-[24px] w-auto"
+                            src="https://r2.limitlesstcg.net/flags/MX.png"
+                            title="MX"
+                            alt="MX"
+                          /><!--]-->
+                          September 13–14, 2025
+                          <!--[!--><!--]-->
+                        </div>
+                      </div></a
+                    >
+                  </li>
+                  <li>
+                    <a
+                      href="/0001/standings"
+                      class="flex gap-4 items-center bg-[var(--lc-bg-two)] hover:bg-[var(--lc-el-two)] py-2 px-3 rounded-lg border-1 border-[var(--lc-border)]"
+                      ><img
+                        class="h-[71px] w-auto"
+                        src="https://limitless3.nyc3.cdn.digitaloceanspaces.com/web/tournaments/regional.png"
+                        alt="regional logo"
+                      />
+                      <div class="flex flex-col gap-1">
+                        <div class="font-bold text-xl">
+                          Regional Championship Frankfurt
+                        </div>
+                        <div class="flex gap-2 items-center">
+                          <!--[--><img
+                            class="h-[24px] w-auto"
+                            src="https://r2.limitlesstcg.net/flags/DE.png"
+                            title="DE"
+                            alt="DE"
+                          /><!--]-->
+                          September 13–14, 2025
+                          <!--[!--><!--]-->
+                        </div>
+                      </div></a
+                    >
+                  </li>
+                  <!--]-->
+                </ul>
+                <!--]-->
+              </div>
+            </div>
+            <!----><!--]--><!---->
+          </main>
+          <footer
+            class="bg-[#080808] bg-header text-white dark:border-t-2 dark:border-[#4d4d4d]"
+          >
+            <div class="container py-4 px-2.5">
+              <div class="flex flex-col sm:flex-row gap-2 sm:gap-5 px-2 py-0.5">
+                <div class="flex gap-3">
+                  <b>Limitless VGC</b>
+                  <span class="inline-flex gap-2"
+                    ><a
+                      href="https://twitter.com/limitlessvgc"
+                      aria-label="Twitter"
+                      ><i class="fab fa-lg fa-twitter"></i></a
+                  ></span>
+                </div>
+                <ul class="flex flex-wrap">
+                  <li class="svelte-lx0fvn">
+                    <a href="https://limitlesstcg.com/about">About</a>
+                  </li>
+                  <li class="svelte-lx0fvn">
+                    <a href="https://limitlesstcg.com/contact">Contact</a>
+                  </li>
+                  <li class="svelte-lx0fvn">
+                    <a href="https://limitlesstcg.com/privacy"
+                      >Privacy Policy</a
+                    >
+                  </li>
+                  <li class="svelte-lx0fvn">
+                    <a href="https://limitlesstcg.com/legal">Site Notice</a>
+                  </li>
+                  <!--[!--><!--]-->
+                </ul>
+              </div>
+              <div
+                class="mt-2.5 border-t-1 border-[lightgray] pt-2.5 px-2 text-[lightgray] text-sm"
+              >
+                The literal and graphical information presented on this website
+                about the Pokémon Video Game is copyright The Pokémon Company
+                (Pokémon), Nintendo, Game Freak and/or Creatures. This website
+                is not produced by, endorsed by, supported by, or affiliated
+                with Pokémon, Nintendo, Game Freak or Creatures.
+              </div>
+            </div>
+          </footer>
+          <!---->
+        </div>
+      </div>
+      <!----><!--]-->
+      <!--[!--><!--]--><!--]-->
+      <script
+        type="application/json"
+        data-sveltekit-fetched
+        data-url="https://mew.limitlesstcg.com/labs/data/vgc/tournaments"
+      >
+        {
+          "status": 200,
+          "statusText": "OK",
+          "headers": {},
+          "body": "{\"ok\":true,\"message\":[{\"id\":1,\"season\":2026,\"type\":\"regional\",\"city\":\"Frankfurt\",\"country\":\"DE\",\"date\":\"September 13–14, 2025\",\"utc_start\":\"2025-09-13 06:30:00\",\"started\":1,\"completed\":1},{\"id\":2,\"season\":2026,\"type\":\"regional\",\"city\":\"Monterrey\",\"country\":\"MX\",\"date\":\"September 13–14, 2025\",\"utc_start\":\"2025-09-13 14:30:00\",\"started\":1,\"completed\":1},{\"id\":3,\"season\":2026,\"type\":\"regional\",\"city\":\"Pittsburgh\",\"country\":\"US\",\"date\":\"September 19–21, 2025\",\"utc_start\":\"2025-09-20 12:30:00\",\"started\":1,\"completed\":1},{\"id\":4,\"season\":2026,\"type\":\"regional\",\"city\":\"Belo Horizonte\",\"country\":\"BR\",\"date\":\"October 11–12, 2025\",\"utc_start\":\"2025-10-11 11:30:00\",\"started\":1,\"completed\":1},{\"id\":5,\"season\":2026,\"type\":\"regional\",\"city\":\"Milwaukee\",\"country\":\"US\",\"date\":\"October 10–12, 2025\",\"utc_start\":\"2025-10-11 13:30:00\",\"started\":1,\"completed\":1},{\"id\":6,\"season\":2026,\"type\":\"regional\",\"city\":\"Lille\",\"country\":\"FR\",\"date\":\"October 25–26, 2025\",\"utc_start\":\"2025-10-25 06:30:00\",\"started\":1,\"completed\":1},{\"id\":7,\"season\":2026,\"type\":\"regional\",\"city\":\"Brisbane\",\"country\":\"AU\",\"date\":\"November 1–2, 2025\",\"utc_start\":\"2025-10-31 22:30:00\",\"started\":1,\"completed\":1},{\"id\":8,\"season\":2026,\"type\":\"regional\",\"city\":\"Gdańsk\",\"country\":\"PL\",\"date\":\"November 1–2, 2025\",\"utc_start\":\"2025-11-01 07:30:00\",\"started\":1,\"completed\":1},{\"id\":9,\"season\":2026,\"type\":\"regional\",\"city\":\"Las Vegas\",\"country\":\"US\",\"date\":\"November 14–16, 2025\",\"utc_start\":\"2025-11-15 16:30:00\",\"started\":1,\"completed\":1},{\"id\":10,\"season\":2026,\"type\":\"international\",\"city\":\"São Paulo\",\"country\":\"BR\",\"date\":\"November 21–23, 2025\",\"utc_start\":\"2025-11-21 12:00:00\",\"started\":1,\"completed\":1},{\"id\":11,\"season\":2026,\"type\":\"regional\",\"city\":\"Stuttgart\",\"country\":\"DE\",\"date\":\"November 29–30, 2025\",\"utc_start\":\"2025-11-29 07:30:00\",\"started\":1,\"completed\":1},{\"id\":12,\"season\":2026,\"type\":\"regional\",\"city\":\"Toronto\",\"country\":\"CA\",\"date\":\"January 16–18, 2026\",\"utc_start\":\"2026-01-17 13:30:00\",\"started\":1,\"completed\":1},{\"id\":13,\"season\":2026,\"type\":\"regional\",\"city\":\"Birmingham\",\"country\":\"GB\",\"date\":\"January 24–25, 2026\",\"utc_start\":\"2026-01-24 08:30:00\",\"started\":1,\"completed\":1},{\"id\":14,\"season\":2026,\"type\":\"regional\",\"city\":\"Mérida\",\"country\":\"MX\",\"date\":\"January 24–25, 2026\",\"utc_start\":\"2026-01-24 14:30:00\",\"started\":1,\"completed\":1},{\"id\":15,\"season\":2026,\"type\":\"special\",\"city\":\"Buenos Aires\",\"country\":\"AR\",\"date\":\"November 15–16, 2025\",\"utc_start\":\"2025-11-15 16:00:00\",\"started\":0,\"completed\":0},{\"id\":16,\"season\":2026,\"type\":\"special\",\"city\":\"Auckland\",\"country\":\"NZ\",\"date\":\"January 25, 2026\",\"utc_start\":\"2026-01-24 21:00:00\",\"started\":0,\"completed\":0},{\"id\":17,\"season\":2026,\"type\":\"regional\",\"city\":\"Sydney\",\"country\":\"AU\",\"date\":\"February 7–8, 2026\",\"utc_start\":\"2026-02-06 21:30:00\",\"started\":1,\"completed\":1},{\"id\":18,\"season\":2026,\"type\":\"regional\",\"city\":\"Santiago\",\"country\":\"CL\",\"date\":\"February 7–8, 2026\",\"utc_start\":\"2026-02-07 11:30:00\",\"started\":1,\"completed\":1},{\"id\":19,\"season\":2026,\"type\":\"international\",\"city\":\"London\",\"country\":\"GB\",\"date\":\"February 13–15, 2026\",\"utc_start\":\"2026-02-13 09:00:00\",\"started\":1,\"completed\":1},{\"id\":20,\"season\":2026,\"type\":\"regional\",\"city\":\"Seattle\",\"country\":\"US\",\"date\":\"February 27–March 1, 2026\",\"utc_start\":\"2026-02-28 16:30:00\",\"started\":1,\"completed\":1},{\"id\":21,\"season\":2026,\"type\":\"special\",\"city\":\"San Juan\",\"country\":\"PR\",\"date\":\"March 7–8, 2026\",\"utc_start\":\"2026-03-07 14:00:00\",\"started\":1,\"completed\":1},{\"id\":22,\"season\":2026,\"type\":\"regional\",\"city\":\"Curitiba\",\"country\":\"BR\",\"date\":\"March 14–15, 2026\",\"utc_start\":\"2026-03-14 11:30:00\",\"started\":1,\"completed\":1},{\"id\":23,\"season\":2026,\"type\":\"regional\",\"city\":\"Houston\",\"country\":\"US\",\"date\":\"March 20–22, 2026\",\"utc_start\":\"2026-03-21 13:30:00\",\"started\":1,\"completed\":1},{\"id\":24,\"season\":2026,\"type\":\"special\",\"city\":\"Seville\",\"country\":\"ES\",\"date\":\"March 28–29, 2026\",\"utc_start\":\"2026-03-28 07:30:00\",\"started\":1,\"completed\":1},{\"id\":25,\"season\":2026,\"type\":\"regional\",\"city\":\"Orlando\",\"country\":\"US\",\"date\":\"April 3–5, 2026\",\"utc_start\":\"2026-04-04 12:30:00\",\"started\":1,\"completed\":1},{\"id\":26,\"season\":2026,\"type\":\"regional\",\"city\":\"Querétaro\",\"country\":\"MX\",\"date\":\"April 4–5, 2026\",\"utc_start\":\"2026-04-04 14:30:00\",\"started\":1,\"completed\":1},{\"id\":27,\"season\":2026,\"type\":\"regional\",\"city\":\"Prague\",\"country\":\"CZ\",\"date\":\"April 25–26, 2026\",\"utc_start\":\"2026-04-25 06:30:00\",\"started\":1,\"completed\":1},{\"id\":28,\"season\":2026,\"type\":\"regional\",\"city\":\"Los Angeles\",\"country\":\"US\",\"date\":\"May 8–10, 2026\",\"utc_start\":\"2026-05-09 15:30:00\",\"started\":1,\"completed\":1},{\"id\":29,\"season\":2026,\"type\":\"regional\",\"city\":\"Utrecht\",\"country\":\"NL\",\"date\":\"May 16–17, 2026\",\"utc_start\":\"2026-05-16 06:30:00\",\"started\":1,\"completed\":1},{\"id\":30,\"season\":2026,\"type\":\"regional\",\"city\":\"Campinas\",\"country\":\"BR\",\"date\":\"May 16–17, 2026\",\"utc_start\":\"2026-05-16 11:30:00\",\"started\":1,\"completed\":1},{\"id\":31,\"season\":2026,\"type\":\"regional\",\"city\":\"Melbourne\",\"country\":\"AU\",\"date\":\"May 23–24, 2026\",\"utc_start\":\"2026-05-22 22:30:00\",\"started\":1,\"completed\":1},{\"id\":32,\"season\":2026,\"type\":\"special\",\"city\":\"Lima\",\"country\":\"PE\",\"date\":\"May 23–24, 2026\",\"utc_start\":\"2026-05-23 15:00:00\",\"started\":1,\"completed\":1},{\"id\":33,\"season\":2026,\"type\":\"regional\",\"city\":\"Indianapolis\",\"country\":\"US\",\"date\":\"May 29–31, 2026\",\"utc_start\":\"2026-05-30 12:30:00\",\"started\":1,\"completed\":1},{\"id\":34,\"season\":2026,\"type\":\"special\",\"city\":\"Turin\",\"country\":\"IT\",\"date\":\"June 6–7, 2026\",\"utc_start\":\"2026-06-06 06:30:00\",\"started\":1,\"completed\":1},{\"id\":35,\"season\":2026,\"type\":\"international\",\"city\":\"New Orleans\",\"country\":\"US\",\"date\":\"June 12–14, 2026\",\"utc_start\":\"2026-06-12 14:00:00\",\"started\":1,\"completed\":1},{\"id\":36,\"season\":2026,\"type\":\"worlds\",\"city\":\"San Francisco\",\"country\":\"US\",\"date\":\"August 28–30, 2026\",\"utc_start\":\"2026-08-28 16:00:00\",\"started\":1,\"completed\":1},{\"id\":37,\"season\":2027,\"type\":\"regional\",\"city\":\"Baltimore\",\"country\":\"US\",\"date\":\"September 18–20, 2026\",\"utc_start\":\"2026-09-19 12:30:00\",\"started\":1,\"completed\":1},{\"id\":38,\"season\":2027,\"type\":\"regional\",\"city\":\"Brisbane\",\"country\":\"AU\",\"date\":\"September 26–27, 2026\",\"utc_start\":\"2026-09-25 22:30:00\",\"started\":1,\"completed\":1},{\"id\":39,\"season\":2027,\"type\":\"regional\",\"city\":\"Frankfurt\",\"country\":\"DE\",\"date\":\"September 26–27, 2026\",\"utc_start\":\"2026-09-26 06:30:00\",\"started\":1,\"completed\":1},{\"id\":40,\"season\":2027,\"type\":\"regional\",\"city\":\"Recife\",\"country\":\"BR\",\"date\":\"October 3–4, 2026\",\"utc_start\":\"2026-10-03 11:30:00\",\"started\":1,\"completed\":1},{\"id\":41,\"season\":2027,\"type\":\"regional\",\"city\":\"Louisville\",\"country\":\"US\",\"date\":\"October 9–11, 2026\",\"utc_start\":\"2026-10-10 12:30:00\",\"started\":1,\"completed\":1},{\"id\":42,\"season\":2027,\"type\":\"regional\",\"city\":\"Nice\",\"country\":\"FR\",\"date\":\"October 17–18, 2026\",\"utc_start\":\"2026-10-17 06:30:00\",\"started\":1,\"completed\":1}]}"
+        }
+      </script>
+      <script>
+        {
+          __sveltekit_1spwm0 = {
+            base: new URL(".", location).pathname.slice(0, -1),
+          };
+
+          const element = document.currentScript.parentElement;
+
+          Promise.all([
+            import("./_app/immutable/entry/start.Dc4AUUzp.js"),
+            import("./_app/immutable/entry/app.DvzOemD_.js"),
+          ]).then(([kit, app]) => {
+            kit.start(app, element, {
+              node_ids: [0, 6],
+              data: [
+                {
+                  type: "data",
+                  data: { theme: "light", storage: "local", showAds: false },
+                  uses: {},
+                },
+                null,
+              ],
+              form: null,
+              error: null,
+            });
+          });
+        }
+      </script>
+    </div>
+  </body>
+</html>

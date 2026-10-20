@@ -1,5 +1,5 @@
 import { parse as parseYaml } from "yaml";
-import { isRegulation, type Regulation } from "@ots/core";
+import { getCurrentRegulation, isRegulation, type Regulation } from "@ots/core";
 import {
   deriveArchetypes,
   describeSheetError,
@@ -17,10 +17,10 @@ import {
 
 export const STANDINGS_SITE = "https://standings.limitlessvgc.com";
 
-/** An official event from data/official-events.yaml. */
+/** An official event: from data/official-events.yaml, or found on Limitless. */
 export interface OfficialEvent {
-  /** The event's id on limitlessvgc.com. */
-  id: number;
+  /** The event's id on limitlessvgc.com, for reference; nothing reads it. */
+  id?: number;
   /** Its standings site id, such as "0037". */
   standings: string;
   name: string;
@@ -72,7 +72,7 @@ export function readOfficialEvents(text: string): OfficialEvent[] {
   const events = data.events as Record<string, unknown>[];
   events.forEach((event, index) => {
     const where = `event ${index + 1}`;
-    if (!Number.isInteger(event.id))
+    if (event.id !== undefined && !Number.isInteger(event.id))
       problems.push(`${where}: \`id\` must be a number`);
     if (typeof event.standings !== "string" || !/^\d+$/.test(event.standings)) {
       problems.push(
@@ -115,6 +115,101 @@ export function readEmbeddedData(html: string): Map<string, unknown> {
     );
   }
   return data;
+}
+
+/** An event in the standings site's list, on its front page. */
+export interface ListedEvent {
+  /** Its number on the standings site: 40 is "0040". */
+  id: number;
+  /** "regional", "special", "international" or "worlds". */
+  type: string;
+  city: string;
+  /** Two letters, such as "US". */
+  country: string;
+  /** As written: "October 17–18, 2026". */
+  date: string;
+  /** 1 once the event has finished. */
+  completed: number;
+}
+
+/** The standings site's list of every event, oldest first. */
+export function readEventList(html: string): ListedEvent[] {
+  const list = readEmbeddedData(html).get("tournaments");
+  if (!Array.isArray(list)) {
+    throw new Error(
+      "The standings site's front page has no embedded event list; its format may have changed",
+    );
+  }
+  return [...(list as ListedEvent[])].sort((a, b) => a.id - b.id);
+}
+
+/** A standings site number as its id: 40 is "0040". */
+export const standingsId = (id: number) => String(id).padStart(4, "0");
+
+// The International Championships, by the country they're held in; the
+// rest are in Europe.
+const INTERNATIONALS: Record<string, string> = {
+  US: "NAIC",
+  CA: "NAIC",
+  BR: "LAIC",
+  AR: "LAIC",
+  CL: "LAIC",
+  CO: "LAIC",
+  MX: "LAIC",
+  PE: "LAIC",
+  AU: "OCIC",
+  NZ: "OCIC",
+};
+
+/**
+ * An event's name, as data/official-events.yaml writes them: "Regional
+ * Nice", "Special Event Turin", "NAIC 2026, New Orleans" or "World
+ * Championships 2026". (limitlessvgc.com adds a US state to some
+ * regionals; the list doesn't carry it.)
+ */
+export function listedEventName(event: ListedEvent): string {
+  const year = readDates(event.date).endsOn.slice(0, 4);
+  switch (event.type) {
+    case "regional":
+      return `Regional ${event.city}`;
+    case "special":
+      return `Special Event ${event.city}`;
+    case "international":
+      return `${INTERNATIONALS[event.country] ?? "EUIC"} ${year}, ${event.city}`;
+    case "worlds":
+      return `World Championships ${year}`;
+    default:
+      return `${event.type.charAt(0).toUpperCase()}${event.type.slice(1)} ${event.city}`;
+  }
+}
+
+/**
+ * The listed events to import: those numbered after `newestKnown` (the
+ * newest official event already listed or imported; earlier ones on the
+ * site were played before Champions), finished, and ended at least
+ * `settleDays` ago so their teamlists are up. Each is in the regulation
+ * of the day it started.
+ */
+export function discoverEvents(
+  list: ListedEvent[],
+  newestKnown: number,
+  now: Date,
+  settleDays: number,
+): OfficialEvent[] {
+  return list
+    .filter((event) => event.id > newestKnown && event.completed === 1)
+    .flatMap((event) => {
+      const { startsOn, endsOn } = readDates(event.date);
+      const settled = Date.parse(endsOn) + settleDays * 86_400_000;
+      if (settled > now.getTime()) return [];
+      return [
+        {
+          standings: standingsId(event.id),
+          name: listedEventName(event),
+          regulation: getCurrentRegulation(new Date(`${startsOn}T12:00:00Z`)),
+        },
+      ];
+    });
 }
 
 /** A standings page's event details and every player's standing. */

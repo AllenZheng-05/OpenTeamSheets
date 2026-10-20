@@ -1,12 +1,16 @@
 /**
- * Imports official events from Limitless VGC (data/official-events.yaml).
+ * Imports official events from Limitless VGC: those listed in
+ * data/official-events.yaml and, with --discover, new ones on its standings
+ * site.
  *
- * Usage: pnpm import:limitless [--event 0037]... [--all] [--dry-run] [--refresh]
- *          [--prod [--yes]]
- *          [--report flagged.md]
+ * Usage: pnpm import:limitless [--event 0037]... [--all] [--discover]
+ *          [--dry-run] [--refresh] [--prod [--yes]] [--report flagged.md]
  *
  *   --event    only these events (by standings id), imported again even if
  *              already there; default: listed events not yet imported
+ *   --discover also import events on the standings site newer than every
+ *              listed or imported one, once they've finished and settled
+ *              (as the daily workflow does), so new events need no listing
  *   --all      import every listed event again, such as after editing sheet
  *              readings (from the cache, so it takes seconds)
  *   --dry-run  fetch and check everything, write nothing
@@ -24,7 +28,9 @@ import { readFileSync, writeFileSync } from "node:fs";
 import path from "node:path";
 import type { Json } from "@ots/core/db";
 import {
+  discoverEvents,
   prepareOfficialEvent,
+  readEventList,
   readOfficialEvents,
   readStandingsPage,
   readTeamlistPage,
@@ -34,7 +40,11 @@ import {
   type OfficialEvent,
 } from "../import/limitless";
 import { createPoliteFetcher } from "../import/polite-fetch";
-import { IMPORT_BATCH_TEAMS, OFFICIAL_REQUEST_MS } from "@ots/core/config";
+import {
+  IMPORT_BATCH_TEAMS,
+  OFFICIAL_REQUEST_MS,
+  OFFICIAL_SETTLE_DAYS,
+} from "@ots/core/config";
 import { refreshSite } from "./site";
 import { check, connect, refreshStoredTotals } from "./supabase";
 
@@ -49,9 +59,12 @@ const configPath = path.join(
   import.meta.dirname,
   "../../../../data/official-events.yaml",
 );
-const events: OfficialEvent[] = readOfficialEvents(
+const listed: OfficialEvent[] = readOfficialEvents(
   readFileSync(configPath, "utf8"),
-).filter((event) => only.length === 0 || only.includes(event.standings));
+);
+const events = listed.filter(
+  (event) => only.length === 0 || only.includes(event.standings),
+);
 if (events.length === 0) {
   console.error(
     `No events match ${only.join(", ")}; see data/official-events.yaml`,
@@ -60,15 +73,45 @@ if (events.length === 0) {
 }
 
 const db = dryRun ? null : await connect(args);
+const fetcher = createPoliteFetcher({ delayMs: OFFICIAL_REQUEST_MS });
 
-// Events already in the database are skipped unless asked for: re-importing
-// one changes nothing, and fetching it without the cache takes an hour.
-if (db && only.length === 0 && !args.includes("--all")) {
+// Official events already in the database, by standings id.
+const imported = new Set<string>();
+if (db) {
   const { data } = check(
     await db.from("events").select("source_id").eq("source", "limitlessvgc"),
     "Reading imported events",
   );
-  const imported = new Set((data ?? []).map((e) => e.source_id));
+  for (const event of data ?? []) imported.add(event.source_id);
+}
+
+// New events on the standings site: those after every event listed or
+// imported, once finished and settled. The list is read fresh each run.
+if (args.includes("--discover")) {
+  const list = readEventList(
+    await fetcher.get(`${STANDINGS_SITE}/`, { refresh: true }),
+  );
+  const newestKnown = Math.max(
+    0,
+    ...[...listed.map((e) => e.standings), ...imported].map(Number),
+  );
+  const found = discoverEvents(
+    list,
+    newestKnown,
+    new Date(),
+    OFFICIAL_SETTLE_DAYS,
+  );
+  console.log(
+    found.length > 0
+      ? `Found ${found.length} new official events: ${found.map((e) => `${e.name} (${e.standings}, Reg ${e.regulation})`).join("; ")}`
+      : "No new official events on Limitless",
+  );
+  events.push(...found);
+}
+
+// Events already in the database are skipped unless asked for: re-importing
+// one changes nothing, and fetching it without the cache takes an hour.
+if (db && only.length === 0 && !args.includes("--all")) {
   const before = events.length;
   events.splice(
     0,
@@ -79,7 +122,6 @@ if (db && only.length === 0 && !args.includes("--all")) {
     `${before - events.length} events already imported; ${events.length} to import`,
   );
 }
-const fetcher = createPoliteFetcher({ delayMs: OFFICIAL_REQUEST_MS });
 
 for (const config of events) {
   console.log(`\n${config.name} (${config.standings})`);
@@ -97,6 +139,11 @@ for (const config of events) {
   const withTeamlists = standings.players.filter(
     (p) => p.teamlist && p.placement !== null,
   );
+  // Not imported, so a later run (or --discover) tries it again.
+  if (withTeamlists.length === 0) {
+    console.log("  no teamlists published yet; left for a later run");
+    continue;
+  }
   const teamlists = new Map<number, LimitlessSet[]>();
   for (const [index, player] of withTeamlists.entries()) {
     const html = await fetcher.get(
