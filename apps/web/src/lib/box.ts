@@ -139,3 +139,12 @@ export function browserCookie(name: string): string | undefined {
     .find((cookie) => cookie.startsWith(prefix))
     ?.slice(prefix.length);
 }
+
+/**
+ * The player's box from their cookie, in the browser, or null if they've
+ * never set one up (so nothing is marked missing).
+ */
+export function browserBox(all: string[]): Set<string> | null {
+  const value = browserCookie(BOX_COOKIE);
+  return value ? decodeBox(value, all) : null;
+}

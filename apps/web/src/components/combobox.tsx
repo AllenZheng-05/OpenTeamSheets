@@ -1,6 +1,13 @@
 "use client";
 
-import { useId, useMemo, useState, type ReactNode } from "react";
+import {
+  useId,
+  useLayoutEffect,
+  useMemo,
+  useRef,
+  useState,
+  type ReactNode,
+} from "react";
 
 export interface ComboboxOption {
   /** Unique among the suggestions. */
@@ -22,7 +29,9 @@ export interface ComboboxOption {
  *
  * The "box" variant is a full search box; the "inline" variant is a bare
  * input that sizes itself to its text, for editing inside something else
- * such as a pill.
+ * such as a pill; the "field" variant is a form field holding one value
+ * (`value`): focusing it lists every option, picking one keeps it shown,
+ * and leaving without picking puts the value back (or, emptied, clears it).
  */
 export function Combobox<T extends ComboboxOption>({
   label,
@@ -42,6 +51,12 @@ export function Combobox<T extends ComboboxOption>({
   autoFocus = false,
   onCancel,
   onSubmit,
+  value,
+  onClear,
+  describedBy,
+  renderOption,
+  listHeader,
+  listClassName = "w-full min-w-56",
 }: {
   /** For screen readers; the box shows the placeholder. */
   label: string;
@@ -66,7 +81,7 @@ export function Combobox<T extends ComboboxOption>({
   before?: ReactNode;
   /** Backspace in the empty box, such as to remove the last filter. */
   onBackspaceEmpty?: () => void;
-  variant?: "box" | "inline";
+  variant?: "box" | "inline" | "field";
   /** The text to start with, such as what's being edited. */
   initialText?: string;
   autoFocus?: boolean;
@@ -77,20 +92,56 @@ export function Combobox<T extends ComboboxOption>({
   onCancel?: () => void;
   /** Enter with no suggestions to pick, such as in the empty box. */
   onSubmit?: () => void;
+  /** The field variant's value, as shown. */
+  value?: string;
+  /** The field variant emptied and left, or Enter in it empty. */
+  onClear?: () => void;
+  /** The id of more about the box, such as what its value does. */
+  describedBy?: string;
+  /** The field variant's look for a suggestion; its name if not given. */
+  renderOption?: (option: T) => ReactNode;
+  /** The field variant's row over the suggestions, such as column names. */
+  listHeader?: ReactNode;
+  /** The field variant list's width. */
+  listClassName?: string;
 }) {
+  const field = variant === "field";
   const listId = useId();
   const id = inputId ?? `${listId}-input`;
   // What was typed, which the suggestions are for, and what the box shows,
   // which moving through the suggestions changes.
-  const [typed, setTyped] = useState(initialText);
-  const [text, setText] = useState(initialText);
+  const [typed, setTyped] = useState(field ? "" : initialText);
+  const [text, setText] = useState(field ? (value ?? "") : initialText);
+  // A field shows its value as it changes, such as on another slot.
+  const [shownValue, setShownValue] = useState(value);
+  if (field && value !== shownValue) {
+    setShownValue(value);
+    setText(value ?? "");
+    setTyped("");
+  }
   const [open, setOpen] = useState(autoFocus);
   // The suggestion moved to, or -1 for none.
   const [active, setActive] = useState(-1);
+  const listRef = useRef<HTMLUListElement>(null);
+  // Set when a field opens on its value, to scroll the list to it.
+  const scrollToActive = useRef(false);
 
   const shown = useMemo(() => suggestions(typed), [suggestions, typed]);
   const expanded = open && shown.length > 0;
   const optionId = (index: number) => `${listId}-${index}`;
+
+  // A field opens with its value in the middle of the list (scrolling the
+  // list only, never the page).
+  useLayoutEffect(() => {
+    if (!scrollToActive.current || !open) return;
+    scrollToActive.current = false;
+    const list = listRef.current;
+    const option = document.getElementById(optionId(active));
+    if (!list || !option) return;
+    // offsetTop counts from the list's positioned wrapper, so less the list's own.
+    const top = option.offsetTop - list.offsetTop;
+    list.scrollTop = top - list.clientHeight / 2 + option.offsetHeight / 2;
+  });
 
   function type(value: string) {
     setTyped(value);
@@ -112,6 +163,14 @@ export function Combobox<T extends ComboboxOption>({
 
   function pick(option: T | undefined) {
     if (!option) return;
+    if (field) {
+      onSelect(option);
+      setTyped("");
+      setText(option.text ?? option.name);
+      setActive(-1);
+      setOpen(false);
+      return;
+    }
     if (completes?.(option, typed)) {
       // Fill it in as if typed, so its own suggestions show.
       type(option.text ?? option.name);
@@ -135,6 +194,10 @@ export function Combobox<T extends ComboboxOption>({
     } else if (event.key === "ArrowUp" && count > 0) {
       event.preventDefault();
       moveTo(previous());
+    } else if (event.key === "Enter" && field && text.trim() === "") {
+      event.preventDefault();
+      setOpen(false);
+      onClear?.();
     } else if (event.key === "Enter") {
       event.preventDefault();
       // Without one moved to, the suggestion matching the text exactly, or
@@ -149,6 +212,11 @@ export function Combobox<T extends ComboboxOption>({
       else onCancel?.();
     } else if (event.key === "Backspace" && text === "") {
       onBackspaceEmpty?.();
+    } else if (event.key === "Escape" && field) {
+      setText(value ?? "");
+      setTyped("");
+      setActive(-1);
+      setOpen(false);
     } else if (event.key === "Escape") {
       if (active >= 0) {
         setText(typed);
@@ -171,6 +239,7 @@ export function Combobox<T extends ComboboxOption>({
       aria-expanded={expanded}
       aria-controls={listId}
       aria-autocomplete="list"
+      aria-describedby={describedBy}
       aria-activedescendant={
         expanded && active >= 0 ? optionId(active) : undefined
       }
@@ -180,9 +249,28 @@ export function Combobox<T extends ComboboxOption>({
         type(event.target.value);
         setOpen(true);
       }}
-      onFocus={() => setOpen(true)}
+      onFocus={(event) => {
+        setOpen(true);
+        if (field) {
+          // Every option, with the value selected to type over, and the
+          // list open at the value.
+          setTyped("");
+          event.target.select();
+          const current = value
+            ? suggestions("").findIndex((o) => (o.text ?? o.name) === value)
+            : -1;
+          setActive(current);
+          scrollToActive.current = current >= 0;
+        }
+      }}
       onBlur={() => {
         setOpen(false);
+        if (field) {
+          if (text.trim() === "" && value) onClear?.();
+          else setText(value ?? "");
+          setTyped("");
+          setActive(-1);
+        }
         onCancel?.();
       }}
       onKeyDown={onKeyDown}
@@ -190,14 +278,24 @@ export function Combobox<T extends ComboboxOption>({
     />
   );
 
-  const list = (className: string) => (
+  const list = (className: string, floating = true) => (
     <ul
+      ref={listRef}
       id={listId}
       role="listbox"
       aria-label={label}
       hidden={!expanded}
-      className={`absolute top-full z-20 mt-1 max-h-80 overflow-y-auto rounded-lg border border-neutral-200 bg-white py-1 text-left text-sm text-neutral-900 shadow-lg ${className}`}
+      className={`${floating ? "absolute top-full z-20 mt-1" : ""} max-h-80 overflow-y-auto rounded-lg border border-neutral-200 bg-white py-1 text-left text-sm text-neutral-900 shadow-lg ${className}`}
     >
+      {field && listHeader && (
+        <li
+          role="presentation"
+          aria-hidden
+          className="sticky -top-1 z-10 border-b border-neutral-100 bg-white"
+        >
+          {listHeader}
+        </li>
+      )}
       {shown.map((option, index) => {
         const heading =
           option.group && option.group !== shown[index - 1]?.group
@@ -222,7 +320,7 @@ export function Combobox<T extends ComboboxOption>({
               onClick={() => pick(option)}
               className="cursor-pointer px-3 py-1.5 hover:bg-neutral-50 aria-selected:bg-neutral-100"
             >
-              {option.name}
+              {field && renderOption ? renderOption(option) : option.name}
               {option.group && (
                 <span className="sr-only">, {option.group}</span>
               )}
@@ -240,6 +338,26 @@ export function Combobox<T extends ComboboxOption>({
         : ""}
     </p>
   );
+
+  if (field) {
+    return (
+      <div className="relative">
+        <label
+          htmlFor={id}
+          className="mb-1 block text-xs font-medium text-neutral-600"
+        >
+          {label}
+        </label>
+        {input(
+          "w-full rounded-lg border border-neutral-300 bg-white px-2.5 py-1.5 text-sm outline-none placeholder:text-neutral-400 focus:border-neutral-500",
+        )}
+        <div className={`absolute top-full left-0 z-20 mt-1 ${listClassName}`}>
+          {list("w-full", false)}
+        </div>
+        {announcement}
+      </div>
+    );
+  }
 
   if (variant === "inline") {
     // A hidden copy of the text sets the width, so the input fits it.

@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import { useState } from "react";
-import { SPRITE_STYLES, spriteStyle } from "@ots/core/game-data";
+import { SPRITE_STYLES, spriteStyle } from "@ots/core/sprites";
 
 const SPRITES = "https://play.pokemonshowdown.com/sprites";
 

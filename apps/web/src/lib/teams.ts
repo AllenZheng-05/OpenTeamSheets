@@ -11,6 +11,7 @@ import {
   exportShowdown,
   sheetErrors,
   type Team,
+  type TeamSet,
 } from "@ots/core/teams";
 import type { Json } from "@ots/core/db";
 import { dateRange } from "./format";
@@ -260,6 +261,26 @@ const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
  * null if there's none. Rows fetch it on click rather than carrying it.
  */
 export async function teamShowdown(id: string): Promise<string | null> {
+  return (await loadTeam(id))?.details.showdown ?? null;
+}
+
+/**
+ * A public team's sets and regulation, for Open in builder on a search
+ * result, or null if there's none. Rows fetch it on click.
+ */
+export async function teamSets(
+  id: string,
+): Promise<{ regulation: Regulation; sets: TeamSet[] } | null> {
+  const loaded = await loadTeam(id);
+  return loaded
+    ? { regulation: loaded.regulation, sets: loaded.details.team.sets }
+    : null;
+}
+
+/** One public team's details, or null if there's none. */
+async function loadTeam(
+  id: string,
+): Promise<{ regulation: Regulation; details: TeamDetails } | null> {
   if (!UUID.test(id)) return null;
   const { data: team, error } = await supabase()
     .from("teams")
@@ -269,7 +290,8 @@ export async function teamShowdown(id: string): Promise<string | null> {
   if (error) throw new Error(error.message);
   if (!team || !isRegulation(team.regulation_id)) return null;
   const details = await loadTeams(new Map([[id, team.regulation_id]]));
-  return details.get(id)?.showdown ?? null;
+  const loaded = details.get(id);
+  return loaded ? { regulation: team.regulation_id, details: loaded } : null;
 }
 
 /** A public team with everything its page shows, or null if there's none. */

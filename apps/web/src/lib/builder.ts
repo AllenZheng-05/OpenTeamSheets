@@ -1,0 +1,169 @@
+import type { Regulation } from "@ots/core";
+import { emptySet, type StatTable, type TeamSet } from "@ots/core/teams";
+
+// The builder's teams, kept in the browser until accounts (#27) move them
+// into a profile. These are the pure operations on them; builder-store.ts
+// keeps them in a Zustand store saved to localStorage.
+
+/** Pokémon on a team. */
+export const SLOTS = 6;
+
+export interface Draft {
+  id: string;
+  name: string;
+  regulation: Regulation;
+  /** Always SLOTS long; an empty slot has no species. */
+  sets: TeamSet[];
+  /** ISO time of the last change. */
+  updatedAt: string;
+  /** The tournament team it was opened from, if any. */
+  sourceTeamId: string | null;
+}
+
+export interface Drafts {
+  drafts: Record<string, Draft>;
+  /** Draft ids in the player's order, as the team list shows them. */
+  order: string[];
+}
+
+export const DEFAULT_NAME = "Untitled team";
+
+const newId = () =>
+  typeof crypto !== "undefined" && "randomUUID" in crypto
+    ? crypto.randomUUID()
+    : `${Date.now().toString(36)}-${Math.random().toString(36).slice(2)}`;
+
+const now = () => new Date().toISOString();
+
+/** Pads or trims sets to SLOTS, filling with empty slots. */
+export function fillSlots(sets: TeamSet[]): TeamSet[] {
+  return Array.from({ length: SLOTS }, (_, i) => sets[i] ?? emptySet());
+}
+
+export function createDraft(
+  regulation: Regulation,
+  from?: { name: string; sets: TeamSet[]; sourceTeamId: string },
+): Draft {
+  return {
+    id: newId(),
+    name: from?.name ?? DEFAULT_NAME,
+    regulation,
+    sets: fillSlots(from?.sets ?? []),
+    updatedAt: now(),
+    sourceTeamId: from?.sourceTeamId ?? null,
+  };
+}
+
+export const noDrafts = (): Drafts => ({ drafts: {}, order: [] });
+
+/** Adds a draft at the top of the list. */
+export function addDraft(state: Drafts, draft: Draft): Drafts {
+  return {
+    drafts: { ...state.drafts, [draft.id]: draft },
+    order: [draft.id, ...state.order],
+  };
+}
+
+/** The drafts in the player's order. */
+export function orderedDrafts(state: Drafts): Draft[] {
+  return state.order.flatMap((id) => state.drafts[id] ?? []);
+}
+
+/** Changes one draft, marking it updated. */
+export function updateDraft(
+  state: Drafts,
+  id: string,
+  change: (draft: Draft) => Partial<Omit<Draft, "id">>,
+): Drafts {
+  const draft = state.drafts[id];
+  if (!draft) return state;
+  return {
+    ...state,
+    drafts: {
+      ...state.drafts,
+      [id]: { ...draft, ...change(draft), updatedAt: now() },
+    },
+  };
+}
+
+/** Changes one slot's set. */
+export function updateSet(
+  state: Drafts,
+  id: string,
+  slot: number,
+  change: Partial<TeamSet>,
+): Drafts {
+  return updateDraft(state, id, (draft) => ({
+    sets: draft.sets.map((set, i) =>
+      i === slot ? { ...set, ...change } : set,
+    ),
+  }));
+}
+
+/**
+ * Moves a slot's set to another slot, shifting those between: dragging
+ * slot 1 onto slot 4 puts it 4th and the others up one. A move of one
+ * swaps neighbours.
+ */
+export function moveSlot(
+  state: Drafts,
+  id: string,
+  from: number,
+  to: number,
+): Drafts {
+  if (from === to || from < 0 || to < 0 || from >= SLOTS || to >= SLOTS) {
+    return state;
+  }
+  return updateDraft(state, id, (draft) => {
+    const sets = [...draft.sets];
+    const [moved] = sets.splice(from, 1);
+    sets.splice(to, 0, moved!);
+    return { sets };
+  });
+}
+
+export function removeDraft(state: Drafts, id: string): Drafts {
+  return {
+    drafts: Object.fromEntries(
+      Object.entries(state.drafts).filter(([key]) => key !== id),
+    ),
+    order: state.order.filter((key) => key !== id),
+  };
+}
+
+/** Moves a draft to a place in the list (0 is the top). */
+export function moveDraft(state: Drafts, id: string, to: number): Drafts {
+  const from = state.order.indexOf(id);
+  if (from < 0) return state;
+  const target = Math.max(0, Math.min(state.order.length - 1, to));
+  if (target === from) return state;
+  const order = state.order.filter((key) => key !== id);
+  order.splice(target, 0, id);
+  return { ...state, order };
+}
+
+/** Whether a slot has a Pokémon in it. */
+export const filled = (set: TeamSet) => set.speciesId !== null;
+
+/** Stat points spent across all stats. */
+export const statTotal = (points: StatTable | null) =>
+  points ? Object.values(points).reduce((sum, n) => sum + n, 0) : 0;
+
+/**
+ * Stat points with one stat set, starting unknown points at zero. The
+ * stat stays within 0 and `max`, and within what's left of `totalMax`
+ * after the other stats, so the total can never go over.
+ */
+export function withStatPoints(
+  points: StatTable | null,
+  stat: keyof StatTable,
+  value: number,
+  max: number,
+  totalMax: number,
+): StatTable {
+  const base = points ?? { hp: 0, atk: 0, def: 0, spa: 0, spd: 0, spe: 0 };
+  const others = statTotal(base) - base[stat];
+  const room = Math.max(0, Math.min(max, totalMax - others));
+  const clamped = Math.max(0, Math.min(room, Math.round(value) || 0));
+  return { ...base, [stat]: clamped };
+}

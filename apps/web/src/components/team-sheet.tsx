@@ -1,6 +1,7 @@
 import type { PokemonView, SheetMark } from "@/lib/pokemon";
 import type { Described, MoveView } from "@/lib/pokemon-details";
 import { BaseStats } from "./base-stats";
+import { FormSprite } from "./form-sprite";
 import { InfoTip } from "./info-tip";
 import { ItemIcon } from "./item-icon";
 import { TypePill } from "./pills";
@@ -169,38 +170,12 @@ function PokemonCard({ p }: { p: PokemonView }) {
   return (
     <>
       <div className="flex items-center gap-3">
-        {mega ? (
-          // The Mega in front, with its base form behind it, darker and
-          // fainter, like a shadow.
-          <div className="relative size-20 shrink-0">
-            <div
-              aria-hidden
-              className="absolute -top-1 -left-2 opacity-40 brightness-50"
-            >
-              <PokemonSprite
-                name={base!.name}
-                spriteId={base!.spriteId}
-                shiny={p.shiny}
-                size={72}
-              />
-            </div>
-            <div className="absolute right-0 bottom-0">
-              <PokemonSprite
-                name={mega.name}
-                spriteId={mega.spriteId}
-                shiny={p.shiny}
-                size={72}
-              />
-            </div>
-          </div>
-        ) : (
-          <PokemonSprite
-            name={base?.name ?? p.name}
-            spriteId={base?.spriteId ?? p.spriteId}
-            shiny={p.shiny}
-            size={80}
-          />
-        )}
+        <FormSprite
+          base={base ?? { name: p.name, spriteId: p.spriteId }}
+          mega={mega}
+          shiny={p.shiny}
+          size={80}
+        />
         <div className="min-w-0">
           <h3 className="truncate font-semibold">{base?.name ?? p.name}</h3>
           <div className="mt-1 flex flex-wrap items-center gap-1">
