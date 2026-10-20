@@ -76,6 +76,7 @@ export function setFromRow(row: Tables<"team_sets">): TeamSet {
       STATS.map((stat) => [stat, row[`iv_${stat}`]]),
     ) as StatTable,
     shiny: row.shiny,
+    note: row.note,
   };
 }
 

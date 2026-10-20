@@ -45,6 +45,7 @@ describe("setFromRow", () => {
       level: 50,
       ivs: { hp: 31, atk: 0, def: 31, spa: 31, spd: 31, spe: 31 },
       shiny: true,
+      note: null,
     });
   });
 

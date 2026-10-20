@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import { cache } from "react";
 import { BackLink } from "@/components/back-link";
 import { CopyTeamButton } from "@/components/copy-team-button";
+import { OpenInBuilderButton } from "@/components/open-in-builder-button";
 import { ArchetypePill, OnlineBadge, StageBadge } from "@/components/pills";
 import { TeamSheet } from "@/components/team-sheet";
 import { count, placement } from "@/lib/format";
@@ -66,7 +67,18 @@ export default async function TeamPage({ params }: PageProps<"/teams/[id]">) {
             </div>
           )}
         </div>
-        <CopyTeamButton paste={team.showdown} variant="solid" />
+        <div className="flex flex-wrap gap-2">
+          <OpenInBuilderButton
+            teamId={team.id}
+            name={
+              top
+                ? `${top.player}${top.placement ? ` · ${placement(top.placement)}` : ""} at ${top.event.name}`
+                : "Tournament team"
+            }
+            team={{ regulation: team.regulation, sets: team.team.sets }}
+          />
+          <CopyTeamButton paste={team.showdown} variant="solid" />
+        </div>
       </header>
 
       <TeamSheet pokemon={team.pokemon} variant="full" />

@@ -2,6 +2,7 @@ import Link from "next/link";
 import { count, placement } from "@/lib/format";
 import type { PlacementRow } from "@/lib/teams";
 import { CopyTeamButton } from "./copy-team-button";
+import { OpenInBuilderButton } from "./open-in-builder-button";
 import { ArchetypePill, OnlineBadge, SheetErrorsBadge } from "./pills";
 import { TeamSheet } from "./team-sheet";
 
@@ -66,15 +67,26 @@ export function TeamRow({
               {!row.event.official && <OnlineBadge />}
             </p>
           </div>
-          <div className="relative z-10 shrink-0 lg:hidden">
-            <CopyTeamButton teamId={row.teamId} />
+          <div className="relative z-10 flex shrink-0 flex-col items-stretch gap-1.5 lg:hidden">
+            <TeamActions row={row} />
           </div>
         </div>
         <TeamSheet pokemon={row.pokemon} variant="compact" owned={owned} />
-        <div className="relative z-10 hidden lg:block lg:shrink-0">
-          <CopyTeamButton teamId={row.teamId} />
+        <div className="relative z-10 hidden lg:flex lg:shrink-0 lg:flex-col lg:items-stretch lg:gap-1.5">
+          <TeamActions row={row} />
         </div>
       </div>
     </article>
+  );
+}
+
+/** Copy team, with Open in builder under it. */
+function TeamActions({ row }: { row: PlacementRow }) {
+  const name = `${row.player}${row.placement ? ` · ${placement(row.placement)}` : ""} at ${row.event.name}`;
+  return (
+    <>
+      <CopyTeamButton teamId={row.teamId} />
+      <OpenInBuilderButton teamId={row.teamId} name={name} />
+    </>
   );
 }

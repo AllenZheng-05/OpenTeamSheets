@@ -28,3 +28,5 @@ export {
 } from "./sheet-errors";
 export { deriveArchetypes } from "./archetypes";
 export { displaySpecies, findId, getSpecies, itemForm, nameOf } from "./lookup";
+export { learnableAbilities, learnableMoves, setForm } from "./learnable";
+export { battleStat } from "./stats";

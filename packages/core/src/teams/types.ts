@@ -37,6 +37,8 @@ export interface TeamSet {
   ivs: StatTable;
   /** Shown with the shiny sprite. */
   shiny: boolean;
+  /** The author's note on this Pokémon (team_sets.note). */
+  note?: string | null;
 }
 
 export interface Team {
