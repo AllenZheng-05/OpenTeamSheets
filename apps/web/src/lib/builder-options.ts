@@ -195,6 +195,70 @@ export function matchOptions(
   return [...starts, ...contains];
 }
 
+const speciesById = new Map(gameData.species.map((s) => [s.id, s]));
+
+/** What's legal in each regulation, by id, or null before its rules are out. */
+const legalByRegulation = new Map<
+  Regulation,
+  { species: Set<string>; items: Set<string> } | null
+>();
+
+function legal(regulation: Regulation) {
+  if (!legalByRegulation.has(regulation)) {
+    const data = regulationData[regulation]?.legality;
+    legalByRegulation.set(
+      regulation,
+      data
+        ? { species: new Set(data.species), items: new Set(data.items) }
+        : null,
+    );
+  }
+  return legalByRegulation.get(regulation)!;
+}
+
+const speciesByRegulation = new Map<Regulation, FieldOption[]>();
+
+/**
+ * The Pokémon legal in a regulation, by name. A Mega is legal when its
+ * base form and its stone are, as the validator decides. Before a
+ * regulation's rules are out, every Pokémon.
+ */
+export function speciesOptions(regulation: Regulation): FieldOption[] {
+  let options = speciesByRegulation.get(regulation);
+  if (!options) {
+    const rules = legal(regulation);
+    options = rules
+      ? fieldOptions("species").filter((o) => {
+          const s = speciesById.get(o.id);
+          if (s && isMega(s)) {
+            return (
+              rules.species.has(s.battleOnlyFromId!) &&
+              rules.items.has(s.requiredItemId!)
+            );
+          }
+          return rules.species.has(o.id);
+        })
+      : fieldOptions("species");
+    speciesByRegulation.set(regulation, options);
+  }
+  return options;
+}
+
+const itemsByRegulation = new Map<Regulation, FieldOption[]>();
+
+/** The items legal in a regulation, by name; every item before its rules are out. */
+export function itemOptions(regulation: Regulation): FieldOption[] {
+  let options = itemsByRegulation.get(regulation);
+  if (!options) {
+    const rules = legal(regulation);
+    options = rules
+      ? fieldOptions("item").filter((o) => rules.items.has(o.id))
+      : fieldOptions("item");
+    itemsByRegulation.set(regulation, options);
+  }
+  return options;
+}
+
 /** Abilities and moves matched per search, so the list stays short. */
 const MATCHES_PER_KIND = 3;
 
@@ -230,7 +294,7 @@ export function searchSpecies(
   query: string,
   regulation: Regulation,
 ): FieldOption[] {
-  const species = fieldOptions("species");
+  const species = speciesOptions(regulation);
   const named = matchOptions(species, query);
   if (fold(query.trim()).length < 2) return named;
 

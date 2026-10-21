@@ -1,5 +1,6 @@
 "use client";
 
+import { useVirtualizer } from "@tanstack/react-virtual";
 import {
   useId,
   useLayoutEffect,
@@ -57,6 +58,8 @@ export function Combobox<T extends ComboboxOption>({
   renderOption,
   listHeader,
   listClassName = "w-full min-w-56",
+  onEnterPick,
+  fieldOrder,
 }: {
   /** For screen readers; the box shows the placeholder. */
   label: string;
@@ -104,6 +107,10 @@ export function Combobox<T extends ComboboxOption>({
   listHeader?: ReactNode;
   /** The field variant list's width. */
   listClassName?: string;
+  /** Called after Enter picks a suggestion, such as to move to the next field. */
+  onEnterPick?: () => void;
+  /** The field's place in its form, for moving between fields. */
+  fieldOrder?: number;
 }) {
   const field = variant === "field";
   const listId = useId();
@@ -130,17 +137,21 @@ export function Combobox<T extends ComboboxOption>({
   const expanded = open && shown.length > 0;
   const optionId = (index: number) => `${listId}-${index}`;
 
+  // A field's list draws only the rows in view (it can hold hundreds, each
+  // with a sprite or a description), measuring each as it's drawn.
+  const rows = useVirtualizer({
+    count: field ? shown.length : 0,
+    getScrollElement: () => listRef.current,
+    estimateSize: () => 40,
+    overscan: 8,
+  });
+
   // A field opens with its value in the middle of the list (scrolling the
   // list only, never the page).
   useLayoutEffect(() => {
     if (!scrollToActive.current || !open) return;
     scrollToActive.current = false;
-    const list = listRef.current;
-    const option = document.getElementById(optionId(active));
-    if (!list || !option) return;
-    // offsetTop counts from the list's positioned wrapper, so less the list's own.
-    const top = option.offsetTop - list.offsetTop;
-    list.scrollTop = top - list.clientHeight / 2 + option.offsetHeight / 2;
+    if (active >= 0) rows.scrollToIndex(active, { align: "center" });
   });
 
   function type(value: string) {
@@ -156,9 +167,12 @@ export function Combobox<T extends ComboboxOption>({
     setActive(index);
     setText(option.text ?? option.name);
     setOpen(true);
-    document
-      .getElementById(optionId(index))
-      ?.scrollIntoView({ block: "nearest" });
+    if (field) rows.scrollToIndex(index);
+    else {
+      document
+        .getElementById(optionId(index))
+        ?.scrollIntoView({ block: "nearest" });
+    }
   }
 
   function pick(option: T | undefined) {
@@ -207,8 +221,10 @@ export function Combobox<T extends ComboboxOption>({
           (o.text ?? o.name).trim().toLowerCase() ===
           typed.trim().toLowerCase(),
       );
-      if (count > 0) pick(active >= 0 ? shown[active] : (exact ?? shown[0]));
-      else if (onSubmit) onSubmit();
+      if (count > 0) {
+        pick(active >= 0 ? shown[active] : (exact ?? shown[0]));
+        onEnterPick?.();
+      } else if (onSubmit) onSubmit();
       else onCancel?.();
     } else if (event.key === "Backspace" && text === "") {
       onBackspaceEmpty?.();
@@ -240,6 +256,7 @@ export function Combobox<T extends ComboboxOption>({
       aria-controls={listId}
       aria-autocomplete="list"
       aria-describedby={describedBy}
+      data-field-order={fieldOrder}
       aria-activedescendant={
         expanded && active >= 0 ? optionId(active) : undefined
       }
@@ -278,57 +295,94 @@ export function Combobox<T extends ComboboxOption>({
     />
   );
 
-  const list = (className: string, floating = true) => (
+  /** A suggestion, with its group's heading above the first of the group. */
+  const optionView = (option: T, index: number) => {
+    const heading =
+      option.group && option.group !== shown[index - 1]?.group
+        ? option.group
+        : null;
+    return (
+      <>
+        {heading && (
+          <p
+            aria-hidden
+            className="px-3 pt-2 pb-1 text-xs font-bold text-neutral-800"
+          >
+            {heading}
+          </p>
+        )}
+        <div
+          id={optionId(index)}
+          role="option"
+          aria-selected={index === active}
+          // Keep focus in the box while clicking.
+          onMouseDown={(event) => event.preventDefault()}
+          onClick={() => pick(option)}
+          className="cursor-pointer px-3 py-1.5 hover:bg-neutral-50 aria-selected:bg-neutral-100"
+        >
+          {field && renderOption ? renderOption(option) : option.name}
+          {option.group && <span className="sr-only">, {option.group}</span>}
+        </div>
+      </>
+    );
+  };
+
+  const list = (className: string) => (
     <ul
       ref={listRef}
       id={listId}
       role="listbox"
       aria-label={label}
       hidden={!expanded}
-      className={`${floating ? "absolute top-full z-20 mt-1" : ""} max-h-80 overflow-y-auto rounded-lg border border-neutral-200 bg-white py-1 text-left text-sm text-neutral-900 shadow-lg ${className}`}
+      className={`absolute top-full z-20 mt-1 max-h-80 overflow-y-auto rounded-lg border border-neutral-200 bg-white py-1 text-left text-sm text-neutral-900 shadow-lg ${className}`}
     >
-      {field && listHeader && (
+      {shown.map((option, index) => (
+        <li key={option.key} role="presentation">
+          {optionView(option, index)}
+        </li>
+      ))}
+    </ul>
+  );
+
+  // A field's list: its header (such as column names) stays above the
+  // rows, which are drawn only while in view.
+  const fieldList = (
+    <div
+      hidden={!expanded}
+      className="overflow-hidden rounded-lg border border-neutral-200 bg-white text-left text-sm text-neutral-900 shadow-lg"
+    >
+      {listHeader && (
+        <div aria-hidden className="border-b border-neutral-100">
+          {listHeader}
+        </div>
+      )}
+      <ul
+        ref={listRef}
+        id={listId}
+        role="listbox"
+        aria-label={label}
+        className="max-h-80 overflow-y-auto"
+      >
         <li
           role="presentation"
-          aria-hidden
-          className="sticky -top-1 z-10 border-b border-neutral-100 bg-white"
+          className="relative"
+          style={{ height: rows.getTotalSize() }}
         >
-          {listHeader}
-        </li>
-      )}
-      {shown.map((option, index) => {
-        const heading =
-          option.group && option.group !== shown[index - 1]?.group
-            ? option.group
-            : null;
-        return (
-          <li key={option.key} role="presentation">
-            {heading && (
-              <p
-                aria-hidden
-                className="px-3 pt-2 pb-1 text-xs font-bold text-neutral-800"
-              >
-                {heading}
-              </p>
-            )}
+          {rows.getVirtualItems().map((row) => (
             <div
-              id={optionId(index)}
-              role="option"
-              aria-selected={index === active}
-              // Keep focus in the box while clicking.
-              onMouseDown={(event) => event.preventDefault()}
-              onClick={() => pick(option)}
-              className="cursor-pointer px-3 py-1.5 hover:bg-neutral-50 aria-selected:bg-neutral-100"
+              key={shown[row.index]!.key}
+              role="presentation"
+              data-index={row.index}
+              ref={rows.measureElement}
+              className="absolute top-0 left-0 w-full"
+              style={{ transform: `translateY(${row.start}px)` }}
             >
-              {field && renderOption ? renderOption(option) : option.name}
-              {option.group && (
-                <span className="sr-only">, {option.group}</span>
-              )}
+              {optionView(shown[row.index]!, row.index)}
             </div>
-          </li>
-        );
-      })}
-    </ul>
+          ))}
+        </li>
+      </ul>
+    </div>
   );
 
   const announcement = (
@@ -352,7 +406,7 @@ export function Combobox<T extends ComboboxOption>({
           "w-full rounded-lg border border-neutral-300 bg-white px-2.5 py-1.5 text-sm outline-none placeholder:text-neutral-400 focus:border-neutral-500",
         )}
         <div className={`absolute top-full left-0 z-20 mt-1 ${listClassName}`}>
-          {list("w-full", false)}
+          {fieldList}
         </div>
         {announcement}
       </div>
