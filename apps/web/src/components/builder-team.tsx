@@ -1,14 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import {
-  useEffect,
-  useId,
-  useMemo,
-  useRef,
-  useState,
-  type KeyboardEvent,
-} from "react";
+import { useId, useMemo, useRef, useState, type KeyboardEvent } from "react";
 import { REGULATIONS, type Regulation } from "@ots/core";
 import { regulationData } from "@ots/core/game-data";
 import {
@@ -24,13 +17,16 @@ import { browserBox } from "@/lib/box";
 import {
   checkTeam,
   DEFAULT_NAME,
+  draftPaste,
   filled,
   SLOTS,
   type Draft,
 } from "@/lib/builder";
 import { useBuilder } from "@/lib/builder-store";
 import { BuilderSlot } from "./builder-slot";
+import { Modal } from "./modal";
 import { NotInBox } from "./not-in-box";
+import { PasteDialog } from "./paste-dialog";
 import { PokemonSprite } from "./pokemon-sprite";
 
 // Regulations with rules to build for, newest first.
@@ -56,9 +52,14 @@ export function BuilderTeam({ draft }: { draft: Draft }) {
   const setRegulation = useBuilder((s) => s.setRegulation);
   const moveSlot = useBuilder((s) => s.moveSlot);
   const updateSet = useBuilder((s) => s.updateSet);
+  const replaceSets = useBuilder((s) => s.replaceSets);
   const [slot, setSlot] = useState(0);
   // Check team's result, shown in a modal until it's closed.
   const [checked, setChecked] = useState<ValidationResult | null>(null);
+  const [editingText, setEditingText] = useState(false);
+  // Counts saves from Import / Export, so the open slot's fields start
+  // over with the new team.
+  const [saves, setSaves] = useState(0);
   // The player's box, to mark Pokémon they don't have; null if they've
   // never set one up. The builder runs in the browser, so this reads the
   // cookie directly.
@@ -143,7 +144,30 @@ export function BuilderTeam({ draft }: { draft: Draft }) {
         >
           Check team
         </button>
+        <button
+          type="button"
+          onClick={() => setEditingText(true)}
+          className="cursor-pointer rounded-lg border border-neutral-300 bg-white px-3 py-1.5 text-sm font-medium hover:bg-neutral-50"
+        >
+          Import / Export
+        </button>
       </div>
+
+      {editingText && (
+        <PasteDialog
+          title="Import / Export"
+          intro="The team as a Showdown paste: copy it, edit it, or replace it with another paste, RK9 team list or PokePaste link. Saving replaces the team's Pokémon."
+          initialText={draftPaste(draft)}
+          submitLabel="Save"
+          copyable
+          onSubmit={({ sets }) => {
+            replaceSets(draft.id, sets);
+            setSlot(0);
+            setSaves((n) => n + 1);
+          }}
+          onClose={() => setEditingText(false)}
+        />
+      )}
 
       {checked && (
         <CheckDialog
@@ -282,7 +306,7 @@ export function BuilderTeam({ draft }: { draft: Draft }) {
         aria-labelledby={`${panelId}-tab-${slot}`}
       >
         <BuilderSlot
-          key={slot}
+          key={`${slot}-${saves}`}
           draft={draft}
           slot={slot}
           owned={owned}
@@ -362,16 +386,14 @@ function CheckDialog({
   onJump: (slot: number) => void;
   onClose: () => void;
 }) {
-  const dialog = useRef<HTMLDialogElement>(null);
-  const titleId = useId();
-  useEffect(() => {
-    const el = dialog.current;
-    if (el && !el.open) el.showModal();
-  }, []);
-
   const ready = report.errors.length === 0;
   const count = report.errors.length;
-  const line = (problem: Problem, i: number, tone: "error" | "warning") => {
+  const line = (
+    problem: Problem,
+    i: number,
+    tone: "error" | "warning",
+    close: () => void,
+  ) => {
     const who = problem.slot ? names[problem.slot - 1] : null;
     const text = (
       <>
@@ -387,7 +409,7 @@ function CheckDialog({
           <button
             type="button"
             onClick={() => {
-              dialog.current?.close();
+              close();
               onJump(problem.slot! - 1);
             }}
             className="cursor-pointer text-left hover:underline"
@@ -402,18 +424,10 @@ function CheckDialog({
   };
 
   return (
-    <dialog
-      ref={dialog}
-      aria-labelledby={titleId}
+    <Modal
       onClose={onClose}
-      // A click on the backdrop lands on the dialog itself.
-      onClick={(e) => {
-        if (e.target === e.currentTarget) e.currentTarget.close();
-      }}
-      className="m-auto w-[min(28rem,calc(100%-2rem))] rounded-xl bg-white text-sm shadow-xl backdrop:bg-neutral-900/40"
-    >
-      <div className="p-5">
-        <h2 id={titleId} className="flex items-center gap-2 font-semibold">
+      title={
+        <>
           <span
             aria-hidden
             className={`flex size-5 shrink-0 items-center justify-center rounded-full text-xs text-white ${ready ? "bg-emerald-600" : "bg-red-600"}`}
@@ -423,36 +437,41 @@ function CheckDialog({
           {ready
             ? `Your team is ready for Reg ${regulation}.`
             : `Your team isn't ready for Reg ${regulation}.`}
-        </h2>
-        {!ready && (
-          <>
-            <p className="mt-3 text-neutral-600">
-              {count === 1
-                ? "Fix this problem:"
-                : `Fix these ${count} problems:`}
-            </p>
-            <ul className="mt-1.5 list-disc space-y-1 pl-5 marker:text-red-300">
-              {report.errors.map((p, i) => line(p, i, "error"))}
-            </ul>
-          </>
-        )}
-        {report.warnings.length > 0 && (
-          <>
-            <p className="mt-3 text-neutral-600">Worth knowing:</p>
-            <ul className="mt-1.5 list-disc space-y-1 pl-5 marker:text-amber-300">
-              {report.warnings.map((p, i) => line(p, i, "warning"))}
-            </ul>
-          </>
-        )}
-        <form method="dialog" className="mt-5 flex justify-end">
-          <button
-            autoFocus
-            className="cursor-pointer rounded-lg bg-neutral-900 px-4 py-1.5 font-medium text-white hover:bg-neutral-700"
-          >
-            OK
-          </button>
-        </form>
-      </div>
-    </dialog>
+        </>
+      }
+    >
+      {(close) => (
+        <>
+          {!ready && (
+            <>
+              <p className="mt-3 text-neutral-600">
+                {count === 1
+                  ? "Fix this problem:"
+                  : `Fix these ${count} problems:`}
+              </p>
+              <ul className="mt-1.5 list-disc space-y-1 pl-5 marker:text-red-300">
+                {report.errors.map((p, i) => line(p, i, "error", close))}
+              </ul>
+            </>
+          )}
+          {report.warnings.length > 0 && (
+            <>
+              <p className="mt-3 text-neutral-600">Worth knowing:</p>
+              <ul className="mt-1.5 list-disc space-y-1 pl-5 marker:text-amber-300">
+                {report.warnings.map((p, i) => line(p, i, "warning", close))}
+              </ul>
+            </>
+          )}
+          <form method="dialog" className="mt-5 flex justify-end">
+            <button
+              autoFocus
+              className="cursor-pointer rounded-lg bg-neutral-900 px-4 py-1.5 font-medium text-white hover:bg-neutral-700"
+            >
+              OK
+            </button>
+          </form>
+        </>
+      )}
+    </Modal>
   );
 }

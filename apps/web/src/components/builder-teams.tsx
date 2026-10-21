@@ -3,9 +3,11 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { getCurrentRegulation } from "@ots/core";
 import { displaySpecies } from "@ots/core/teams";
 import { DEFAULT_NAME, orderedDrafts, type Draft } from "@/lib/builder";
 import { useBuilder } from "@/lib/builder-store";
+import { PasteDialog } from "./paste-dialog";
 import { PokemonSprite } from "./pokemon-sprite";
 
 /**
@@ -16,12 +18,14 @@ export function BuilderTeams() {
   const drafts = useBuilder((s) => s.drafts);
   const order = useBuilder((s) => s.order);
   const newDraft = useBuilder((s) => s.newDraft);
+  const openTeam = useBuilder((s) => s.openTeam);
   const moveDraft = useBuilder((s) => s.moveDraft);
   const router = useRouter();
   const teams = orderedDrafts({ drafts, order });
   // The card being dragged, and the place it would drop.
   const [dragging, setDragging] = useState<string | null>(null);
   const [over, setOver] = useState<number | null>(null);
+  const [importing, setImporting] = useState(false);
 
   function create() {
     router.push(`/builder?team=${newDraft()}`);
@@ -29,7 +33,7 @@ export function BuilderTeams() {
 
   return (
     <div className="space-y-5">
-      <div className="flex flex-wrap items-center justify-between gap-3">
+      <div className="flex flex-wrap items-center gap-3">
         <button
           type="button"
           onClick={create}
@@ -37,14 +41,39 @@ export function BuilderTeams() {
         >
           New team
         </button>
+        <button
+          type="button"
+          onClick={() => setImporting(true)}
+          className="cursor-pointer rounded-lg border border-neutral-300 bg-white px-4 py-2 text-sm font-medium hover:bg-neutral-50"
+        >
+          Import team
+        </button>
       </div>
+
+      {importing && (
+        <PasteDialog
+          title="Import team"
+          intro="Paste a Showdown team, an RK9 team list or a PokePaste link. It's added as a new team."
+          submitLabel="Import"
+          onSubmit={({ sets, title, regulation }) => {
+            const id = openTeam({
+              name: title ?? DEFAULT_NAME,
+              regulation: regulation ?? getCurrentRegulation(),
+              sets,
+              sourceTeamId: null,
+            });
+            router.push(`/builder?team=${id}`);
+          }}
+          onClose={() => setImporting(false)}
+        />
+      )}
 
       {teams.length === 0 ? (
         <div className="rounded-xl border border-dashed border-neutral-300 px-6 py-12 text-center">
           <p className="font-medium">No teams yet</p>
           <p className="mt-1 text-sm text-neutral-500">
-            Start one with New team, or open a tournament team in the builder
-            from its page.
+            Start one with New team or Import team, or open a tournament team in
+            the builder from its page.
           </p>
         </div>
       ) : (

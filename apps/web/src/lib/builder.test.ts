@@ -5,10 +5,12 @@ import {
   checkTeam,
   createDraft,
   DEFAULT_NAME,
+  draftPaste,
   fillSlots,
   moveDraft,
   noDrafts,
   orderedDrafts,
+  readPastedTeam,
   removeDraft,
   SLOTS,
   statTotal,
@@ -224,5 +226,60 @@ describe("checkTeam", () => {
     expect(report.errors.some((e) => e.message === "Choose a Pokémon")).toBe(
       false,
     );
+  });
+});
+
+describe("readPastedTeam", () => {
+  const lines = (...text: string[]) => text.join("\n");
+
+  it("makes a Mega its base form holding its stone", () => {
+    const { sets } = readPastedTeam(
+      lines("Charizard-Mega-Y", "Ability: Blaze", "- Heat Wave"),
+    );
+    expect(sets[0]).toMatchObject({
+      speciesId: "charizard",
+      itemId: "charizarditey",
+    });
+  });
+
+  it("keeps the first six Pokémon", () => {
+    const incineroar = lines("Incineroar", "Ability: Intimidate", "- Protect");
+    const { sets, problems } = readPastedTeam(
+      Array.from({ length: 7 }, () => incineroar).join("\n\n"),
+    );
+    expect(sets).toHaveLength(SLOTS);
+    expect(problems.map((p) => p.message)).toEqual([
+      "A team has at most six Pokémon",
+    ]);
+  });
+
+  it("reports lines it can't read", () => {
+    const { sets, problems } = readPastedTeam(
+      lines("Incineroar", "Ability: Intimidate", "Mood: grumpy"),
+    );
+    expect(sets).toHaveLength(1);
+    expect(problems.length).toBeGreaterThan(0);
+  });
+});
+
+describe("draftPaste", () => {
+  it("writes the filled slots as a paste that reads back the same", () => {
+    const pasted = readPastedTeam(
+      [
+        "Incineroar @ Sitrus Berry",
+        "Ability: Intimidate",
+        "EVs: 32 HP / 2 Atk / 32 SpD",
+        "Careful Nature",
+        "- Fake Out",
+        "- Parting Shot",
+      ].join("\n"),
+    ).sets;
+    const draft = {
+      ...createDraft("M-C"),
+      sets: fillSlots([emptySet(), ...pasted]),
+    };
+    const paste = draftPaste(draft);
+    expect(paste.startsWith("Incineroar @ Sitrus Berry")).toBe(true);
+    expect(readPastedTeam(paste).sets).toEqual(pasted);
   });
 });
