@@ -66,39 +66,43 @@ export function sheetReading(
  * isn't wrong; it just doesn't say.
  */
 export function sheetErrors(team: Team, regulation: Regulation): SheetError[] {
-  return validateTeam(team, regulation, { complete: true })
-    .errors.filter((error) => error.field !== "nature")
-    .map((error): SheetError => {
-      const set = error.slot ? team.sets[error.slot - 1] : undefined;
-      if (
-        !set?.speciesId ||
-        !error.field ||
-        error.field === "nature" ||
-        !error.value
-      ) {
-        return error;
-      }
-      const species = getSpecies(set.speciesId);
-      const form = species?.battleOnlyFromId ?? set.speciesId;
-      const mega = itemForm(form, set.itemId);
-      if (error.field === "ability" && mega?.ability1 === error.value) {
-        return {
-          ...error,
-          message: `${nameOf("ability", error.value)} is ${mega.name}'s ability, so ${getSpecies(form)?.name ?? form}'s own isn't known`,
-          megaAbility: true,
-        };
-      }
-      const reading = sheetReading(form, error.field, error.value);
-      if (!reading && BLANK[error.field] === error.value) {
-        return { ...error, leftBlank: true };
-      }
-      return reading
-        ? {
+  return (
+    validateTeam(team, regulation, { complete: true })
+      .errors.filter((error) => error.field !== "nature")
+      // Where a builder shows a problem isn't part of a sheet's errors.
+      .map(({ place: _place, short: _short, ...error }) => error)
+      .map((error): SheetError => {
+        const set = error.slot ? team.sets[error.slot - 1] : undefined;
+        if (
+          !set?.speciesId ||
+          !error.field ||
+          error.field === "nature" ||
+          !error.value
+        ) {
+          return error;
+        }
+        const species = getSpecies(set.speciesId);
+        const form = species?.battleOnlyFromId ?? set.speciesId;
+        const mega = itemForm(form, set.itemId);
+        if (error.field === "ability" && mega?.ability1 === error.value) {
+          return {
             ...error,
-            reading: nameOf(error.field, reading),
-          }
-        : error;
-    });
+            message: `${nameOf("ability", error.value)} is ${mega.name}'s ability, so ${getSpecies(form)?.name ?? form}'s own isn't known`,
+            megaAbility: true,
+          };
+        }
+        const reading = sheetReading(form, error.field, error.value);
+        if (!reading && BLANK[error.field] === error.value) {
+          return { ...error, leftBlank: true };
+        }
+        return reading
+          ? {
+              ...error,
+              reading: nameOf(error.field, reading),
+            }
+          : error;
+      })
+  );
 }
 
 /** "Slot 5: Basculegion can't learn Last Resort (probably Last Respects)" */

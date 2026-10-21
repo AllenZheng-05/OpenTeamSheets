@@ -1,7 +1,14 @@
 "use client";
 
 import Link from "next/link";
-import { useId, useRef, useState, type KeyboardEvent } from "react";
+import {
+  useEffect,
+  useId,
+  useMemo,
+  useRef,
+  useState,
+  type KeyboardEvent,
+} from "react";
 import { REGULATIONS, type Regulation } from "@ots/core";
 import { regulationData } from "@ots/core/game-data";
 import {
@@ -9,9 +16,18 @@ import {
   boxTiles,
   displaySpecies,
   emptySet,
+  validateTeam,
+  type Problem,
+  type ValidationResult,
 } from "@ots/core/teams";
 import { browserBox } from "@/lib/box";
-import { DEFAULT_NAME, filled, SLOTS, type Draft } from "@/lib/builder";
+import {
+  checkTeam,
+  DEFAULT_NAME,
+  filled,
+  SLOTS,
+  type Draft,
+} from "@/lib/builder";
 import { useBuilder } from "@/lib/builder-store";
 import { BuilderSlot } from "./builder-slot";
 import { NotInBox } from "./not-in-box";
@@ -41,10 +57,18 @@ export function BuilderTeam({ draft }: { draft: Draft }) {
   const moveSlot = useBuilder((s) => s.moveSlot);
   const updateSet = useBuilder((s) => s.updateSet);
   const [slot, setSlot] = useState(0);
+  // Check team's result, shown in a modal until it's closed.
+  const [checked, setChecked] = useState<ValidationResult | null>(null);
   // The player's box, to mark Pokémon they don't have; null if they've
   // never set one up. The builder runs in the browser, so this reads the
   // cookie directly.
   const [owned] = useState(() => browserBox(boxTiles().map((t) => t.id)));
+  // What's wrong with the team as it stands (an unfinished set isn't).
+  const problems = useMemo(
+    () =>
+      validateTeam({ sets: draft.sets }, draft.regulation, { complete: false }),
+    [draft.sets, draft.regulation],
+  );
   // The slot being dragged, and the one it's over.
   const [dragging, setDragging] = useState<number | null>(null);
   const [over, setOver] = useState<number | null>(null);
@@ -112,7 +136,27 @@ export function BuilderTeam({ draft }: { draft: Draft }) {
             ))}
           </select>
         </label>
+        <button
+          type="button"
+          onClick={() => setChecked(checkTeam(draft))}
+          className="cursor-pointer rounded-lg border border-neutral-300 bg-white px-3 py-1.5 text-sm font-medium hover:bg-neutral-50"
+        >
+          Check team
+        </button>
       </div>
+
+      {checked && (
+        <CheckDialog
+          report={checked}
+          regulation={draft.regulation}
+          names={draft.sets.map((s) => displaySpecies(s)?.name ?? null)}
+          onJump={(i) => {
+            setSlot(i);
+            tabs.current[i]?.focus();
+          }}
+          onClose={() => setChecked(null)}
+        />
+      )}
 
       <div
         role="tablist"
@@ -237,7 +281,16 @@ export function BuilderTeam({ draft }: { draft: Draft }) {
         role="tabpanel"
         aria-labelledby={`${panelId}-tab-${slot}`}
       >
-        <BuilderSlot key={slot} draft={draft} slot={slot} owned={owned} />
+        <BuilderSlot
+          key={slot}
+          draft={draft}
+          slot={slot}
+          owned={owned}
+          problems={{
+            errors: problems.errors.filter((p) => p.slot === slot + 1),
+            warnings: problems.warnings.filter((p) => p.slot === slot + 1),
+          }}
+        />
       </section>
     </div>
   );
@@ -287,5 +340,119 @@ function TrashIcon() {
     >
       <path d="M2.5 4h11M6.5 4V2.5h3V4M4 4l.7 9.5h6.6L12 4M6.75 6.5v4.5M9.25 6.5v4.5" />
     </svg>
+  );
+}
+
+/**
+ * Check team's result in a modal, as Showdown's Validate gives: ready, or
+ * every problem with its Pokémon (clicking one closes this and opens that
+ * slot), then warnings. It shows the team as it was when checked.
+ */
+function CheckDialog({
+  report,
+  regulation,
+  names,
+  onJump,
+  onClose,
+}: {
+  report: ValidationResult;
+  regulation: string;
+  /** Each slot's Pokémon, by slot index. */
+  names: (string | null)[];
+  onJump: (slot: number) => void;
+  onClose: () => void;
+}) {
+  const dialog = useRef<HTMLDialogElement>(null);
+  const titleId = useId();
+  useEffect(() => {
+    const el = dialog.current;
+    if (el && !el.open) el.showModal();
+  }, []);
+
+  const ready = report.errors.length === 0;
+  const count = report.errors.length;
+  const line = (problem: Problem, i: number, tone: "error" | "warning") => {
+    const who = problem.slot ? names[problem.slot - 1] : null;
+    const text = (
+      <>
+        {who && <span className="font-medium text-neutral-900">{who}: </span>}
+        <span className={tone === "error" ? "text-red-700" : "text-amber-700"}>
+          {problem.message}
+        </span>
+      </>
+    );
+    return (
+      <li key={`${tone}-${i}`}>
+        {problem.slot ? (
+          <button
+            type="button"
+            onClick={() => {
+              dialog.current?.close();
+              onJump(problem.slot! - 1);
+            }}
+            className="cursor-pointer text-left hover:underline"
+          >
+            {text}
+          </button>
+        ) : (
+          text
+        )}
+      </li>
+    );
+  };
+
+  return (
+    <dialog
+      ref={dialog}
+      aria-labelledby={titleId}
+      onClose={onClose}
+      // A click on the backdrop lands on the dialog itself.
+      onClick={(e) => {
+        if (e.target === e.currentTarget) e.currentTarget.close();
+      }}
+      className="m-auto w-[min(28rem,calc(100%-2rem))] rounded-xl bg-white text-sm shadow-xl backdrop:bg-neutral-900/40"
+    >
+      <div className="p-5">
+        <h2 id={titleId} className="flex items-center gap-2 font-semibold">
+          <span
+            aria-hidden
+            className={`flex size-5 shrink-0 items-center justify-center rounded-full text-xs text-white ${ready ? "bg-emerald-600" : "bg-red-600"}`}
+          >
+            {ready ? "✓" : "!"}
+          </span>
+          {ready
+            ? `Your team is ready for Reg ${regulation}.`
+            : `Your team isn't ready for Reg ${regulation}.`}
+        </h2>
+        {!ready && (
+          <>
+            <p className="mt-3 text-neutral-600">
+              {count === 1
+                ? "Fix this problem:"
+                : `Fix these ${count} problems:`}
+            </p>
+            <ul className="mt-1.5 list-disc space-y-1 pl-5 marker:text-red-300">
+              {report.errors.map((p, i) => line(p, i, "error"))}
+            </ul>
+          </>
+        )}
+        {report.warnings.length > 0 && (
+          <>
+            <p className="mt-3 text-neutral-600">Worth knowing:</p>
+            <ul className="mt-1.5 list-disc space-y-1 pl-5 marker:text-amber-300">
+              {report.warnings.map((p, i) => line(p, i, "warning"))}
+            </ul>
+          </>
+        )}
+        <form method="dialog" className="mt-5 flex justify-end">
+          <button
+            autoFocus
+            className="cursor-pointer rounded-lg bg-neutral-900 px-4 py-1.5 font-medium text-white hover:bg-neutral-700"
+          >
+            OK
+          </button>
+        </form>
+      </div>
+    </dialog>
   );
 }

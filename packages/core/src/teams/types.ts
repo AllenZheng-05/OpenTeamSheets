@@ -55,6 +55,14 @@ export interface Problem {
   field?: "item" | "ability" | "move" | "nature";
   /** Its id, or for an item that isn't in the game, its name as listed. */
   value?: string;
+  /**
+   * Where a builder shows it when there's no `field`: on the Pokémon, the
+   * item, the ability, or a move (the one in `value`). Kept apart from
+   * `field`, which team sheets' suggested readings rely on.
+   */
+  place?: "species" | "item" | "ability" | "move";
+  /** A few words for inside that field, such as "can't learn". */
+  short?: string;
 }
 
 export interface ParseResult {

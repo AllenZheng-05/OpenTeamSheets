@@ -4,6 +4,7 @@ import { describe, expect, it } from "vitest";
 import { teamFingerprint } from "./fingerprint";
 import { parseRk9 } from "./rk9";
 import { parseShowdown } from "./showdown";
+import { emptySet, type TeamSet } from "./types";
 import { validateTeam } from "./validate";
 
 const fixtures = path.join(import.meta.dirname, "__fixtures__");
@@ -111,6 +112,62 @@ describe("validateTeam", () => {
     expect(result.errors).toEqual([]);
     expect(messages(result.warnings)).toEqual([
       "Reg M-D's rules aren't available yet, so legality wasn't checked",
+    ]);
+  });
+});
+
+describe("validateTeam's places for a builder", () => {
+  const set = (speciesId: string, more: Partial<TeamSet> = {}): TeamSet => ({
+    ...emptySet(),
+    speciesId,
+    ...more,
+  });
+  const problems = (sets: TeamSet[]) =>
+    validateTeam({ sets }, "M-C", { complete: false }).errors.map(
+      ({ slot, field, place, value, short }) => ({
+        slot,
+        at: field ?? place,
+        value,
+        short,
+      }),
+    );
+
+  it("puts a move it can't learn on that move", () => {
+    expect(
+      problems([set("garchomp", { moveIds: ["earthquake", "fakeout"] })]),
+    ).toEqual([
+      { slot: 1, at: "move", value: "fakeout", short: "can't learn" },
+    ]);
+  });
+
+  it("puts the one-of-each rules on the Pokémon and the item", () => {
+    expect(
+      problems([
+        set("incineroar", { itemId: "sitrusberry" }),
+        set("incineroar", { itemId: "sitrusberry" }),
+      ]),
+    ).toEqual([
+      {
+        slot: 2,
+        at: "species",
+        value: undefined,
+        short: "already on the team",
+      },
+      { slot: 2, at: "item", value: undefined, short: "held twice" },
+    ]);
+  });
+
+  it("puts a repeated move on that move", () => {
+    expect(
+      problems([set("incineroar", { moveIds: ["fakeout", "fakeout"] })]),
+    ).toEqual([
+      { slot: 1, at: "move", value: "fakeout", short: "listed twice" },
+    ]);
+  });
+
+  it("puts a Pokémon not in the regulation on the Pokémon", () => {
+    expect(problems([set("cramorant")])).toEqual([
+      { slot: 1, at: "species", value: undefined, short: "not in Reg M-C" },
     ]);
   });
 });
