@@ -140,6 +140,7 @@ ${indent(team(kingambit.replace("Iron Head", "Moonblast")))}
         message: "Kingambit can't learn Moonblast",
         field: "move",
         value: "moonblast",
+        short: "can't learn",
       },
     ]);
   });

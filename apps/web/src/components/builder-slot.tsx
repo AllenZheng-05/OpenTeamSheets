@@ -11,7 +11,9 @@ import {
   MAX_STAT_POINTS,
   MAX_TOTAL_STAT_POINTS,
   nameOf,
+  type Problem,
   type TeamSet,
+  type ValidationResult,
 } from "@ots/core/teams";
 import { filled, statTotal, withStatPoints, type Draft } from "@/lib/builder";
 import {
@@ -82,12 +84,41 @@ export function BuilderSlot({
   draft,
   slot,
   owned,
+  problems,
 }: {
   draft: Draft;
   slot: number;
   /** The player's box, to mark Pokémon they don't have; null if unset. */
   owned: Set<string> | null;
+  /** The validator's problems with this slot. */
+  problems: ValidationResult;
 }) {
+  // A field's problem, if it has one: a move's by its id.
+  const markAt = (
+    at: Problem["place"],
+    value?: string | null,
+  ): Mark | undefined => {
+    const find = (list: Problem[]) =>
+      list.find(
+        (p) =>
+          (p.field ?? p.place) === at && (at !== "move" || p.value === value),
+      );
+    const error = find(problems.errors);
+    if (error)
+      return {
+        tone: "error",
+        short: error.short ?? "not allowed",
+        message: error.message,
+      };
+    const warning = find(problems.warnings);
+    if (warning)
+      return {
+        tone: "warning",
+        short: warning.short ?? "check",
+        message: warning.message,
+      };
+    return undefined;
+  };
   const set = draft.sets[slot]!;
   const update = useBuilder((s) => s.updateSet);
   const change = (patch: Partial<TeamSet>) => update(draft.id, slot, patch);
@@ -139,6 +170,7 @@ export function BuilderSlot({
           search={findSpecies}
           kind="species"
           value={set.speciesId}
+          mark={markAt("species")}
           onPick={chooseSpecies}
           onClear={() => change(emptySet())}
         />
@@ -174,10 +206,15 @@ export function BuilderSlot({
                 options={itemOptions(draft.regulation)}
                 kind="item"
                 value={set.itemId}
+                mark={markAt("item")}
                 onPick={(itemId) => change({ itemId, listedItem: null })}
                 onClear={() => change({ itemId: null, listedItem: null })}
               />
-              <AbilityField set={set} onChange={change} />
+              <AbilityField
+                set={set}
+                mark={markAt("ability")}
+                onChange={change}
+              />
               {mega?.ability && (
                 <p className="text-xs text-neutral-600">
                   Becomes{" "}
@@ -189,7 +226,12 @@ export function BuilderSlot({
                 </p>
               )}
             </div>
-            <MoveFields set={set} draft={draft} onChange={change} />
+            <MoveFields
+              set={set}
+              draft={draft}
+              markFor={(move) => markAt("move", move)}
+              onChange={change}
+            />
           </div>
         </div>
       </div>
@@ -197,6 +239,7 @@ export function BuilderSlot({
       <StatPanel
         set={set}
         base={base?.stats}
+        baseName={base?.name}
         mega={mega ? { name: mega.name, stats: mega.stats } : undefined}
         onChange={change}
       />
@@ -223,9 +266,11 @@ export function BuilderSlot({
 /** The abilities this Pokémon can have outside battle. */
 function AbilityField({
   set,
+  mark,
   onChange,
 }: {
   set: TeamSet;
+  mark: Mark | undefined;
   onChange: (patch: Partial<TeamSet>) => void;
 }) {
   const options = useMemo(() => {
@@ -240,6 +285,7 @@ function AbilityField({
       options={options}
       kind="ability"
       value={set.abilityId}
+      mark={mark}
       onPick={(abilityId) => onChange({ abilityId })}
       onClear={() => onChange({ abilityId: null })}
     />
@@ -250,10 +296,13 @@ function AbilityField({
 function MoveFields({
   set,
   draft,
+  markFor,
   onChange,
 }: {
   set: TeamSet;
   draft: Draft;
+  /** A move's problem, if it has one. */
+  markFor: (move: string | null) => Mark | undefined;
   onChange: (patch: Partial<TeamSet>) => void;
 }) {
   const learnable = useMemo(() => {
@@ -272,6 +321,7 @@ function MoveFields({
           move={move}
           options={learnable}
           others={set.moveIds}
+          mark={markFor(move)}
           onPick={(id) => {
             const next = [...set.moveIds];
             next[Math.min(i, next.length)] = id;
@@ -291,6 +341,7 @@ function MoveField({
   move,
   options,
   others,
+  mark,
   onPick,
   onClear,
 }: {
@@ -298,6 +349,7 @@ function MoveField({
   move: string | null;
   options: FieldOption[];
   others: string[];
+  mark: Mark | undefined;
   onPick: (id: string) => void;
   onClear: () => void;
 }) {
@@ -314,6 +366,7 @@ function MoveField({
       options={shown}
       kind="move"
       value={move}
+      mark={mark}
       onPick={onPick}
       onClear={onClear}
     />
@@ -330,11 +383,13 @@ function MoveField({
 function StatPanel({
   set,
   base,
+  baseName,
   mega,
   onChange,
 }: {
   set: TeamSet;
   base: Record<StatId, number> | undefined;
+  baseName: string | undefined;
   mega: { name: string; stats: Record<StatId, number> } | undefined;
   onChange: (patch: Partial<TeamSet>) => void;
 }) {
@@ -376,7 +431,26 @@ function StatPanel({
         </p>
       </div>
 
-      <div className="mt-4 space-y-3">
+      {/* A key for the numbers on the right: whose stats, before and after
+          Mega Evolving. */}
+      {base && (
+        <p
+          aria-hidden
+          className="mt-4 border-b border-neutral-100 pb-1.5 text-right text-xs text-neutral-500"
+        >
+          {mega ? (
+            <>
+              <span className="font-semibold text-neutral-900">{baseName}</span>
+              {" → "}
+              <span className="font-semibold">{mega.name}</span>
+            </>
+          ) : (
+            "Stats in battle"
+          )}
+        </p>
+      )}
+
+      <div className={`${base ? "mt-2" : "mt-4"} space-y-3`}>
         {STATS.map(({ id, label }) => {
           const value = set.statPoints?.[id] ?? 0;
           const boost =
@@ -405,6 +479,7 @@ function StatPanel({
                 </span>
                 <span className="tabular-nums" title="Stat in battle">
                   <span className="font-semibold">{now}</span>
+                  {mega && <span className="sr-only"> as {baseName}</span>}
                   {asMega !== null && asMega !== now && (
                     <span
                       className="text-neutral-500"
@@ -466,6 +541,7 @@ function Field({
   onClear,
   owned = null,
   order,
+  mark,
 }: {
   label: string;
   placeholder: string;
@@ -481,7 +557,10 @@ function Field({
   owned?: Set<string> | null;
   /** Its place in the slot (FIELD_ORDER); Enter moves to the next. */
   order: number;
+  /** What's wrong with its value, shown inside it. */
+  mark?: Mark;
 }) {
+  const markId = useId();
   const suggestions = useCallback(
     (query: string) => (search ? search(query) : matchOptions(options, query)),
     [options, search],
@@ -498,6 +577,12 @@ function Field({
         onClear={onClear}
         fieldOrder={order}
         onEnterPick={() => focusAfter(order)}
+        invalid={mark?.tone}
+        describedBy={mark ? markId : undefined}
+        inputEnd={mark && <MarkView mark={mark} />}
+        inputEndWidth={
+          mark ? `calc(${mark.short.length * 0.6}em + 2.25rem)` : undefined
+        }
         {...(kind === "species"
           ? {
               renderOption: (option: FieldOption) =>
@@ -522,6 +607,11 @@ function Field({
               ),
             })}
       />
+      {mark && (
+        <span id={markId} className="sr-only">
+          {mark.message}
+        </span>
+      )}
     </div>
   );
 }
@@ -728,6 +818,31 @@ function HoverInfo({
       >
         <span className="block font-semibold">{label}</span>
         {description ?? "Not in Pokémon Champions."}
+      </span>
+    </span>
+  );
+}
+
+/** A field's problem: how bad, a few words for inside it, and in full. */
+interface Mark {
+  tone: "error" | "warning";
+  short: string;
+  message: string;
+}
+
+/** "can't learn" and a "!", inside the field at its right end. */
+function MarkView({ mark }: { mark: Mark }) {
+  const error = mark.tone === "error";
+  return (
+    <span
+      aria-hidden
+      className={`flex items-center gap-1.5 text-[11px] ${error ? "text-red-700" : "text-amber-700"}`}
+    >
+      {mark.short}
+      <span
+        className={`flex size-5 items-center justify-center rounded-full text-[11px] font-bold text-white ${error ? "bg-red-600" : "bg-amber-600"}`}
+      >
+        !
       </span>
     </span>
   );

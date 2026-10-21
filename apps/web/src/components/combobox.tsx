@@ -60,6 +60,9 @@ export function Combobox<T extends ComboboxOption>({
   listClassName = "w-full min-w-56",
   onEnterPick,
   fieldOrder,
+  invalid,
+  inputEnd,
+  inputEndWidth,
 }: {
   /** For screen readers; the box shows the placeholder. */
   label: string;
@@ -111,6 +114,12 @@ export function Combobox<T extends ComboboxOption>({
   onEnterPick?: () => void;
   /** The field's place in its form, for moving between fields. */
   fieldOrder?: number;
+  /** The field variant's value has a problem: not allowed, or a warning. */
+  invalid?: "error" | "warning";
+  /** Shown inside the field at its right end, such as why it's invalid. */
+  inputEnd?: ReactNode;
+  /** How much room `inputEnd` needs (CSS), so the text stops before it. */
+  inputEndWidth?: string;
 }) {
   const field = variant === "field";
   const listId = useId();
@@ -256,6 +265,7 @@ export function Combobox<T extends ComboboxOption>({
       aria-controls={listId}
       aria-autocomplete="list"
       aria-describedby={describedBy}
+      aria-invalid={invalid ? true : undefined}
       data-field-order={fieldOrder}
       aria-activedescendant={
         expanded && active >= 0 ? optionId(active) : undefined
@@ -292,6 +302,7 @@ export function Combobox<T extends ComboboxOption>({
       }}
       onKeyDown={onKeyDown}
       className={className}
+      style={inputEndWidth ? { paddingRight: inputEndWidth } : undefined}
     />
   );
 
@@ -402,9 +413,22 @@ export function Combobox<T extends ComboboxOption>({
         >
           {label}
         </label>
-        {input(
-          "w-full rounded-lg border border-neutral-300 bg-white px-2.5 py-1.5 text-sm outline-none placeholder:text-neutral-400 focus:border-neutral-500",
-        )}
+        <div className="relative">
+          {input(
+            `w-full rounded-lg border bg-white px-2.5 py-1.5 text-sm outline-none placeholder:text-neutral-400 ${
+              invalid === "error"
+                ? "border-red-500"
+                : invalid === "warning"
+                  ? "border-amber-500"
+                  : "border-neutral-300 focus:border-neutral-500"
+            }`,
+          )}
+          {inputEnd && (
+            <span className="pointer-events-none absolute inset-y-0 right-1.5 flex items-center">
+              {inputEnd}
+            </span>
+          )}
+        </div>
         <div className={`absolute top-full left-0 z-20 mt-1 ${listClassName}`}>
           {fieldList}
         </div>

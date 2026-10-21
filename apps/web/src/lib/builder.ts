@@ -1,5 +1,12 @@
 import type { Regulation } from "@ots/core";
-import { emptySet, type StatTable, type TeamSet } from "@ots/core/teams";
+import {
+  emptySet,
+  MAX_TOTAL_STAT_POINTS,
+  validateTeam,
+  type StatTable,
+  type TeamSet,
+  type ValidationResult,
+} from "@ots/core/teams";
 
 // The builder's teams, kept in the browser until accounts (#27) move them
 // into a profile. These are the pure operations on them; builder-store.ts
@@ -166,4 +173,48 @@ export function withStatPoints(
   const room = Math.max(0, Math.min(max, totalMax - others));
   const clamped = Math.max(0, Math.min(room, Math.round(value) || 0));
   return { ...base, [stat]: clamped };
+}
+
+/** Teams this small are legal, but not recommended. */
+const SMALL_TEAM = 5;
+
+/**
+ * The team checked as finished, as Showdown's Validate does: every problem
+ * the live marks show, plus what a finished team needs (at least four
+ * Pokémon; an ability, nature and move each). Empty slots are left out,
+ * since a team needn't fill all six, and problems keep their slot numbers.
+ * Warnings, which are legal but not recommended: stat points left unspent,
+ * and a team of four or five.
+ */
+export function checkTeam(draft: Draft): ValidationResult {
+  const kept = draft.sets.flatMap((set, i) =>
+    filled(set) ? [{ set, i }] : [],
+  );
+  const result = validateTeam(
+    { sets: kept.map((k) => k.set) },
+    draft.regulation,
+    { complete: true },
+  );
+  const slotOf = (slot: number | null) =>
+    slot === null ? null : kept[slot - 1]!.i + 1;
+  const warnings = result.warnings.map((p) => ({ ...p, slot: slotOf(p.slot) }));
+  for (const { set, i } of kept) {
+    const left = MAX_TOTAL_STAT_POINTS - statTotal(set.statPoints);
+    if (left > 0) {
+      warnings.push({
+        slot: i + 1,
+        message: `${left} of ${MAX_TOTAL_STAT_POINTS} stat points are unspent`,
+      });
+    }
+  }
+  if (kept.length >= 4 && kept.length <= SMALL_TEAM) {
+    warnings.push({
+      slot: null,
+      message: `A team of ${kept.length} Pokémon is legal in Pokémon Champions, but not recommended`,
+    });
+  }
+  return {
+    errors: result.errors.map((p) => ({ ...p, slot: slotOf(p.slot) })),
+    warnings,
+  };
 }

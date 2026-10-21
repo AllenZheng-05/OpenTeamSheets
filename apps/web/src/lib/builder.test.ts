@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import { emptySet } from "@ots/core/teams";
 import {
   addDraft,
+  checkTeam,
   createDraft,
   DEFAULT_NAME,
   fillSlots,
@@ -150,5 +151,78 @@ describe("withStatPoints", () => {
     // Lowering one makes room again.
     points = withStatPoints(points, "hp", 20, 32, 66);
     expect(withStatPoints(points, "atk", 20, 32, 66).atk).toBe(14);
+  });
+});
+
+describe("checkTeam", () => {
+  const finished = (speciesId: string, abilityId: string) => ({
+    ...emptySet(),
+    speciesId,
+    abilityId,
+    natureId: "adamant",
+    moveIds: ["protect"],
+    statPoints: { hp: 32, atk: 32, def: 2, spa: 0, spd: 0, spe: 0 },
+  });
+  const team = (sets: ReturnType<typeof emptySet>[]) => ({
+    ...createDraft("M-C"),
+    sets: fillSlots(sets),
+  });
+
+  it("finds a finished team of four ready, with a warning", () => {
+    const report = checkTeam(
+      team([
+        finished("incineroar", "intimidate"),
+        finished("garchomp", "roughskin"),
+        finished("charizard", "blaze"),
+        finished("kingambit", "defiant"),
+      ]),
+    );
+    expect(report.errors).toEqual([]);
+    expect(report.warnings.map((w) => w.message)).toEqual([
+      "A team of 4 Pokémon is legal in Pokémon Champions, but not recommended",
+    ]);
+  });
+
+  it("reports what a finished team needs, by the slots' own numbers", () => {
+    const report = checkTeam(
+      team([
+        finished("incineroar", "intimidate"),
+        emptySet(),
+        emptySet(),
+        { ...finished("garchomp", "roughskin"), natureId: null },
+      ]),
+    );
+    expect(report.errors.map((e) => [e.slot, e.message])).toEqual([
+      [null, "A team needs at least 4 Pokémon"],
+      [4, "Choose a nature"],
+    ]);
+  });
+
+  it("warns of stat points left unspent", () => {
+    const report = checkTeam(
+      team([
+        finished("incineroar", "intimidate"),
+        {
+          ...finished("garchomp", "roughskin"),
+          statPoints: { hp: 32, atk: 0, def: 0, spa: 0, spd: 0, spe: 24 },
+        },
+        { ...finished("charizard", "blaze"), statPoints: null },
+        finished("kingambit", "defiant"),
+        finished("sylveon", "pixilate"),
+        finished("dragapult", "clearbody"),
+      ]),
+    );
+    expect(report.errors).toEqual([]);
+    expect(report.warnings.map((w) => [w.slot, w.message])).toEqual([
+      [2, "10 of 66 stat points are unspent"],
+      [3, "66 of 66 stat points are unspent"],
+    ]);
+  });
+
+  it("doesn't report empty slots", () => {
+    const report = checkTeam(team([finished("incineroar", "intimidate")]));
+    expect(report.errors.some((e) => e.message === "Choose a Pokémon")).toBe(
+      false,
+    );
   });
 });

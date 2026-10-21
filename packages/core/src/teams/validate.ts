@@ -67,12 +67,11 @@ export function validateTeam(
 
   team.sets.forEach((set, index) => {
     const slot = index + 1;
-    const error = (message: string, about?: Pick<Problem, "field" | "value">) =>
+    type About = Pick<Problem, "field" | "value" | "place" | "short">;
+    const error = (message: string, about?: About) =>
       errors.push({ slot, message, ...about });
-    const illegal = (
-      message: string,
-      about?: Pick<Problem, "field" | "value">,
-    ) => legalityProblems.push({ slot, message, ...about });
+    const illegal = (message: string, about?: About) =>
+      legalityProblems.push({ slot, message, ...about });
 
     if (!set.speciesId) {
       if (complete) error("Choose a Pokémon");
@@ -80,7 +79,10 @@ export function validateTeam(
     }
     const species = getSpecies(set.speciesId);
     if (!species) {
-      error(`Unknown Pokémon "${set.speciesId}"`);
+      error(`Unknown Pokémon "${set.speciesId}"`, {
+        place: "species",
+        short: "unknown",
+      });
       return;
     }
 
@@ -88,6 +90,7 @@ export function validateTeam(
       error(`${set.listedItem} isn't in Pokémon Champions`, {
         field: "item",
         value: set.listedItem,
+        short: "not in Champions",
       });
     }
 
@@ -99,6 +102,10 @@ export function validateTeam(
     if (species.requiredItemId && set.itemId !== species.requiredItemId) {
       illegal(
         `${species.name} must hold ${nameOf("item", species.requiredItemId)}`,
+        {
+          place: "item",
+          short: `needs ${nameOf("item", species.requiredItemId)}`,
+        },
       );
     }
     if (
@@ -107,6 +114,10 @@ export function validateTeam(
     ) {
       illegal(
         `${species.name} needs the ability ${nameOf("ability", species.requiredAbilityId)}`,
+        {
+          place: "ability",
+          short: `needs ${nameOf("ability", species.requiredAbilityId)}`,
+        },
       );
     }
     if (
@@ -115,6 +126,10 @@ export function validateTeam(
     ) {
       illegal(
         `${species.name} needs the move ${nameOf("move", species.requiredMoveId)}`,
+        {
+          place: "species",
+          short: `needs ${nameOf("move", species.requiredMoveId)}`,
+        },
       );
     }
 
@@ -122,18 +137,22 @@ export function validateTeam(
       if (set.itemId && !legalItems.has(set.itemId)) {
         illegal(
           `${nameOf("item", set.itemId)} isn't legal in Reg ${regulation}`,
+          { place: "item", short: `not in Reg ${regulation}` },
         );
       }
       // An illegal Pokémon has no learnset in the regulation, so its moves
       // and ability can't be checked; the one problem is the Pokémon.
       if (!legalSpecies.has(form.id)) {
-        illegal(`${form.name} isn't legal in Reg ${regulation}`);
+        illegal(`${form.name} isn't legal in Reg ${regulation}`, {
+          place: "species",
+          short: `not in Reg ${regulation}`,
+        });
       } else {
         const abilities = [form.ability1, form.ability2, form.abilityHidden];
         if (set.abilityId && !abilities.includes(set.abilityId)) {
           illegal(
             `${form.name} can't have ${nameOf("ability", set.abilityId)}`,
-            { field: "ability", value: set.abilityId },
+            { field: "ability", value: set.abilityId, short: "can't have" },
           );
         }
         const learnset = data.learnsets[form.id] ?? [];
@@ -142,6 +161,7 @@ export function validateTeam(
             illegal(`${form.name} can't learn ${nameOf("move", move)}`, {
               field: "move",
               value: move,
+              short: "can't learn",
             });
           }
         }
@@ -149,8 +169,15 @@ export function validateTeam(
     }
 
     if (set.moveIds.length > 4) error("A Pokémon has at most four moves");
-    if (new Set(set.moveIds).size !== set.moveIds.length) {
-      error(`${species.name} has the same move twice`);
+    const repeated = set.moveIds.find(
+      (move, i) => set.moveIds.indexOf(move) !== i,
+    );
+    if (repeated) {
+      error(`${species.name} has the same move twice`, {
+        place: "move",
+        value: repeated,
+        short: "listed twice",
+      });
     }
     if (complete) {
       if (!set.abilityId) error("Choose an ability");
@@ -191,6 +218,8 @@ export function validateTeam(
         errors.push({
           slot: index + 1,
           message: `A team can have only one ${baseName}`,
+          place: "species",
+          short: "already on the team",
         });
       }
       seenSpecies.set(species.num, baseName);
@@ -200,6 +229,8 @@ export function validateTeam(
         errors.push({
           slot: index + 1,
           message: `Only one Pokémon can hold ${nameOf("item", set.itemId)}`,
+          place: "item",
+          short: "held twice",
         });
       }
       seenItems.add(set.itemId);
