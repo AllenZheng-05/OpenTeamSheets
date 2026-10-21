@@ -1,5 +1,12 @@
 import { describe, expect, it } from "vitest";
-import { fieldOptions, searchSpecies, speciesChoice } from "./builder-options";
+import { gameData, regulationData } from "@ots/core/game-data";
+import {
+  fieldOptions,
+  itemOptions,
+  searchSpecies,
+  speciesChoice,
+  speciesOptions,
+} from "./builder-options";
 
 const ids = (options: { id: string; group?: string }[], group?: string) =>
   options.filter((o) => o.group === group).map((o) => o.id);
@@ -91,5 +98,45 @@ describe("speciesChoice", () => {
 
   it("leaves the item alone for a Pokémon that isn't a Mega", () => {
     expect(speciesChoice("incineroar", null)).not.toHaveProperty("itemId");
+  });
+});
+
+describe("legal lists", () => {
+  const rules = regulationData["M-C"]!.legality;
+
+  it("list only the Pokémon legal in the regulation", () => {
+    const ids = speciesOptions("M-C").map((o) => o.id);
+    expect(ids).toContain("incineroar");
+    // Cramorant isn't in Champions' Reg M-C.
+    expect(ids).not.toContain("cramorant");
+    expect(fieldOptions("species").map((o) => o.id)).toContain("cramorant");
+  });
+
+  it("list a Mega only when its base form and stone are legal", () => {
+    const byId = new Map(gameData.species.map((s) => [s.id, s]));
+    const megas = speciesOptions("M-C")
+      .map((o) => byId.get(o.id)!)
+      .filter((s) => s.battleOnlyFromId);
+    expect(megas.length).toBeGreaterThan(0);
+    for (const mega of megas) {
+      expect(rules.species).toContain(mega.battleOnlyFromId);
+      expect(rules.items).toContain(mega.requiredItemId);
+    }
+  });
+
+  it("list only the items legal in the regulation", () => {
+    const ids = itemOptions("M-C").map((o) => o.id);
+    expect(ids).toContain("sitrusberry");
+    expect(ids).not.toContain("cornerstonemask");
+  });
+
+  it("list everything before a regulation's rules are out", () => {
+    expect(speciesOptions("M-D")).toEqual(fieldOptions("species"));
+    expect(itemOptions("M-D")).toEqual(fieldOptions("item"));
+  });
+
+  it("limit the search by ability or move to legal Pokémon", () => {
+    const found = searchSpecies("cramorant", "M-C");
+    expect(found.map((o) => o.id)).not.toContain("cramorant");
   });
 });

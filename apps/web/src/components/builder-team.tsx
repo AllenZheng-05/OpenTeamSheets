@@ -14,6 +14,7 @@ import { browserBox } from "@/lib/box";
 import { DEFAULT_NAME, filled, SLOTS, type Draft } from "@/lib/builder";
 import { useBuilder } from "@/lib/builder-store";
 import { BuilderSlot } from "./builder-slot";
+import { NotInBox } from "./not-in-box";
 import { PokemonSprite } from "./pokemon-sprite";
 
 // Regulations with rules to build for, newest first.
@@ -187,10 +188,10 @@ export function BuilderTeam({ draft }: { draft: Draft }) {
                   </span>
                 )}
                 <span className="flex w-full min-w-0 items-center justify-center gap-0.5">
+                  <span className="truncate">{name}</span>
                   {filled(set) &&
                     owned &&
                     !owned.has(boxSpecies(set.speciesId!)) && <NotInBox />}
-                  <span className="truncate">{name}</span>
                 </span>
               </button>
               {/* Shown on the selected slot, and on others when hovered. */}
@@ -236,7 +237,7 @@ export function BuilderTeam({ draft }: { draft: Draft }) {
         role="tabpanel"
         aria-labelledby={`${panelId}-tab-${slot}`}
       >
-        <BuilderSlot key={slot} draft={draft} slot={slot} />
+        <BuilderSlot key={slot} draft={draft} slot={slot} owned={owned} />
       </section>
     </div>
   );
@@ -286,28 +287,5 @@ function TrashIcon() {
     >
       <path d="M2.5 4h11M6.5 4V2.5h3V4M4 4l.7 9.5h6.6L12 4M6.75 6.5v4.5M9.25 6.5v4.5" />
     </svg>
-  );
-}
-
-/** A crossed-out Poké Ball beside a Pokémon not in the player's box. */
-function NotInBox() {
-  return (
-    <span title="Not in your box" className="shrink-0 text-amber-700">
-      <span className="sr-only">Not in your box: </span>
-      <svg
-        aria-hidden
-        viewBox="0 0 16 16"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="1.6"
-        strokeLinecap="round"
-        className="size-3"
-      >
-        <circle cx="8" cy="8" r="5.5" />
-        <path d="M2.5 8h11" />
-        <circle cx="8" cy="8" r="1.6" />
-        <path d="M2 14 14 2" />
-      </svg>
-    </span>
   );
 }

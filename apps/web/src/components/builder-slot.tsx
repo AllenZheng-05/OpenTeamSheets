@@ -4,6 +4,7 @@ import { useCallback, useId, useMemo } from "react";
 import { gameData, type StatId } from "@ots/core/game-data";
 import {
   battleStat,
+  boxSpecies,
   emptySet,
   learnableAbilities,
   learnableMoves,
@@ -16,8 +17,10 @@ import { filled, statTotal, withStatPoints, type Draft } from "@/lib/builder";
 import {
   fieldOptions,
   matchOptions,
+  itemOptions,
   searchSpecies,
   speciesChoice,
+  speciesOptions,
   type FieldKind,
   type FieldOption,
   type MoveBasics,
@@ -27,8 +30,39 @@ import { useBuilder } from "@/lib/builder-store";
 import { setDetails } from "@/lib/pokemon-details";
 import { Combobox } from "./combobox";
 import { FormSprite } from "./form-sprite";
+import { NotInBox } from "./not-in-box";
 import { TypePill } from "./pills";
 import { PokemonSprite } from "./pokemon-sprite";
+
+/**
+ * The slot's fields in order, for Enter to move from one to the next: the
+ * Pokémon, item, ability, four moves, nature, then the six stat boxes.
+ */
+const FIELD_ORDER = {
+  species: 1,
+  item: 2,
+  ability: 3,
+  move: 4,
+  nature: 8,
+  stats: 9,
+};
+
+/**
+ * Focuses the slot's next field after `order`, once the page has updated
+ * (picking a Pokémon for an empty slot brings the other fields in).
+ */
+function focusAfter(order: number) {
+  requestAnimationFrame(() => {
+    const next = [
+      ...document.querySelectorAll<HTMLElement>("[data-field-order]"),
+    ]
+      .filter((el) => Number(el.dataset.fieldOrder) > order)
+      .sort(
+        (a, b) => Number(a.dataset.fieldOrder) - Number(b.dataset.fieldOrder),
+      )[0];
+    next?.focus();
+  });
+}
 
 const STATS: { id: StatId; label: string }[] = [
   { id: "hp", label: "HP" },
@@ -44,7 +78,16 @@ const STATS: { id: StatId; label: string }[] = [
  * item, ability and moves on top; its nature and stat points below. A
  * Pokémon holding its Mega Stone shows the Mega's ability and stats too.
  */
-export function BuilderSlot({ draft, slot }: { draft: Draft; slot: number }) {
+export function BuilderSlot({
+  draft,
+  slot,
+  owned,
+}: {
+  draft: Draft;
+  slot: number;
+  /** The player's box, to mark Pokémon they don't have; null if unset. */
+  owned: Set<string> | null;
+}) {
   const set = draft.sets[slot]!;
   const update = useBuilder((s) => s.updateSet);
   const change = (patch: Partial<TeamSet>) => update(draft.id, slot, patch);
@@ -61,8 +104,10 @@ export function BuilderSlot({ draft, slot }: { draft: Draft; slot: number }) {
         <div className="space-y-2">
           <Field
             label="Pokémon"
+            order={FIELD_ORDER.species}
             placeholder="Search Pokémon, abilities or moves"
-            options={fieldOptions("species")}
+            options={speciesOptions(draft.regulation)}
+            owned={owned}
             search={findSpecies}
             kind="species"
             value={null}
@@ -87,8 +132,10 @@ export function BuilderSlot({ draft, slot }: { draft: Draft; slot: number }) {
         {/* On its own row, so its list is as wide as the editor. */}
         <Field
           label="Pokémon"
+          order={FIELD_ORDER.species}
           placeholder="Search Pokémon, abilities or moves"
-          options={fieldOptions("species")}
+          options={speciesOptions(draft.regulation)}
+          owned={owned}
           search={findSpecies}
           kind="species"
           value={set.speciesId}
@@ -122,8 +169,9 @@ export function BuilderSlot({ draft, slot }: { draft: Draft; slot: number }) {
             <div className="space-y-3">
               <Field
                 label="Item"
+                order={FIELD_ORDER.item}
                 placeholder="No item"
-                options={fieldOptions("item")}
+                options={itemOptions(draft.regulation)}
                 kind="item"
                 value={set.itemId}
                 onPick={(itemId) => change({ itemId, listedItem: null })}
@@ -187,6 +235,7 @@ function AbilityField({
   return (
     <Field
       label="Ability"
+      order={FIELD_ORDER.ability}
       placeholder="Ability"
       options={options}
       kind="ability"
@@ -260,6 +309,7 @@ function MoveField({
   return (
     <Field
       label={`Move ${index + 1}`}
+      order={FIELD_ORDER.move + index}
       placeholder="Move"
       options={shown}
       kind="move"
@@ -309,6 +359,7 @@ function StatPanel({
         <div className="w-full max-w-xs">
           <Field
             label="Nature"
+            order={FIELD_ORDER.nature}
             placeholder="Nature"
             options={fieldOptions("nature")}
             kind="nature"
@@ -384,6 +435,9 @@ function StatPanel({
                   value={set.statPoints ? value : ""}
                   placeholder="–"
                   aria-label={`${label} stat points`}
+                  data-field-order={
+                    FIELD_ORDER.stats + STATS.findIndex((s) => s.id === id)
+                  }
                   onChange={(e) => setStat(id, e.target.valueAsNumber)}
                   className="w-16 shrink-0 rounded-lg border border-neutral-300 bg-white px-2 py-1 text-sm tabular-nums outline-none focus:border-neutral-500"
                 />
@@ -410,6 +464,8 @@ function Field({
   value,
   onPick,
   onClear,
+  owned = null,
+  order,
 }: {
   label: string;
   placeholder: string;
@@ -421,6 +477,10 @@ function Field({
   value: string | null;
   onPick: (id: string) => void;
   onClear?: () => void;
+  /** For the Pokémon field: the player's box, to mark ones not in it. */
+  owned?: Set<string> | null;
+  /** Its place in the slot (FIELD_ORDER); Enter moves to the next. */
+  order: number;
 }) {
   const suggestions = useCallback(
     (query: string) => (search ? search(query) : matchOptions(options, query)),
@@ -436,11 +496,19 @@ function Field({
         suggestions={suggestions}
         onSelect={(option) => onPick(option.id)}
         onClear={onClear}
+        fieldOrder={order}
+        onEnterPick={() => focusAfter(order)}
         {...(kind === "species"
           ? {
               renderOption: (option: FieldOption) =>
                 option.species ? (
-                  <SpeciesRowView name={option.name} row={option.species} />
+                  <SpeciesRowView
+                    name={option.name}
+                    row={option.species}
+                    missing={
+                      owned !== null && !owned.has(boxSpecies(option.id))
+                    }
+                  />
                 ) : (
                   option.name
                 ),
@@ -537,7 +605,16 @@ function SpeciesRowHeader() {
  * A Pokémon in the list: sprite, name and types, abilities, base stats. A
  * Mega shows its own types, ability and stats.
  */
-function SpeciesRowView({ name, row }: { name: string; row: SpeciesRow }) {
+function SpeciesRowView({
+  name,
+  row,
+  missing,
+}: {
+  name: string;
+  row: SpeciesRow;
+  /** Not in the player's box. */
+  missing: boolean;
+}) {
   const sprite = (
     <PokemonSprite
       name={name}
@@ -565,7 +642,10 @@ function SpeciesRowView({ name, row }: { name: string; row: SpeciesRow }) {
       <span className={`-mx-1 hidden ${SPECIES_COLUMNS} text-xs @xl:grid`}>
         {sprite}
         <span className="flex min-w-0 flex-col gap-1 py-0.5">
-          <span className="truncate text-sm">{name}</span>
+          <span className="flex min-w-0 items-center gap-1 text-sm">
+            <span className="truncate">{name}</span>
+            {missing && <NotInBox />}
+          </span>
           {types}
         </span>
         <span className="flex flex-col text-neutral-600">
@@ -591,7 +671,10 @@ function SpeciesRowView({ name, row }: { name: string; row: SpeciesRow }) {
         <span className="shrink-0">{sprite}</span>
         <span className="flex min-w-0 flex-1 flex-col gap-1">
           <span className="flex flex-wrap items-center justify-between gap-x-2 gap-y-1">
-            <span className="text-sm">{name}</span>
+            <span className="flex items-center gap-1 text-sm">
+              {name}
+              {missing && <NotInBox />}
+            </span>
             {types}
           </span>
           <span className="flex flex-wrap gap-x-2 text-neutral-600">
