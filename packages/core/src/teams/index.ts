@@ -3,6 +3,12 @@ export { DEFAULT_LEVEL, emptySet, MAX_IV, perfectIvs } from "./types";
 export { exportShowdown, parseShowdown } from "./showdown";
 export { parseRk9 } from "./rk9";
 export {
+  isRk9Text,
+  parseTeamText,
+  pokePasteId,
+  pokePasteJsonUrl,
+} from "./paste";
+export {
   MAX_STAT_POINTS,
   MAX_TOTAL_STAT_POINTS,
   validateTeam,

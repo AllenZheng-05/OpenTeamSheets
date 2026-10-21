@@ -1,8 +1,12 @@
 import type { Regulation } from "@ots/core";
 import {
   emptySet,
+  exportShowdown,
+  getSpecies,
   MAX_TOTAL_STAT_POINTS,
+  parseTeamText,
   validateTeam,
+  type Problem,
   type StatTable,
   type TeamSet,
   type ValidationResult,
@@ -49,7 +53,7 @@ export function fillSlots(sets: TeamSet[]): TeamSet[] {
 
 export function createDraft(
   regulation: Regulation,
-  from?: { name: string; sets: TeamSet[]; sourceTeamId: string },
+  from?: { name: string; sets: TeamSet[]; sourceTeamId: string | null },
 ): Draft {
   return {
     id: newId(),
@@ -174,6 +178,37 @@ export function withStatPoints(
   const clamped = Math.max(0, Math.min(room, Math.round(value) || 0));
   return { ...base, [stat]: clamped };
 }
+
+/** A team read from pasted text, ready to fill a draft's slots. */
+export interface PastedTeam {
+  sets: TeamSet[];
+  /** Lines that couldn't be read, and a seventh Pokémon or more. */
+  problems: Problem[];
+}
+
+/**
+ * Reads a pasted team (a Showdown paste or RK9 teamlist) for the builder.
+ * A Mega listed by its own name ("Charizard-Mega-Y") becomes its base form
+ * holding its stone, as picking it from the list does. Only six fit.
+ */
+export function readPastedTeam(text: string): PastedTeam {
+  const parsed = parseTeamText(text);
+  const sets = parsed.team.sets.map((set): TeamSet => {
+    const species = set.speciesId ? getSpecies(set.speciesId) : undefined;
+    if (!species?.battleOnlyFromId || !species.requiredItemId) return set;
+    return {
+      ...set,
+      speciesId: species.battleOnlyFromId,
+      itemId: set.itemId ?? species.requiredItemId,
+    };
+  });
+  // The reader reports a seventh Pokémon and beyond; they're left out.
+  return { sets: sets.slice(0, SLOTS), problems: parsed.errors };
+}
+
+/** A draft as a Showdown paste, leaving out empty slots. */
+export const draftPaste = (draft: Draft) =>
+  exportShowdown({ sets: draft.sets.filter(filled) });
 
 /** Teams this small are legal, but not recommended. */
 const SMALL_TEAM = 5;

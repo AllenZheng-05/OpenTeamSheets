@@ -11,6 +11,7 @@ import type { TeamSet } from "@ots/core/teams";
 import {
   addDraft,
   createDraft,
+  fillSlots,
   moveDraft,
   noDrafts,
   removeDraft,
@@ -52,13 +53,18 @@ const safeStorage: StateStorage = {
 interface BuilderState extends Drafts {
   /** Starts an empty team at the top of the list; returns its id. */
   newDraft: () => string;
-  /** Opens a tournament team as a new draft; returns its id. */
+  /**
+   * Adds a team as a new draft, from a tournament team (its id is the
+   * source) or a paste (no source); returns its id.
+   */
   openTeam: (team: {
     name: string;
     regulation: Regulation;
     sets: TeamSet[];
-    sourceTeamId: string;
+    sourceTeamId: string | null;
   }) => string;
+  /** Replaces a team's Pokémon, as Import / Export's Save does. */
+  replaceSets: (id: string, sets: TeamSet[]) => void;
   deleteDraft: (id: string) => void;
   /** Moves a team to a place in the list (0 is the top). */
   moveDraft: (id: string, to: number) => void;
@@ -84,6 +90,8 @@ export const useBuilder = create<BuilderState>()(
         newDraft: () => add(createDraft(getCurrentRegulation())),
         openTeam: ({ name, regulation, sets, sourceTeamId }) =>
           add(createDraft(regulation, { name, sets, sourceTeamId })),
+        replaceSets: (id, sets) =>
+          set((s) => updateDraft(s, id, () => ({ sets: fillSlots(sets) }))),
         deleteDraft: (id) => set((s) => removeDraft(s, id)),
         moveDraft: (id, to) => set((s) => moveDraft(s, id, to)),
         renameDraft: (id, name) =>

@@ -2,8 +2,9 @@ import { parse as parseYaml } from "yaml";
 import { isRegulation, type Regulation } from "@ots/core";
 import {
   deriveArchetypes,
-  parseRk9,
-  parseShowdown,
+  parseTeamText,
+  pokePasteId,
+  pokePasteJsonUrl,
   teamFingerprint,
   validateTeam,
   type Problem,
@@ -173,21 +174,14 @@ export function readEventFile(text: string, fileSlug?: string): EventFile {
   return data as unknown as EventFile;
 }
 
-const POKEPASTE = /^https?:\/\/pokepast\.es\/([0-9a-f]+)\/?$/i;
-
 /** The text of a PokePaste, from its JSON form. */
 export async function fetchPokePaste(url: string): Promise<string> {
-  const id = url.match(POKEPASTE)?.[1];
-  const response = await fetch(`https://pokepast.es/${id}/json`);
+  const response = await fetch(pokePasteJsonUrl(pokePasteId(url)!));
   if (!response.ok) {
     throw new Error(`Couldn't fetch ${url} (HTTP ${response.status})`);
   }
   return ((await response.json()) as { paste: string }).paste;
 }
-
-/** RK9 teamlists label their fields; Showdown pastes don't. */
-const isRk9Text = (text: string) =>
-  /Held Item:/.test(text) && /Stat Alignment:/.test(text);
 
 export interface TeamReport {
   player: string;
@@ -233,7 +227,7 @@ export async function prepareImport(
     reports.push(report);
 
     let text = entry.paste;
-    if (POKEPASTE.test(text.trim())) {
+    if (pokePasteId(text)) {
       try {
         text = await fetchPaste(text.trim());
       } catch (error) {
@@ -241,7 +235,7 @@ export async function prepareImport(
         continue;
       }
     }
-    const parsed = isRk9Text(text) ? parseRk9(text) : parseShowdown(text);
+    const parsed = parseTeamText(text);
     const team: Team = parsed.team;
     const validation = validateTeam(team, regulation, { complete: true });
     report.errors.push(...parsed.errors, ...validation.errors);

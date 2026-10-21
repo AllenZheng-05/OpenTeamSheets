@@ -1,6 +1,7 @@
 import { readdirSync, readFileSync } from "node:fs";
 import path from "node:path";
 import { describe, expect, it } from "vitest";
+import { parseTeamText, pokePasteId } from "./paste";
 import { parseRk9 } from "./rk9";
 import { exportShowdown, parseShowdown } from "./showdown";
 
@@ -179,5 +180,23 @@ describe("parseRk9", () => {
 
   it("explains what to copy when no team is found", () => {
     expect(parseRk9("hello").errors[0]?.message).toMatch(/RK9 teamlist/);
+  });
+});
+
+describe("parseTeamText", () => {
+  it("reads a Showdown paste or an RK9 teamlist, whichever it is", () => {
+    const showdown = fixture("baltimore-2027-01.showdown.txt");
+    expect(parseTeamText(showdown)).toEqual(parseShowdown(showdown));
+    const dir = path.join(fixtures, "rk9");
+    const rk9 = readFileSync(path.join(dir, readdirSync(dir)[0]!), "utf8");
+    expect(parseTeamText(rk9)).toEqual(parseRk9(rk9));
+  });
+
+  it("knows a PokePaste link", () => {
+    expect(pokePasteId(" https://pokepast.es/816414687c1c150d/ ")).toBe(
+      "816414687c1c150d",
+    );
+    expect(pokePasteId("https://example.com/816414687c1c150d")).toBeNull();
+    expect(pokePasteId("Incineroar @ Sitrus Berry")).toBeNull();
   });
 });
