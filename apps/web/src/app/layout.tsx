@@ -1,3 +1,4 @@
+import { Analytics } from "@vercel/analytics/next";
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import { SiteFooter, SiteHeader } from "@/components/site-chrome";
@@ -54,6 +55,9 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
           {children}
         </main>
         <SiteFooter />
+        {/* Vercel Web Analytics: page views, without cookies. Only counts
+            on Vercel deployments; does nothing in development. */}
+        <Analytics />
       </body>
     </html>
   );
