@@ -29,6 +29,6 @@
   "devDependencies": {
     "prettier": "^3",
     "supabase": "^2",
-    "typescript": "^5"
+    "typescript": "^7"
   }
 }

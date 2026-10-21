@@ -14,7 +14,7 @@
     "@ots/core": "workspace:*",
     "@types/node": "^22",
     "tsx": "^4",
-    "typescript": "^5",
+    "typescript": "^7",
     "vitest": "^3"
   }
 }
